@@ -1,17 +1,35 @@
 package model.entity.enums;
 
+import java.util.Arrays;
+
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public enum ReservationStatus {
 
-    PROCESSING,
+    PROCESSING(1),
 
-    ANSWERED,
+    CANCELLED(2),
 
-    REFUSED,
+    ANSWERED(3),
 
-    SUBMITTED,
+    REFUSED(4),
 
-    ALL;
+    SUBMITTED(5),
+
+    ALL(-1);
+
+    private int Id;
+
+    ReservationStatus(int id) {
+        Id = id;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public static ReservationStatus fromId(int id) {
+        return Arrays.asList(ReservationStatus.values()).stream().filter(status -> status.getId() == id).findFirst().get();
+    }
 }

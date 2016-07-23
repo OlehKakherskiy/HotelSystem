@@ -1,26 +1,37 @@
 package model.service.serviceImpl;
 
+import model.dao.GenericMobilePhoneDao;
 import model.dao.GenericUserDao;
 import model.entity.User;
-import model.service.GenericUserService;
+import model.service.AbstractUserService;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class UserService extends GenericUserService {
+public class UserService implements AbstractUserService {
 
-    public UserService(GenericUserDao dao) {
-        super(dao);
+    private GenericUserDao userDao;
+
+    private GenericMobilePhoneDao mobilePhoneDao;
+
+    public UserService(GenericUserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
     public User login(String login, String password) {
-        int userID = dao.tryLogin(login, password);
-        return (userID == -1) ? null : getSimpleUserInfo(userID); //TODO: or exception
+        User result = userDao.tryLogin(login, password);
+        if (result == null) {
+            throw new RuntimeException(); //TODO: переделать
+        }
+        result.setMobilePhoneList(mobilePhoneDao.getAll(result.getIdUser()));
+        return result;
     }
 
     @Override
     public User getSimpleUserInfo(int ID) {
-        return dao.read(ID);
+        User user = userDao.read(ID);
+        user.setMobilePhoneList(mobilePhoneDao.getAll(user.getIdUser()));
+        return user;
     }
 }

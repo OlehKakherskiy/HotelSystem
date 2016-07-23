@@ -1,8 +1,5 @@
 package model.service.serviceImpl;
 
-import app.GlobalContext;
-import app.constants.GlobalContextConstant;
-import model.dao.DaoManager;
 import model.dao.GenericHotelRoomDao;
 import model.dao.GenericReservationDao;
 import model.dao.GenericUserDao;
@@ -11,17 +8,23 @@ import model.entity.Reservation;
 import model.entity.User;
 import model.entity.enums.ReservationStatus;
 import model.entity.enums.UserType;
-import model.service.GenericReservationService;
+import model.service.AbstractReservationService;
 
 import java.util.List;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class ReservationService extends GenericReservationService {
+public class ReservationService implements AbstractReservationService {
+
+    private GenericReservationDao dao;
+
+    private GenericHotelRoomDao hotelRoomDao;
+
+    private GenericUserDao userDao;
 
     public ReservationService(GenericReservationDao dao) {
-        super(dao);
+        this.dao = dao;
     }
 
     @Override
@@ -35,18 +38,9 @@ public class ReservationService extends GenericReservationService {
     public Reservation getReservationDetailInfo(int reservationID, User user) {
         Reservation reservation = dao.read(reservationID);
         if (user.getUserType() == UserType.ADMIN) {
-            try {
-                DaoManager daoManager = (DaoManager) GlobalContext.getValue(GlobalContextConstant.DAO_MANAGER);
 
-                GenericUserDao userDao = daoManager.getDAO(GenericUserDao.class);
-                GenericHotelRoomDao hotelRoomDao = daoManager.getDAO(GenericHotelRoomDao.class);
-
-                reservation.setUser(userDao.read(reservation.getUser().getIdUser()));
-                reservation.setHotelRoom(hotelRoomDao.getShortDetails(reservation.getHotelRoomID()));
-
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            reservation.setUser(userDao.read(reservation.getUser().getIdUser()));
+            reservation.setHotelRoom(hotelRoomDao.getShortDetails(reservation.getHotelRoomID()));
         }
         return reservation;
     }
@@ -67,7 +61,8 @@ public class ReservationService extends GenericReservationService {
 
     @Override
     public void setStatusToSubmitted(Reservation reservation) {
-        dao.changeReservationStatus(reservation, ReservationStatus.SUBMITTED);
+        reservation.setStatus(ReservationStatus.SUBMITTED);
+        dao.changeReservationStatus(reservation);
     }
 
     @Override
@@ -75,6 +70,5 @@ public class ReservationService extends GenericReservationService {
         reservation.setUser(user);
         dao.save(reservation);
     }
-
 
 }

@@ -8,6 +8,30 @@ import java.util.List;
 public abstract class TransparentGenericDao<T, K> implements GenericDao<T, K> {
 
     @Override
+    public T read(K id) {
+        unsupportedException();
+        return null;
+    }
+
+    @Override
+    public T save(T object) {
+        unsupportedException();
+        return null;
+    }
+
+    @Override
+    public boolean delete(K id) {
+        unsupportedException();
+        return false;
+    }
+
+    @Override
+    public boolean update(T object) {
+        unsupportedException();
+        return false;
+    }
+
+    @Override
     public List<T> getAll() {
         unsupportedException();
         return null;

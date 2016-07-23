@@ -1,8 +1,9 @@
-package controller;
+package controller.manager.managerImpl;
 
 import app.constants.CommandConstant;
-import controller.command.GenericCommand;
+import controller.GenericCommandManager;
 import controller.command.commandImpl.*;
+import controller.manager.GenericCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,11 +11,12 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class StubCommandFactory implements CommandFactory {
+public class StubCommandFactory extends GenericCommandManager {
 
     Map<CommandConstant, GenericCommand> commandMap;
 
-    public StubCommandFactory(Map<CommandConstant, GenericCommand> commandMap) {
+    public StubCommandFactory() {
+        super(null);
         commandMap = new HashMap<CommandConstant, GenericCommand>() {{
             put(CommandConstant.LOGIN_COMMAND, new LoginCommand());
             put(CommandConstant.FILL_NEW_RESERVATION_COMMAND, new FillNewReservationCommand());
@@ -27,8 +29,12 @@ public class StubCommandFactory implements CommandFactory {
     }
 
     @Override
-    public GenericCommand getCommandInstance(CommandConstant commandID) {
-        return commandMap.get(commandID);
+    public <V extends GenericCommand> V getObject(CommandConstant key) {
+        return (V) commandMap.get(key);
     }
 
+    @Override
+    protected <V extends GenericCommand> V getObjectHook(Class<V> objectClass) throws IllegalAccessException, InstantiationException {
+        return null;
+    }
 }

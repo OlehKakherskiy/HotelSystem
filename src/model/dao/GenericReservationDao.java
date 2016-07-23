@@ -11,9 +11,9 @@ import java.util.List;
  */
 public abstract class GenericReservationDao extends TransparentGenericDao<Reservation, Integer> {
 
-    public abstract List<Reservation> getAllRoomSubmittedReservationsInPeriod(Integer roomID, LocalDate startDate, LocalDate endDate);
+//    public abstract List<Reservation> getAllRoomSubmittedReservationsInPeriod(int roomID, LocalDate startDate, LocalDate endDate);
 
-    public abstract List<Reservation> getAllUserReservationsShortInfo(Integer userID, ReservationStatus status);
+    public abstract List<Reservation> getAllUserReservationsShortInfo(int userID, ReservationStatus status);
 
-    public abstract void changeReservationStatus(Reservation reservation, ReservationStatus status);
+    public abstract void changeReservationStatus(Reservation reservation);
 }

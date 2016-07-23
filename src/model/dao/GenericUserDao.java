@@ -7,5 +7,5 @@ import model.entity.User;
  */
 public abstract class GenericUserDao extends TransparentGenericDao<User, Integer> {
 
-    public abstract int tryLogin(String login, String password);
+    public abstract User tryLogin(String login, String password);
 }

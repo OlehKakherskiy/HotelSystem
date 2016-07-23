@@ -3,8 +3,8 @@
 <properties>
 
     <entry key="commandManager">src.controller.CommandFactoryImpl</entry>
-    <entry key="serviceManager">src.model.service.ServiceManagerImpl</entry>
-    <entry key="commandFactory">src.model.dao.DaoManagerImpl</entry>
+    <entry key="serviceManager">src.model.dao.manager.managerImpl.ServiceManagerImpl</entry>
+    <entry key="commandFactory">src.model.dao.manager.managerImpl.DaoManagerImpl</entry>
 
     <entry key="loginCommand">src.controller.command.commandImpl.LoginCommand</entry>
     <entry key="getReservationListCommand">src.controller.command.commandImpl.GetReservationListCommand</entry>

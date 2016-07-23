@@ -1,6 +1,6 @@
-package controller.command;
+package controller.manager;
 
-import model.service.ServiceManager;
+import model.service.manager.GenericServiceManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class GenericCommand {
 
-    protected ServiceManager serviceManager;
+    protected GenericServiceManager serviceManager;
 
     public abstract String process(HttpServletRequest request, HttpServletResponse response);
 
-    public final void setServiceManager(ServiceManager serviceManager) {
+    public void setServiceManager(GenericServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
 }

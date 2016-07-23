@@ -1,9 +1,9 @@
 package controller.command.commandImpl;
 
 import app.constants.GlobalContextConstant;
-import controller.command.GenericCommand;
+import controller.manager.GenericCommand;
 import model.entity.User;
-import model.service.GenericUserService;
+import model.service.AbstractUserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ public class LoginCommand extends GenericCommand {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
 
-        GenericUserService userService = serviceManager.getService(GenericUserService.class);
+        AbstractUserService userService = serviceManager.getService(AbstractUserService.class);
 
         String login = request.getParameter(GlobalContextConstant.LOGIN.getName());
         String password = request.getParameter(GlobalContextConstant.PASSWORD.getName());

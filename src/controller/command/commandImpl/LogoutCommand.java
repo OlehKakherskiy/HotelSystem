@@ -1,7 +1,7 @@
 package controller.command.commandImpl;
 
 import app.constants.WebPageConstant;
-import controller.command.GenericCommand;
+import controller.manager.GenericCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

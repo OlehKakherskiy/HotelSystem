@@ -1,9 +1,9 @@
 package controller.command.commandImpl;
 
 import app.constants.GlobalContextConstant;
-import controller.command.GenericCommand;
+import controller.manager.GenericCommand;
 import model.entity.User;
-import model.service.GenericReservationService;
+import model.service.AbstractReservationService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
  */
 public class GetReservationListCommand extends GenericCommand {
 
-    GenericReservationService reservationService = serviceManager.getService(GenericReservationService.class);
+    AbstractReservationService reservationService = serviceManager.getService(AbstractReservationService.class);
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
