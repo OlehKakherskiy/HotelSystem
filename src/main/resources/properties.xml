@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <entry key="commandManager">src.controller.CommandFactoryImpl</entry>
+    <entry key="serviceManager">src.model.service.ServiceManagerImpl</entry>
+    <entry key="commandFactory">src.model.dao.DaoManagerImpl</entry>
+
+    <entry key="loginCommand">src.controller.command.commandImpl.LoginCommand</entry>
+    <entry key="getReservationListCommand">src.controller.command.commandImpl.GetReservationListCommand</entry>
+    <entry key="logoutCommand">src.controller.command.commandImpl.LogoutCommand</entry>
+    <entry key="getRequestFullInfoCommand">src.controller.command.commandImpl.GetReservationFullInfoCommand</entry>
+    <entry key="fillNewReservationCommand">src.controller.command.commandImpl.FillNewReservationCommand</entry>
+    <entry key="refuseHotelRoomOfferCommand">src.controller.command.commandImpl.RefuseHotelRoomOfferCommand</entry>
+    <entry key="submitHotelRoomOfferCommand">src.controller.command.commandImpl.SubmitHotelRoomOfferCommand</entry>
+
+    <entry key="reservationService">src.model.service.serviceImpl.ReservationService</entry>
+    <entry key="hotelRoomService">src.model.service.serviceImpl.HotelRoomService</entry>
+    <entry key="userService">src.model.service.serviceImpl.UserService</entry>
+
+    <entry key="userDao">src.model.dao.daoImpl.GenericUserDaoImpl</entry>
+
+</properties>
+    
