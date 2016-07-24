@@ -20,6 +20,8 @@ public class HotelRoom implements Serializable {
 
     private List<ParameterValue> parameters;
 
+    private List<Integer> parametersIds;
+
     public int getRoomID() {
         return roomID;
     }
@@ -58,5 +60,14 @@ public class HotelRoom implements Serializable {
 
     public void setParameters(List<ParameterValue> parameters) {
         this.parameters = parameters;
+    }
+
+
+    public List<Integer> getParametersIds() {
+        return parametersIds;
+    }
+
+    public void setParametersIds(List<Integer> parametersIds) {
+        this.parametersIds = parametersIds;
     }
 }

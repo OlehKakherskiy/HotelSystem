@@ -8,7 +8,10 @@ import model.entity.roomParameter.ParameterValue;
 import model.entity.roomParameter.Value;
 import model.service.AbstractParameterValueService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -23,10 +26,10 @@ public class AbstractParameterValueServiceImpl implements AbstractParameterValue
     }
 
     @Override
-    public List<ParameterValue> getAllParams(int... ids) {
+    public List<ParameterValue> getAllParams(List<Integer> ids) {
         List<ParameterValue> fullParamList = getAllParams();
-        return Arrays.stream(ids)
-                .mapToObj(id -> fullParamList.stream()
+        return ids.stream()
+                .map(id -> fullParamList.stream()
                         .filter(parameterValue -> parameterValue.getId() == id)
                         .findFirst()
                         .get())

@@ -7,6 +7,7 @@ import model.entity.Reservation;
 import model.entity.User;
 import model.entity.enums.ReservationStatus;
 import model.entity.enums.UserType;
+import model.service.AbstractParameterValueService;
 import model.service.AbstractReservationService;
 import model.service.AbstractUserService;
 
@@ -24,10 +25,14 @@ public class ReservationService implements AbstractReservationService {
 
     private AbstractUserService userService;
 
-    public ReservationService(GenericReservationDao dao, GenericHotelRoomDao hotelRoomDao, AbstractUserService userService) {
+    private AbstractParameterValueService parameterValueService;
+
+    public ReservationService(GenericReservationDao dao, GenericHotelRoomDao hotelRoomDao,
+                              AbstractUserService userService, AbstractParameterValueService parameterValueService) {
         this.dao = dao;
         this.hotelRoomDao = hotelRoomDao;
         this.userService = userService;
+        this.parameterValueService = parameterValueService;
     }
 
     @Override
@@ -45,8 +50,13 @@ public class ReservationService implements AbstractReservationService {
         Reservation reservation = dao.read(reservationID);
         if (user.getUserType() == UserType.ADMIN) {
             reservation.setUser(userService.getSimpleUserInfo(reservation.getUser().getIdUser()));
-            reservation.setHotelRoom(hotelRoomDao.getShortDetails(reservation.getHotelRoomID()));
+            reservation.setHotelRoom(hotelRoomDao.read(reservation.getHotelRoomID()));
         }
+
+        parameterValueService.getAllParams(reservation.getRequestParametersIds());
+        reservation.getRequestParametersIds().clear();
+        reservation.setRequestParametersIds(null);
+
         return reservation;
     }
 
@@ -69,7 +79,7 @@ public class ReservationService implements AbstractReservationService {
     public void addReservation(Reservation reservation, User user) {
         reservation.setUserID(user.getIdUser());
         int newID = dao.save(reservation);
-
+        //TODO: в дао также инфу по параметрам сохранять
         if (newID == -1) {
             throw new RuntimeException(); //TODO: не вернул первичный ключ - ошибка
         }

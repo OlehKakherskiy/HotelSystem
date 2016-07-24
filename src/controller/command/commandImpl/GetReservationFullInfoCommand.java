@@ -20,7 +20,7 @@ public class GetReservationFullInfoCommand extends GenericCommand {
 
         Reservation currentReservation = (Reservation) request.getSession(false)
                 .getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
-        AbstractReservationService reservationService = serviceManager.getService(AbstractReservationService.class);
+        AbstractReservationService reservationService = serviceManager.getObject(AbstractReservationService.class);
 
         User user = (User) request.getSession(false).getAttribute(GlobalContextConstant.USER.getName());
         currentReservation = reservationService.getReservationDetailInfo(currentReservation.getId(), user);

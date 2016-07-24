@@ -36,6 +36,9 @@ public class Reservation implements Serializable {
 
     private List<ParameterValue> requestParameters;
 
+    private List<Integer> requestParametersIds;
+
+
     public int getId() {
         return id;
     }
@@ -122,5 +125,13 @@ public class Reservation implements Serializable {
 
     public void setRequestParameters(List<ParameterValue> requestParameters) {
         this.requestParameters = requestParameters;
+    }
+
+    public List<Integer> getRequestParametersIds() {
+        return requestParametersIds;
+    }
+
+    public void setRequestParametersIds(List<Integer> requestParametersIds) {
+        this.requestParametersIds = requestParametersIds;
     }
 }

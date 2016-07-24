@@ -1,6 +1,7 @@
 package model.service;
 
 import model.entity.HotelRoom;
+import model.entity.enums.ReservationStatus;
 
 import java.time.Month;
 import java.time.Year;
@@ -13,6 +14,6 @@ public interface AbstractHotelRoomService extends AbstractService {
 
     List<HotelRoom> getAllRoomShortDetails();
 
-    HotelRoom getFullDetailsWithMonthReservationsDetails(int ID, Month month, Year year);
+    HotelRoom getFullDetailsWithMonthReservationsDetails(int ID, Month month, Year year, ReservationStatus status);
 
 }

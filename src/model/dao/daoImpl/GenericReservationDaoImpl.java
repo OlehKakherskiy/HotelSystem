@@ -3,12 +3,15 @@ package model.dao.daoImpl;
 import model.dao.GenericReservationDao;
 import model.entity.Reservation;
 import model.entity.enums.ReservationStatus;
+import model.entity.roomParameter.ParameterValue;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -16,22 +19,28 @@ import java.util.List;
 public class GenericReservationDaoImpl extends GenericReservationDao {
 
     private static final String shortInfoAboutAllForUser = "SELECT ID, date_request, id_Reservation_Status " +
-                    "FROM Reservation WHERE id_User = ?";
+            "FROM Reservation WHERE id_User = ?";
 
     private static final String shortInfoAboutAllForUserFilteringByStatus = "SELECT ID, date_request, id_Reservation_Status " +
-                    "FROM Reservation WHERE id_User=? AND id_Reservation_Status=?";
+            "FROM Reservation WHERE id_User=? AND id_Reservation_Status=?";
 
-    private static final String shortInfoAboutAllFilteringByStatusAndDate ="SELECT ID, date_request, id_Reservation_Status" +
-                    "FROM Reservation WHERE id_User = ? AND id_Reservation_Status=?"; //TODO:
+    private static final String shortInfoAboutAllFilteringByStatusAndDate = "SELECT ID, date_request, id_Reservation_Status " +
+            "FROM Reservation WHERE id_Reservation_Status=? AND ((date_from >= STR_TO_DATE(?,'%Y-%m-%d') AND date_from <= STR_TO_DATE(?,'%Y-%m-%d')) " +
+            "OR (date_to >= STR_TO_DATE(?,'%Y-%m-%d') AND date_to <= STR_TO_DATE(?,'%Y-%m-%d')))";
 
     private static final String fullInfoRequest = "SELECT ID, date_request, id_Reservation_Status, date_from, date_to, id_User, comment, id_Hotel_Room FROM " +
-                    "FROM Reservation WHERE ID = ?";
+            "FROM Reservation WHERE ID = ?";
+
+    private static final String reservationRequestsIds = "SELECT id_parameter_values " +
+            "from Request_Parameters WHERE id_reservation_request = ?";
 
     private static final String insertNewReservation = "INSERT INTO Reservation" +
             "(date_from, date_to, id_User, date_request, comment, id_Hotel_Room, id_reservation_status)" +
             "VALUES" +
             "(?,?,?,?,?,?,?)";
 
+    private static final String insertRequestParameters = "INSERT INTO Request_Parameters " +
+            "(id_reservation_request, id_Parameter_Values) VALUES ";
 
 
     private DataSource dataSource;
@@ -54,6 +63,18 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
                 reservation.setComment(resultSet.getString(7));
                 reservation.setHotelRoomID(resultSet.getInt(8));
             }
+            if (reservation == null)
+                throw new RuntimeException(); //TODO:!!!!
+
+
+            PreparedStatement statement = connection.prepareStatement(reservationRequestsIds);
+            statement.setInt(1, reservation.getId());
+            ResultSet set = statement.getResultSet();
+            List<Integer> requestIds = new ArrayList<>();
+            while (set.next()) {
+                requestIds.add(set.getInt(1));
+            }
+            reservation.setRequestParametersIds(requestIds);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,7 +85,6 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
     public Integer save(Reservation object) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS);
-//            preparedStatement.setInt(1, object.getId());
             preparedStatement.setString(1, object.getDateFrom().toString());
             preparedStatement.setString(2, object.getDateTo().toString());
             preparedStatement.setInt(3, object.getUserID());
@@ -75,6 +95,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 
+            saveRequestParams(connection, object);
             return generatedKeys.next() ? generatedKeys.getInt(1) : -1;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,12 +103,30 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         return -1;
     }
 
+    private int saveRequestParams(Connection connection, Reservation reservation) throws SQLException {
+        String template = "(?," + reservation.getId() + ")";
+        StringJoiner joiner = new StringJoiner(",", insertRequestParameters, "");
+        for (int i = 0; i < reservation.getRequestParameters().size(); i++) {
+            joiner.add(template);
+        }
+        PreparedStatement preparedStatement = connection.prepareStatement(joiner.toString());
+
+        int rowCount = 0;
+        for (ParameterValue pv : reservation.getRequestParameters()) {
+            preparedStatement.setInt(rowCount++, pv.getId());
+        }
+
+        int insertedRows = preparedStatement.executeUpdate();
+        return insertedRows; //TODO: exception if caused!!! TRANSACTION!!!!!!!!
+    }
+
     @Override
     public boolean update(Reservation object) {
-        String query = "Update Reservation";//TODO:
+        String query = "Update Reservation SET id_Hotel_Room = ?, id_Reservation_Status = ? WHERE ID = " + object.getId();
         boolean wasUpdate = false;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(object.getHotelRoom().getRoomID(), object.getStatus().getId());
             wasUpdate = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,7 +142,21 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
     @Override
     public List<Reservation> getAllReservationsShortInfoInPeriod(ReservationStatus status, LocalDate startDate, LocalDate endDate) {
-        return null;//TODO!!!!!
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(shortInfoAboutAllFilteringByStatusAndDate);
+            String startDateStr = startDate.toString();
+            String endDateStr = endDate.toString();
+            preparedStatement.setInt(1, status.getId());
+            preparedStatement.setString(2, startDateStr);
+            preparedStatement.setString(3, endDateStr);
+            preparedStatement.setString(4, startDateStr);
+            preparedStatement.setString(5, endDateStr);
+            ResultSet res = preparedStatement.executeQuery();
+            return buildReservationList(res); //TODO: exception handling.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 
 

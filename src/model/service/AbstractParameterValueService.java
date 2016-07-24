@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public interface AbstractParameterValueService {
 
-    List<ParameterValue> getAllParams(int... ids);
+    List<ParameterValue> getAllParams(List<Integer> ids);
 
     Map<Parameter, List<Value>> getParameterValueMap();
 }
