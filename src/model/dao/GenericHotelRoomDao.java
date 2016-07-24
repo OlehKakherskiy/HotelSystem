@@ -9,10 +9,6 @@ import java.util.List;
  */
 public abstract class GenericHotelRoomDao extends TransparentGenericDao<HotelRoom, Integer> {
 
-    public abstract HotelRoom getShortDetails(int id);
-
-    public abstract double getRoomPrice(int id);
-
     public abstract List<HotelRoom> getAllShortDetails();
 
 //    List<HotelRoom> findMatches(List<>)

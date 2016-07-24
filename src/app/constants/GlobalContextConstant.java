@@ -23,7 +23,11 @@ public enum GlobalContextConstant {
 
     RESERVATION_ID("reservationID"),
 
-    CURRENT_RESERVATION("currentReservation");
+    CURRENT_RESERVATION("currentReservation"),
+
+    PARAMETER_VALUE_LIST("parameterValueList"),
+
+    PARAMETER_VALUE_MAP("parameterValueMap");
 
     private String name;
 
