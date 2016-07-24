@@ -14,8 +14,9 @@ public class UserService implements AbstractUserService {
 
     private GenericMobilePhoneDao mobilePhoneDao;
 
-    public UserService(GenericUserDao userDao) {
+    public UserService(GenericUserDao userDao, GenericMobilePhoneDao mobilePhoneDao) {
         this.userDao = userDao;
+        this.mobilePhoneDao = mobilePhoneDao;
     }
 
     @Override
@@ -31,6 +32,9 @@ public class UserService implements AbstractUserService {
     @Override
     public User getSimpleUserInfo(int ID) {
         User user = userDao.read(ID);
+        if(user == null){
+            throw new RuntimeException();
+        }
         user.setMobilePhoneList(mobilePhoneDao.getAll(user.getIdUser()));
         return user;
     }

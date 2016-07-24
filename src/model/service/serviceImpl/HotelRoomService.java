@@ -4,6 +4,7 @@ import model.dao.GenericHotelRoomDao;
 import model.dao.GenericReservationDao;
 import model.entity.HotelRoom;
 import model.entity.Reservation;
+import model.entity.enums.ReservationStatus;
 import model.service.AbstractHotelRoomService;
 
 import java.time.LocalDate;
@@ -46,8 +47,8 @@ public class HotelRoomService implements AbstractHotelRoomService {
 
     private List<Reservation> getSubmittedReservations(LocalDate startDate, LocalDate endDate,
                                                        GenericReservationDao reservationDao, int roomID) {
-        return reservationDao.getAllRoomSubmittedReservationsInPeriod
-                (roomID, startDate, endDate);
+        return reservationDao.getAllRoomReservationsInPeriod
+                (roomID, ReservationStatus.SUBMITTED, startDate, endDate);
     }
 
 }

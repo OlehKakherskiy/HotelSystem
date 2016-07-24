@@ -32,31 +32,33 @@ public class GenericUserDaoImpl extends GenericUserDao {
 
     @Override
     public User read(Integer id) {
+        User user = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(getUserFromID)) {
 
             statement.setInt(1, id);
 
-            return buildUserObject(statement.executeQuery());
+            user = buildUserObject(statement.executeQuery());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return user;
     }
 
     @Override
     public User tryLogin(String login, String password) {
+        User result = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(getUserFromLoginAndPassword)) {
 
             statement.setString(1, login);
             statement.setString(2, password);
 
-            return buildUserObject(statement.executeQuery());
+            result = buildUserObject(statement.executeQuery());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
     private User buildUserObject(ResultSet resultSet) throws SQLException {

@@ -1,5 +1,7 @@
 package model.entity;
 
+import model.entity.roomParameter.ParameterValue;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +17,8 @@ public class HotelRoom implements Serializable {
     private boolean isActiveStatus;
 
     private List<Reservation> reservationList;
+
+    private List<ParameterValue> parameters;
 
     public int getRoomID() {
         return roomID;
@@ -46,5 +50,13 @@ public class HotelRoom implements Serializable {
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
+    }
+
+    public List<ParameterValue> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<ParameterValue> parameters) {
+        this.parameters = parameters;
     }
 }

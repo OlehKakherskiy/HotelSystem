@@ -1,9 +1,11 @@
 package model.entity;
 
 import model.entity.enums.ReservationStatus;
+import model.entity.roomParameter.ParameterValue;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -31,6 +33,8 @@ public class Reservation implements Serializable {
 
     //TODO: промежуточное состояние
     private int userID;
+
+    private List<ParameterValue> requestParameters;
 
     public int getId() {
         return id;
@@ -110,5 +114,13 @@ public class Reservation implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public List<ParameterValue> getRequestParameters() {
+        return requestParameters;
+    }
+
+    public void setRequestParameters(List<ParameterValue> requestParameters) {
+        this.requestParameters = requestParameters;
     }
 }
