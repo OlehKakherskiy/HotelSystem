@@ -16,13 +16,13 @@ import java.util.List;
 public class GenericReservationDaoImpl extends GenericReservationDao {
 
 
-    private static final String shortInfoAboutAll =
-            "SELECT ID, date_from, date_to, date_request, id_Reservation_Status, id_Hotel_Room, id_User" +
+    private static final String mainInfoAboutAll =
+            "SELECT ID, date_request, id_Reservation_Status" +
                     "FROM Reservation " +
                     "WHERE id_User = ?";
 
     private static final String shortInfoAboutAllFilteringByStatus =
-            shortInfoAboutAll + " AND id_Reservation_status = ?";
+            mainInfoAboutAll + " AND id_Reservation_status = ?";
 
 
     private static final String changeSubmittedOrRefusedStatus =
@@ -32,13 +32,45 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
     private static final String changeAnsweredOrProcessingStatus =
             changeSubmittedOrRefusedStatus + ",id_Hotel_Room=?";
 
+    private static final String fullInfoRequest =
+            "SELECT ID, date_request, id_Reservation_Status, date_from, date_to, id_User, comment, id_Hotel_Room FROM " +
+                    "FROM Reservation WHERE ID = ?";
+
+    private static final String insertNewReservation = "INSERT INTO Reservation" +
+            "(date_from, date_to, id_User, date_request, comment, id_Hotel_Room, id_reservation_status)" +
+            "VALUES" +
+            "(?,?,?,?,?,?,?)";
+
 
     private DataSource dataSource;
 
 
     @Override
     public Reservation read(Integer id) {
-        return super.read(id); //TODO:!!!!реализация
+        Reservation reservation = null;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(fullInfoRequest);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                reservation = new Reservation();
+                appendMainInfoToReservation(reservation, resultSet);
+                reservation.setDateFrom(LocalDate.parse(resultSet.getString(4)));
+                reservation.setDateTo(LocalDate.parse(resultSet.getString(5)));
+                reservation.setUserID(resultSet.getInt(6));
+                reservation.setComment(resultSet.getString(7));
+                reservation.setHotelRoomID(resultSet.getInt(8));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reservation;
+    }
+
+    @Override
+    public List<Reservation> getAllRoomSubmittedReservationsInPeriod(int roomID, LocalDate startDate, LocalDate endDate) {
+        return null;
     }
 
     @Override
@@ -55,7 +87,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
     }
 
     private List<Reservation> getAllReservations(int userId, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(shortInfoAboutAll);
+        PreparedStatement preparedStatement = connection.prepareStatement(mainInfoAboutAll);
         preparedStatement.setInt(1, userId);
         return buildReservationList(preparedStatement.executeQuery());
     }
@@ -71,61 +103,39 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         List<Reservation> reservationList = new ArrayList<>();
 
         while (resultSet.next()) {
-            Reservation reservation = new Reservation();
-            reservation.setId(resultSet.getInt(1));
-            reservation.setDateFrom(LocalDate.parse(resultSet.getString(2)));
-            reservation.setDateTo(LocalDate.parse(resultSet.getString(3)));
-            reservation.setDateFrom(LocalDate.parse(resultSet.getString(4)));
-            reservation.setStatus(ReservationStatus.fromId(resultSet.getInt(5)));
-            reservation.setHotelRoomID(resultSet.getInt(6));
-            reservation.setUserID(resultSet.getInt(7));
-            reservationList.add(reservation);
+            reservationList.add(appendMainInfoToReservation(new Reservation(), resultSet));
         }
         return reservationList;
     }
 
+    private Reservation appendMainInfoToReservation(Reservation reservation, ResultSet resultSet) throws SQLException {
+        reservation.setId(resultSet.getInt(1));
+        reservation.setRequestDate(LocalDate.parse(resultSet.getString(2)));
+        reservation.setStatus(ReservationStatus.fromId(resultSet.getInt(3)));
+        return reservation;
+    }
+
     @Override
-    public void changeReservationStatus(Reservation reservation) { //TODO: для уменьшения размера кода просто update делать и всё
+    public Integer save(Reservation object) {
         try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS);
+//            preparedStatement.setInt(1, object.getId());
+            preparedStatement.setString(1, object.getDateFrom().toString());
+            preparedStatement.setString(2, object.getDateTo().toString());
+            preparedStatement.setInt(3, object.getUserID());
+            preparedStatement.setString(4, object.getRequestDate().toString());
+            preparedStatement.setString(5, object.getComment());
+            preparedStatement.setInt(6, object.getHotelRoomID());
+            preparedStatement.setInt(7, object.getStatus().getId());
+            preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 
-            ReservationStatus newStatus = reservation.getStatus();
-            PreparedStatement preparedStatement =
-                    (newStatus == ReservationStatus.ANSWERED || newStatus == ReservationStatus.PROCESSING)
-                    ? updateProcessingOrAnsweredReservationStatus(reservation, connection)
-                    : updateSubmittedOrRefusedReservationStatus(reservation, connection);
-
-            int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated < 1) {
-                throw new RuntimeException(); //TODO: не было обновления - ошибка!!
-            }
+            return generatedKeys.next() ? generatedKeys.getInt(1) : -1;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
-
-    @Override
-    public Reservation save(Reservation object) {
-        return super.save(object);
-    }
-
-
-    private PreparedStatement updateProcessingOrAnsweredReservationStatus(Reservation reservation, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(changeAnsweredOrProcessingStatus);
-        preparedStatement.setInt(1, reservation.getStatus().getId());
-        if (reservation.getHotelRoom() == null) {
-            preparedStatement.setNull(2, Types.INTEGER);
-        } else {
-            preparedStatement.setInt(2, reservation.getHotelRoom().getRoomID());
-        }
-        return preparedStatement;
-    }
-
-    private PreparedStatement updateSubmittedOrRefusedReservationStatus(Reservation reservation, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(changeSubmittedOrRefusedStatus);
-        preparedStatement.setInt(1, reservation.getStatus().getId());
-        return preparedStatement;
-    }
-
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;

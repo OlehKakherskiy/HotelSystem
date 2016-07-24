@@ -1,5 +1,6 @@
 package model.entity.enums;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 /**
@@ -20,6 +21,7 @@ public enum UserType {
     public int getID() {
         return ID;
     }
+
 
     public static UserType fromID(int ID) {
         return Arrays.asList(UserType.values()).stream().

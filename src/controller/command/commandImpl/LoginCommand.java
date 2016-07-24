@@ -1,8 +1,14 @@
 package controller.command.commandImpl;
 
+import app.GlobalContext;
+import app.constants.CommandConstant;
 import app.constants.GlobalContextConstant;
+import app.constants.WebPageConstant;
+import controller.GenericCommandManager;
 import controller.manager.GenericCommand;
 import model.entity.User;
+import model.entity.enums.ReservationStatus;
+import model.entity.enums.UserType;
 import model.service.AbstractUserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,19 +23,21 @@ public class LoginCommand extends GenericCommand {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
 
-        AbstractUserService userService = serviceManager.getService(AbstractUserService.class);
+        AbstractUserService userService = serviceManager.getObject(AbstractUserService.class);
 
         String login = request.getParameter(GlobalContextConstant.LOGIN.getName());
         String password = request.getParameter(GlobalContextConstant.PASSWORD.getName());
 
         User user = userService.login(login, password);
-        if (user == null) {
-            //TODO: invalid login or password
-        } else {
-            HttpSession httpSession = request.getSession(true);
-            httpSession.setAttribute(GlobalContextConstant.USER.getName(), user);
-            //TODO: переходы на страницы и добавление инфы
-        }
-        return "WEB-INF/index.jsp";
+        HttpSession httpSession = request.getSession(true);
+        httpSession.setAttribute(GlobalContextConstant.USER.getName(), user);
+        request.setAttribute("reservationStatus",
+                UserType.fromID(user.getIdUser()) == UserType.ADMIN
+                        ? ReservationStatus.PROCESSING.getId()
+                        : ReservationStatus.ALL.getId());
+
+        ((GenericCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
+                .getObject(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
+        return WebPageConstant.HOTEL_ROOM_LIST.getPath();
     }
 }

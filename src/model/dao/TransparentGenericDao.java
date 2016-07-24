@@ -14,7 +14,7 @@ public abstract class TransparentGenericDao<T, K> implements GenericDao<T, K> {
     }
 
     @Override
-    public T save(T object) {
+    public K save(T object) {
         unsupportedException();
         return null;
     }
@@ -29,12 +29,6 @@ public abstract class TransparentGenericDao<T, K> implements GenericDao<T, K> {
     public boolean update(T object) {
         unsupportedException();
         return false;
-    }
-
-    @Override
-    public List<T> getAll() {
-        unsupportedException();
-        return null;
     }
 
     private void unsupportedException() {

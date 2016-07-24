@@ -11,7 +11,6 @@ import java.util.List;
 public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
 
 
-
     @Override
     public HotelRoom getShortDetails(int id) {
         return null;

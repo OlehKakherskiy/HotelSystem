@@ -9,13 +9,11 @@ public enum ReservationStatus {
 
     PROCESSING(1),
 
-    CANCELLED(2),
+    ANSWERED(2),
 
-    ANSWERED(3),
+    REFUSED(3),
 
-    REFUSED(4),
-
-    SUBMITTED(5),
+    SUBMITTED(4),
 
     ALL(-1);
 

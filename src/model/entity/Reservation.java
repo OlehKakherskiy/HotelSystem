@@ -24,6 +24,8 @@ public class Reservation implements Serializable {
 
     private User user;
 
+    private String comment;
+
     //TODO: промежуточное состояние
     private int hotelRoomID;
 
@@ -100,5 +102,13 @@ public class Reservation implements Serializable {
 
     public void setUserID(int userID) {
         this.userID = userID;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

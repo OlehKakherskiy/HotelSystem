@@ -60,14 +60,15 @@ public class GenericUserDaoImpl extends GenericUserDao {
     }
 
     private User buildUserObject(ResultSet resultSet) throws SQLException {
-        User user = new User();
+        User user = null;
         while (resultSet.next()) {
+            user = new User();
             user.setIdUser(resultSet.getInt(1));
             user.setName(resultSet.getString(2));
             user.setLastName(resultSet.getString(3));
             user.setUserType(UserType.fromID(resultSet.getInt(4)));
         }
-        return (user.getIdUser() != 0) ? user : null;
+        return user;
     }
 
 }

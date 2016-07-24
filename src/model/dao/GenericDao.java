@@ -9,12 +9,9 @@ public interface GenericDao<T, K> {
 
     T read(K id);
 
-    T save(T object);
+    K save(T object);
 
     boolean delete(K id);
 
     boolean update(T object);
-
-    List<T> getAll();
-
 }

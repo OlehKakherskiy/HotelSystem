@@ -3,6 +3,7 @@ package model.service;
 import model.entity.HotelRoom;
 import model.entity.Reservation;
 import model.entity.User;
+import model.entity.enums.ReservationStatus;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface AbstractReservationService extends AbstractService {
 
-    List<Reservation> getShortInfoAboutAllReservations(User user);
+    List<Reservation> getShortInfoAboutAllReservations(User user, ReservationStatus reservationStatus);
 
     Reservation getReservationDetailInfo(int reservationID, User user);
 
