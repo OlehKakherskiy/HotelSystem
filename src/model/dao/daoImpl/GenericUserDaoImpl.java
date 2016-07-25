@@ -4,7 +4,6 @@ import model.dao.GenericUserDao;
 import model.entity.User;
 import model.entity.enums.UserType;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +26,6 @@ public class GenericUserDaoImpl extends GenericUserDao {
                     "WHERE login=? AND password=?";
 
 
-    @Resource(name = "datasource")
     private DataSource dataSource;
 
     @Override
@@ -73,4 +71,11 @@ public class GenericUserDaoImpl extends GenericUserDao {
         return user;
     }
 
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 }

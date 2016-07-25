@@ -204,4 +204,8 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 }

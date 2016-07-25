@@ -3,7 +3,6 @@ package model.dao.daoImpl;
 import model.dao.GenericMobilePhoneDao;
 import model.entity.MobilePhone;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +23,6 @@ public class GenericMobilePhoneDaoImpl extends GenericMobilePhoneDao {
                     "WHERE id_User=?";
 
 
-    @Resource(name = "datasource")
     private DataSource dataSource;
 
     @Override
@@ -60,4 +58,11 @@ public class GenericMobilePhoneDaoImpl extends GenericMobilePhoneDao {
         return mobilePhone;
     }
 
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 }
