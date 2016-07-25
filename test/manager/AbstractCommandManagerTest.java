@@ -7,7 +7,6 @@ import controller.command.commandImpl.GetReservationListCommand;
 import controller.command.commandImpl.LogoutCommand;
 import controller.command.commandImpl.RefuseHotelRoomOfferCommand;
 import manager.managerImpl.CommandManagerImpl;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,7 +26,6 @@ public class AbstractCommandManagerTest {
 
     @BeforeClass
     public static void init() {
-
         map = new HashMap<>();
         map.put(CommandConstant.LOGOUT_COMMAND, LogoutCommand.class);
         map.put(CommandConstant.REFUSE_HOTEL_ROOM_OFFER_COMMAND, RefuseHotelRoomOfferCommand.class);
@@ -35,14 +33,6 @@ public class AbstractCommandManagerTest {
         map.put(CommandConstant.FILL_NEW_RESERVATION_COMMAND, FillNewReservationCommand.class);
 
         commandManager = new CommandManagerImpl(map);
-    }
-
-    @Test
-    public void testGetInstance() throws Exception {
-        for (Map.Entry<CommandConstant, Class<? extends AbstractCommand>> entry : map.entrySet()) {
-            System.out.println(entry.getKey());
-            Assert.assertEquals(entry.getValue(), commandManager.getInstance(entry.getKey()).getClass());
-        }
     }
 
     @Test(expected = model.exceptions.SystemException.class)

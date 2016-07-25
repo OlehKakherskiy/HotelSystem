@@ -22,6 +22,9 @@ public abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E
     @SuppressWarnings(value = "unchecked")
     public <V extends E> V getInstance(K key) {
         try {
+            if (key == null) {
+                throw new ManagerConfigException(String.format("The key param in method createAndCache of manager %s is null", this.getClass()));
+            }
             return (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
         } catch (RuntimeException | ManagerConfigException e) {
             throw new SystemException(e.getMessage(), e); //TODO: системная ошибка просто описание
@@ -33,7 +36,7 @@ public abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E
         V result = null;
         T intermediateTemplateElement = keyObjectTemplateMap.get(key);
         if (intermediateTemplateElement == null) {
-            throw new ManagerConfigException("There is no template element in template map with the key: " + key);
+            throw new ManagerConfigException(String.format("There is no template element in template map with the key: %s in manager %s", key, this.getClass().getName()));
         }
         result = getObjectHook(intermediateTemplateElement);
         cache.put(key, result);

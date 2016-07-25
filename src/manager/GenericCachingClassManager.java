@@ -19,4 +19,5 @@ public abstract class GenericCachingClassManager<K, E> extends GenericCachingMan
     }
 
     protected abstract <V extends E> V instantiate(Class<V> fromClass) throws ManagerConfigException;
+
 }

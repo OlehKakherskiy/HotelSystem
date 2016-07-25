@@ -13,6 +13,8 @@ public enum GlobalContextConstant {
 
     COMMAND_FACTORY("commandFactory"),
 
+    DATA_SOURCE("dataSource"),
+
     COMMAND_NAME("commandName"),
 
     USER("user"),
