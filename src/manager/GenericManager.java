@@ -1,4 +1,4 @@
-package model.manager;
+package manager;
 
 import java.util.Map;
 
@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public abstract class GenericManager<K, E> {
 
-    Map<K, Class<? extends E>> keyObjectTemplateMap;
+    protected Map<K, Class<? extends E>> keyObjectTemplateMap;
 
     public GenericManager(Map<K, Class<? extends E>> keyObjectTemplateMap) {
         this.keyObjectTemplateMap = keyObjectTemplateMap;

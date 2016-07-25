@@ -1,9 +1,9 @@
-package controller.commandManager.managerImpl;
+package manager.managerImpl;
 
 import app.constants.CommandConstant;
-import controller.commandManager.GenericCommandManager;
+import manager.AbstractCommandManager;
 import controller.command.commandImpl.*;
-import controller.command.GenericCommand;
+import controller.command.AbstractCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +11,13 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class StubCommandFactory extends GenericCommandManager {
+public class StubCommandFactory extends AbstractCommandManager {
 
-    Map<CommandConstant, GenericCommand> commandMap;
+    Map<CommandConstant, AbstractCommand> commandMap;
 
     public StubCommandFactory() {
         super(null);
-        commandMap = new HashMap<CommandConstant, GenericCommand>() {{
+        commandMap = new HashMap<CommandConstant, AbstractCommand>() {{
             put(CommandConstant.LOGIN_COMMAND, new LoginCommand());
             put(CommandConstant.FILL_NEW_RESERVATION_COMMAND, new FillNewReservationCommand());
             put(CommandConstant.GET_RESERVATION_FULL_INFO_COMMAND, new GetReservationFullInfoCommand());
@@ -29,12 +29,12 @@ public class StubCommandFactory extends GenericCommandManager {
     }
 
     @Override
-    public <V extends GenericCommand> V getInstance(CommandConstant key) {
+    public <V extends AbstractCommand> V getInstance(CommandConstant key) {
         return (V) commandMap.get(key);
     }
 
     @Override
-    protected <V extends GenericCommand> V getObjectHook(Class<V> objectClass) throws IllegalAccessException, InstantiationException {
+    protected <V extends AbstractCommand> V getObjectHook(Class<V> objectClass){
         return null;
     }
 }

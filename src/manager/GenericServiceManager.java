@@ -1,6 +1,5 @@
-package model.service.manager;
+package manager;
 
-import model.manager.GenericCachingManager;
 import model.service.AbstractService;
 
 import java.util.Map;

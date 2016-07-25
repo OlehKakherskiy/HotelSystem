@@ -1,10 +1,10 @@
-package model.service.manager.managerImpl;
+package manager.managerImpl;
 
 import model.dao.GenericDao;
-import model.dao.manager.DaoManager;
+import manager.DaoManager;
 import model.exceptions.ManagerConfigException;
 import model.service.AbstractService;
-import model.service.manager.GenericServiceManager;
+import manager.GenericServiceManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -29,17 +29,20 @@ public class ServiceManagerImpl extends GenericServiceManager {
     }
 
     @Override
-    protected <V extends AbstractService> V getObjectHook(Class<V> objectClass) throws IllegalAccessException, InstantiationException, InvocationTargetException, ManagerConfigException {
+    protected <V extends AbstractService> V getObjectHook(Class<V> objectClass) throws ManagerConfigException {
         Constructor<V> constructor = (Constructor<V>) objectClass.getConstructors()[0];
         List<Object> preparedParams = new ArrayList<>(constructor.getParameterCount());
         V result = null;
-        preparedParams.addAll(Arrays.asList(constructor.getParameters())
-                .stream()
-                .map(Parameter::getType)
-                .map(this::createNewParameterInstance)
-                .collect(Collectors.toList()));
-
-        result = newInstance(constructor, preparedParams);
+        List<Class> types = Arrays.asList(constructor.getParameters()).stream().map(Parameter::getType).collect(Collectors.toList());
+        for(Class type: types){
+            preparedParams.add(createNewParameterInstance(type));
+        }
+        try {
+            result = newInstance(constructor, preparedParams);
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            throw new ManagerConfigException(String.format("Exception caused while instantiating service of type %s with params:%s",
+                    objectClass.getName(), Arrays.toString(preparedParams.toArray())));
+        }
         return result;
     }
 

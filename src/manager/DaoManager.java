@@ -1,7 +1,6 @@
-package model.dao.manager;
+package manager;
 
 import model.dao.GenericDao;
-import model.manager.GenericCachingManager;
 
 import java.util.Map;
 
