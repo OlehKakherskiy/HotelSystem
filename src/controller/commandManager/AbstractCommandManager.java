@@ -9,9 +9,9 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public abstract class GenericCommandManager extends GenericCachingManager<CommandConstant, GenericCommand> {
+public abstract class AbstractCommandManager extends GenericCachingManager<CommandConstant, GenericCommand> {
 
-    public GenericCommandManager(Map<CommandConstant, Class<? extends GenericCommand>> keyObjectTemplateMap) {
+    public AbstractCommandManager(Map<CommandConstant, Class<? extends GenericCommand>> keyObjectTemplateMap) {
         super(keyObjectTemplateMap);
     }
 

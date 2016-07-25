@@ -17,7 +17,7 @@
 
     <servlet-mapping>
         <servlet-name>universalServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
 

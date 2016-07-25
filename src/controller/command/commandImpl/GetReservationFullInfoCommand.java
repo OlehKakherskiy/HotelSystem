@@ -1,7 +1,7 @@
 package controller.command.commandImpl;
 
 import app.constants.GlobalContextConstant;
-import controller.command.GenericCommand;
+import controller.command.AbstractCommand;
 import model.entity.Reservation;
 import model.entity.User;
 import model.service.AbstractReservationService;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class GetReservationFullInfoCommand extends GenericCommand {
+public class GetReservationFullInfoCommand extends AbstractCommand {
 
 
     @Override
