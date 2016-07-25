@@ -16,12 +16,7 @@ public class DaoManagerImpl extends DaoManager {
     }
 
     @Override
-    protected <V extends GenericDao> V getObjectHook(Class<V> objectClass) {
-        try {
-            return objectClass.newInstance(); //TODO: exception handling
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+    protected <V extends GenericDao> V getObjectHook(Class<V> objectClass) throws InstantiationException, IllegalAccessException {
+        return objectClass.newInstance();
     }
 }

@@ -1,9 +1,9 @@
-package controller.manager.managerImpl;
+package controller.commandManager.managerImpl;
 
 import app.constants.CommandConstant;
-import controller.GenericCommandManager;
+import controller.commandManager.GenericCommandManager;
 import controller.command.commandImpl.*;
-import controller.manager.GenericCommand;
+import controller.command.GenericCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class StubCommandFactory extends GenericCommandManager {
     }
 
     @Override
-    public <V extends GenericCommand> V getObject(CommandConstant key) {
+    public <V extends GenericCommand> V getInstance(CommandConstant key) {
         return (V) commandMap.get(key);
     }
 

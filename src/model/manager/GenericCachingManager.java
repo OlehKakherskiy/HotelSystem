@@ -1,5 +1,8 @@
 package model.manager;
 
+import model.exceptions.ManagerConfigException;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -15,22 +18,28 @@ public abstract class GenericCachingManager<K, E> extends GenericManager<K, E> {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public <V extends E> V getObject(K key) {
+    public <V extends E> V getInstance(K key) {
         return (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
     }
 
+    @SuppressWarnings("unchecked")
     private <V extends E> V createAndCache(K key) {
+        V result = null;
         try {
             Class<? extends E> resultClass = keyObjectTemplateMap.get(key);
-            V result = null;
             result = getObjectHook((Class<V>) resultClass);
             cache.put(key, result);
-            return result;
+
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (ManagerConfigException e1) {
+            e1.printStackTrace();
         }
-        return null;
+        return result;
     }
 
-    protected abstract <V extends E> V getObjectHook(Class<V> objectClass) throws IllegalAccessException, InstantiationException;
+    protected abstract <V extends E> V getObjectHook(Class<V> objectClass) throws IllegalAccessException, InstantiationException,
+            InvocationTargetException, ManagerConfigException;
 }

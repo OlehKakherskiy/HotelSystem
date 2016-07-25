@@ -1,7 +1,7 @@
 package controller.command.commandImpl;
 
 import app.constants.GlobalContextConstant;
-import controller.manager.GenericCommand;
+import controller.command.GenericCommand;
 import model.entity.Reservation;
 import model.entity.User;
 import model.service.AbstractReservationService;
@@ -19,7 +19,7 @@ public class RefuseHotelRoomOfferCommand extends GenericCommand {
         User user = (User) request.getSession(false).getAttribute(GlobalContextConstant.USER.getName());
         Reservation reservation = (Reservation) request.getSession(false)
                 .getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
-        AbstractReservationService abstractReservationService = serviceManager.getService(AbstractReservationService.class);
+        AbstractReservationService abstractReservationService = serviceManager.getInstance(AbstractReservationService.class);
         abstractReservationService.setStatusToRefused(reservation);
 
         return null;

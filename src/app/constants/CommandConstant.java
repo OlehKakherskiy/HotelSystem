@@ -7,19 +7,19 @@ import java.util.Arrays;
  */
 public enum CommandConstant {
 
-    LOGIN_COMMAND("login"),
+    LOGIN_COMMAND("loginCommand"),
 
-    GET_RESERVATION_LIST_COMMAND("getReservationList"),
+    GET_RESERVATION_LIST_COMMAND("getReservationListCommand"),
 
-    LOGOUT_COMMAND("logout"),
+    LOGOUT_COMMAND("logoutCommand"),
 
-    GET_RESERVATION_FULL_INFO_COMMAND("getReservationFullInfo"),
+    GET_RESERVATION_FULL_INFO_COMMAND("getReservationFullInfoCommand"),
 
-    FILL_NEW_RESERVATION_COMMAND("fillNewReservation"),
+    FILL_NEW_RESERVATION_COMMAND("fillNewReservationCommand"),
 
-    REFUSE_HOTEL_ROOM_OFFER_COMMAND("refuseHotelRoomOffer"),
+    REFUSE_HOTEL_ROOM_OFFER_COMMAND("refuseHotelRoomOfferCommand"),
 
-    SUBMIT_HOTEL_ROOM_OFFER_COMMAND("submitHotelRoomOffer");
+    SUBMIT_HOTEL_ROOM_OFFER_COMMAND("submitHotelRoomOfferCommand");
 
     private String commandName;
 

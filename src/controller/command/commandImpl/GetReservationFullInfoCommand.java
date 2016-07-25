@@ -1,7 +1,7 @@
 package controller.command.commandImpl;
 
 import app.constants.GlobalContextConstant;
-import controller.manager.GenericCommand;
+import controller.command.GenericCommand;
 import model.entity.Reservation;
 import model.entity.User;
 import model.service.AbstractReservationService;
@@ -20,7 +20,7 @@ public class GetReservationFullInfoCommand extends GenericCommand {
 
         Reservation currentReservation = (Reservation) request.getSession(false)
                 .getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
-        AbstractReservationService reservationService = serviceManager.getObject(AbstractReservationService.class);
+        AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
 
         User user = (User) request.getSession(false).getAttribute(GlobalContextConstant.USER.getName());
         currentReservation = reservationService.getReservationDetailInfo(currentReservation.getId(), user);

@@ -2,7 +2,7 @@ package controller.command.commandImpl;
 
 import app.constants.GlobalContextConstant;
 import app.constants.WebPageConstant;
-import controller.manager.GenericCommand;
+import controller.command.GenericCommand;
 import model.entity.Reservation;
 import model.service.AbstractReservationService;
 
@@ -18,7 +18,7 @@ public class SubmitHotelRoomOfferCommand extends GenericCommand {
     public String process(HttpServletRequest request, HttpServletResponse response) {
         Reservation reservation = (Reservation) request.getSession(false)
                 .getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
-        AbstractReservationService reservationService = serviceManager.getService(AbstractReservationService.class);
+        AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
         reservationService.setStatusToSubmitted(reservation);
         //TODO: redirect
         return WebPageConstant.INDEX.getPath();

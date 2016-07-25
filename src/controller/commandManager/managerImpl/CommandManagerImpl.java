@@ -1,10 +1,10 @@
-package controller.manager.managerImpl;
+package controller.commandManager.managerImpl;
 
 import app.GlobalContext;
 import app.constants.CommandConstant;
 import app.constants.GlobalContextConstant;
-import controller.GenericCommandManager;
-import controller.manager.GenericCommand;
+import controller.commandManager.GenericCommandManager;
+import controller.command.GenericCommand;
 import model.service.manager.GenericServiceManager;
 
 import java.util.Map;

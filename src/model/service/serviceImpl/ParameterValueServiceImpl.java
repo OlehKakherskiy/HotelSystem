@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class AbstractParameterValueServiceImpl implements AbstractParameterValueService {
+public class ParameterValueServiceImpl implements AbstractParameterValueService {
 
     private GenericParameterValueDao parameterValueDao;
 
-    public AbstractParameterValueServiceImpl(GenericParameterValueDao parameterValueDao) {
+    public ParameterValueServiceImpl(GenericParameterValueDao parameterValueDao) {
         this.parameterValueDao = parameterValueDao;
     }
 

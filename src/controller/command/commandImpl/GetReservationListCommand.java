@@ -2,7 +2,7 @@ package controller.command.commandImpl;
 
 import app.constants.GlobalContextConstant;
 import app.constants.WebPageConstant;
-import controller.manager.GenericCommand;
+import controller.command.GenericCommand;
 import model.entity.Reservation;
 import model.entity.User;
 import model.entity.enums.ReservationStatus;
@@ -23,7 +23,7 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
  */
 public class GetReservationListCommand extends GenericCommand {
 
-    AbstractReservationService reservationService = serviceManager.getObject(AbstractReservationService.class);
+    AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {

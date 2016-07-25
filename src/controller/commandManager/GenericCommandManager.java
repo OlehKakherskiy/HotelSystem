@@ -1,9 +1,8 @@
-package controller;
+package controller.commandManager;
 
 import app.constants.CommandConstant;
-import controller.manager.GenericCommand;
+import controller.command.GenericCommand;
 import model.manager.GenericCachingManager;
-import model.manager.GenericManager;
 
 import java.util.Map;
 

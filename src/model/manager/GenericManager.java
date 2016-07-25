@@ -13,5 +13,5 @@ public abstract class GenericManager<K, E> {
         this.keyObjectTemplateMap = keyObjectTemplateMap;
     }
 
-    public abstract <V extends E> V getObject(K key);
+    public abstract <V extends E> V getInstance(K key);
 }

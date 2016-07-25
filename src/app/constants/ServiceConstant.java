@@ -5,7 +5,13 @@ package app.constants;
  */
 public enum ServiceConstant {
 
-    USER_SERVICE("userService");
+    USER_SERVICE("userService"),
+
+    RESERVATION_SERVICE("reservationService"),
+
+    HOTEL_ROOM_SERVICE("hotelRoomService"),
+
+    PARAMETER_VALUE_SERVICE("parameterValueService");
 
     private String serviceName;
 

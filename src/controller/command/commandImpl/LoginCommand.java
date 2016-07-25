@@ -3,8 +3,8 @@ package controller.command.commandImpl;
 import app.GlobalContext;
 import app.constants.CommandConstant;
 import app.constants.GlobalContextConstant;
-import controller.GenericCommandManager;
-import controller.manager.GenericCommand;
+import controller.commandManager.GenericCommandManager;
+import controller.command.GenericCommand;
 import model.entity.User;
 import model.entity.enums.ReservationStatus;
 import model.entity.enums.UserType;
@@ -23,7 +23,7 @@ public class LoginCommand extends GenericCommand {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
 
-        AbstractUserService userService = serviceManager.getObject(AbstractUserService.class);
+        AbstractUserService userService = serviceManager.getInstance(AbstractUserService.class);
 
         String login = request.getParameter(GlobalContextConstant.LOGIN.getName());
         String password = request.getParameter(GlobalContextConstant.PASSWORD.getName());
@@ -41,7 +41,7 @@ public class LoginCommand extends GenericCommand {
         }
 
         return ((GenericCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
-                .getObject(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
+                .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
 
     }
 }

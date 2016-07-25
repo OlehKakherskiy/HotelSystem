@@ -29,7 +29,6 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
 
     private DataSource dataSource;
 
-
     @Override
     public List<HotelRoom> getAllShortDetails(boolean onlyActive) {
         List<HotelRoom> hotelRooms = new ArrayList<>();

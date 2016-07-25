@@ -1,6 +1,6 @@
 package controller.command.commandImpl;
 
-import controller.manager.GenericCommand;
+import controller.command.GenericCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

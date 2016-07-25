@@ -1,4 +1,4 @@
-package controller.manager;
+package controller.command;
 
 import model.service.manager.GenericServiceManager;
 
