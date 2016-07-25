@@ -27,7 +27,7 @@ public class DataSourceDaoManagerImpl extends DaoManager {
     }
 
     @Override
-    protected <V extends GenericDao> V getObjectHook(Class<V> objectClass) throws ManagerConfigException{
+    protected <V extends GenericDao> V instantiate(Class<V> objectClass) throws ManagerConfigException{
         V result = null;
         try {
             result = objectClass.newInstance();

@@ -6,7 +6,7 @@ import app.constants.GlobalContextConstant;
 import manager.AbstractCommandManager;
 import controller.command.AbstractCommand;
 import model.exceptions.ManagerConfigException;
-import model.service.manager.GenericServiceManager;
+import manager.GenericServiceManager;
 
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class CommandManagerImpl extends AbstractCommandManager {
     }
 
     @Override
-    protected <V extends AbstractCommand> V getObjectHook(Class<V> objectClass) throws ManagerConfigException{
+    protected <V extends AbstractCommand> V instantiate(Class<V> objectClass) throws ManagerConfigException{
         V res = null;
         try {
             res = objectClass.newInstance();

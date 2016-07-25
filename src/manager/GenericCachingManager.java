@@ -9,18 +9,18 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public abstract class GenericCachingManager<K, E> extends GenericManager<K, E> {
+public abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E, T> {
 
     protected Map<K, E> cache;
 
-    public GenericCachingManager(Map<K, Class<? extends E>> keyObjectTemplateMap) {
+    public GenericCachingManager(Map<K, T> keyObjectTemplateMap) {
         super(keyObjectTemplateMap);
         cache = new HashMap<K, E>();
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public <V extends E> V getInstance(K key){
+    public <V extends E> V getInstance(K key) {
         try {
             return (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
         } catch (RuntimeException | ManagerConfigException e) {
@@ -29,17 +29,17 @@ public abstract class GenericCachingManager<K, E> extends GenericManager<K, E> {
     }
 
     @SuppressWarnings("unchecked")
-    private <V extends E> V createAndCache(K key) throws ManagerConfigException{
+    private <V extends E> V createAndCache(K key) throws ManagerConfigException {
         V result = null;
-        Class<? extends E> resultClass = keyObjectTemplateMap.get(key);
-        if(resultClass == null){
-            throw new ManagerConfigException("There is no class in template map with the key: "+key);
+        T intermediateTemplateElement = keyObjectTemplateMap.get(key);
+        if (intermediateTemplateElement == null) {
+            throw new ManagerConfigException("There is no template element in template map with the key: " + key);
         }
-        result = getObjectHook((Class<V>) resultClass);
+        result = getObjectHook(intermediateTemplateElement);
         cache.put(key, result);
 
         return result;
     }
 
-    protected abstract <V extends E> V getObjectHook(Class<V> objectClass) throws ManagerConfigException;
+    protected abstract <V extends E> V getObjectHook(T intermediateTemplateElement) throws ManagerConfigException;
 }

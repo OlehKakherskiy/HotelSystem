@@ -29,7 +29,7 @@ public class ServiceManagerImpl extends GenericServiceManager {
     }
 
     @Override
-    protected <V extends AbstractService> V getObjectHook(Class<V> objectClass) throws ManagerConfigException {
+    protected <V extends AbstractService> V instantiate(Class<V> objectClass) throws ManagerConfigException {
         Constructor<V> constructor = (Constructor<V>) objectClass.getConstructors()[0];
         List<Object> preparedParams = new ArrayList<>(constructor.getParameterCount());
         V result = null;
@@ -64,5 +64,4 @@ public class ServiceManagerImpl extends GenericServiceManager {
     private <V extends GenericDao> V getDaoInstance(Class<V> daoType) {
         return daoManager.getInstance(daoType);
     }
-
 }
