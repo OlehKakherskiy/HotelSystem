@@ -13,6 +13,16 @@ public class Parameter {
 
     private String paramName;
 
+    public Parameter(int id, boolean optional, Value defaultValue, String paramName) {
+        this.id = id;
+        this.optional = optional;
+        this.defaultValue = defaultValue;
+        this.paramName = paramName;
+    }
+
+    public Parameter() {
+    }
+
     public int getId() {
         return id;
     }

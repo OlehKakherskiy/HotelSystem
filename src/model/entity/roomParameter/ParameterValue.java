@@ -13,6 +13,16 @@ public class ParameterValue {
 
     private int price;
 
+    public ParameterValue(int id, Parameter parameter, Value value, int price) {
+        this.id = id;
+        this.parameter = parameter;
+        this.value = value;
+        this.price = price;
+    }
+
+    public ParameterValue() {
+    }
+
     public int getId() {
         return id;
     }

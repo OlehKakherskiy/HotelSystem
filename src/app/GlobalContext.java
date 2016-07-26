@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public final class GlobalContext {
+public class GlobalContext {
 
     private Map<GlobalContextConstant, Object> globalContextMap;
 
@@ -25,6 +25,10 @@ public final class GlobalContext {
 
     public static Object getValue(GlobalContextConstant key) {
         return globalContext.globalContextMap.get(key);
+    }
+
+    public static void removeValue(GlobalContextConstant key) {
+        globalContext.globalContextMap.remove(key);
     }
 
 }

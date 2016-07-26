@@ -4,7 +4,7 @@ import com.mysql.fabric.jdbc.FabricMySQLDataSource;
 import manager.managerImpl.DataSourceDaoManagerImpl;
 import model.dao.GenericDao;
 import model.dao.TransparentGenericDao;
-import model.exceptions.SystemException;
+import model.exception.SystemException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

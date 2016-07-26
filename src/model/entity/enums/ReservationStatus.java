@@ -28,6 +28,6 @@ public enum ReservationStatus {
     }
 
     public static ReservationStatus fromId(int id) {
-        return Arrays.asList(ReservationStatus.values()).stream().filter(status -> status.getId() == id).findFirst().get();
+        return Arrays.asList(ReservationStatus.values()).stream().filter(status -> status.getId() == id).findFirst().orElse(ALL);//TODO: если нету id, то возвращаем все
     }
 }

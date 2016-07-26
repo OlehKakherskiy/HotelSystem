@@ -29,7 +29,9 @@ public enum GlobalContextConstant {
 
     PARAMETER_VALUE_LIST("parameterValueList"),
 
-    PARAMETER_VALUE_MAP("parameterValueMap");
+    PARAMETER_VALUE_MAP("parameterValueMap"),
+
+    DEFAULT_ROOM_PARAMS_TO_SHOW("defaultRoomParamsToShow");
 
     private String name;
 
@@ -45,7 +47,7 @@ public enum GlobalContextConstant {
                 .stream()
                 .filter(constant -> constant.name.equals(name))
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 
     public String getName() {

@@ -3,7 +3,7 @@ package manager;
 import manager.managerImpl.DataSourceDaoManagerImpl;
 import manager.managerImpl.ServiceManagerImpl;
 import model.dao.GenericMobilePhoneDao;
-import model.exceptions.SystemException;
+import model.exception.SystemException;
 import model.service.AbstractHotelRoomService;
 import model.service.AbstractService;
 import org.junit.Assert;

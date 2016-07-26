@@ -1,6 +1,5 @@
 package model.entity.enums;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 
 /**
@@ -25,6 +24,6 @@ public enum UserType {
 
     public static UserType fromID(int ID) {
         return Arrays.asList(UserType.values()).stream().
-                filter(t -> t.getID() == ID).findFirst().get();
+                filter(t -> t.getID() == ID).findFirst().orElse(REGISTERED_USER);
     }
 }

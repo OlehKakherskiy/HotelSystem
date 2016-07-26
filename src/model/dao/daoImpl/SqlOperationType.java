@@ -11,5 +11,5 @@ public enum SqlOperationType {
 
     UPDATE,
 
-    DELETE;
+    DELETE
 }

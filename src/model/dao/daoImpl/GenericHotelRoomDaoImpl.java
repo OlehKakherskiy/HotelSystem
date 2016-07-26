@@ -2,6 +2,7 @@ package model.dao.daoImpl;
 
 import model.dao.GenericHotelRoomDao;
 import model.entity.HotelRoom;
+import model.exception.SystemException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -32,18 +33,18 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
     @Override
     public List<HotelRoom> getAllShortDetails(boolean onlyActive) {
         List<HotelRoom> hotelRooms = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection()) {
-            String req = onlyActive ? getAllActiveRooms : getAllRooms;
-            PreparedStatement preparedStatement = connection.prepareStatement(req);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        String req = onlyActive ? getAllActiveRooms : getAllRooms;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(req);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
             while (resultSet.next()) {
                 hotelRooms.add(buildRoom(resultSet));
             }
+
         } catch (SQLException e) {
+            hotelRooms = null;
             e.printStackTrace();
-        }
-        if (hotelRooms.size() == 0) {
-            throw new RuntimeException(); //TODO: список комнат не может быть пустым.
         }
         return hotelRooms;
     }
@@ -51,14 +52,14 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
     @Override
     public HotelRoom read(Integer id) {
         HotelRoom room = null;
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(readRoom);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(readRoom)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 room = buildRoom(resultSet);
             }
             if (room == null) {
-                throw new RuntimeException(); //TODO: нет комнаты хотя должжна быть!!!!
+                throw new SystemException(); //TODO: нет комнаты хотя должжна быть!!!!
             }
             room.setParametersIds(getRoomParamsIDs(room.getRoomID(), connection));
         } catch (SQLException e) {
@@ -76,14 +77,13 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
             list.add(resultSet.getInt(1));
         }
         if (list.size() == 0) {
-            throw new RuntimeException(); //TODO: у комнаты, которая существует, не может не быть параметров.
+            throw new SystemException(); //TODO: у комнаты, которая существует, не может не быть параметров.
         }
         return list;
     }
 
     private HotelRoom buildRoom(ResultSet resultSet) throws SQLException {
-        HotelRoom hotelRoom = null;
-        hotelRoom = new HotelRoom();
+        HotelRoom hotelRoom = new HotelRoom();
         hotelRoom.setRoomID(resultSet.getInt(1));
         hotelRoom.setRoomName(resultSet.getString(2));
         hotelRoom.setIsActiveStatus(resultSet.getBoolean(3));

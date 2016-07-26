@@ -1,7 +1,7 @@
 package manager;
 
-import model.exceptions.ManagerConfigException;
-import model.exceptions.SystemException;
+import model.exception.ManagerConfigException;
+import model.exception.SystemException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E
 
     @SuppressWarnings("unchecked")
     private <V extends E> V createAndCache(K key) throws ManagerConfigException {
-        V result = null;
+        V result;
         T intermediateTemplateElement = keyObjectTemplateMap.get(key);
         if (intermediateTemplateElement == null) {
             throw new ManagerConfigException(String.format("There is no template element in template map with the key: %s in manager %s", key, this.getClass().getName()));

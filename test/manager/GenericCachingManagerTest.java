@@ -12,7 +12,7 @@ import manager.managerImpl.DataSourceDaoManagerImpl;
 import manager.managerImpl.ServiceManagerImpl;
 import model.dao.*;
 import model.dao.daoImpl.*;
-import model.exceptions.SystemException;
+import model.exception.SystemException;
 import model.service.*;
 import model.service.serviceImpl.HotelRoomService;
 import model.service.serviceImpl.ParameterValueServiceImpl;

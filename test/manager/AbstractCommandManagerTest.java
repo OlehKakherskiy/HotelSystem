@@ -35,12 +35,12 @@ public class AbstractCommandManagerTest {
         commandManager = new CommandManagerImpl(map);
     }
 
-    @Test(expected = model.exceptions.SystemException.class)
+    @Test(expected = model.exception.SystemException.class)
     public void testGetInstanceOfNull() throws Exception {
         commandManager.getInstance(null);
     }
 
-    @Test(expected = model.exceptions.SystemException.class)
+    @Test(expected = model.exception.SystemException.class)
     public void testGetInstanceWithoutDefaultConstructor() throws Exception {
         Map<CommandConstant, Class<? extends AbstractCommand>> dirtiedMap = new HashMap<>();
         map.entrySet().stream().forEach(entry -> dirtiedMap.put(entry.getKey(), entry.getValue()));

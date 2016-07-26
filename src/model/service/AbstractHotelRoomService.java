@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface AbstractHotelRoomService extends AbstractService {
 
-    List<HotelRoom> getAllRoomShortDetails();
+    List<HotelRoom> getAllRoomShortDetails(List<Integer> defaultRoomParamsToShow, boolean onlyActive);
 
     HotelRoom getFullDetailsWithMonthReservationsDetails(int ID, Month month, Year year, ReservationStatus status);
 

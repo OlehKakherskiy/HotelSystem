@@ -3,7 +3,7 @@ package controller.command.commandImpl;
 import app.GlobalContext;
 import app.constants.CommandConstant;
 import app.constants.GlobalContextConstant;
-import controller.commandManager.AbstractCommandManager;
+import manager.AbstractCommandManager;
 import controller.command.AbstractCommand;
 import model.entity.User;
 import model.entity.enums.ReservationStatus;

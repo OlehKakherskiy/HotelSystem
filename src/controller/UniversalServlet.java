@@ -3,15 +3,12 @@ package controller;
 import app.GlobalContext;
 import app.constants.CommandConstant;
 import app.constants.GlobalContextConstant;
-import controller.commandManager.GenericCommandManager;
+import manager.AbstractCommandManager;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import java.io.IOException;
 
 /**
@@ -19,21 +16,13 @@ import java.io.IOException;
  */
 public class UniversalServlet extends HttpServlet {
 
-    private GenericCommandManager commandFactory = (GenericCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY);
-
-    public UniversalServlet() {
-        try {
-            InitialContext initialContext = new InitialContext();
-            DataSource dataSource = (DataSource) initialContext.lookup("java:/comp/env/jdbc/mysql");
-            System.out.println(dataSource);
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
+    private AbstractCommandManager commandFactory = (AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String newUrl = processCommand(req, resp);
+
         //TODO: или переход или не переход
     }
 

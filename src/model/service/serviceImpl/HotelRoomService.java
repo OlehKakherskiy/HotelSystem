@@ -5,6 +5,7 @@ import model.dao.GenericReservationDao;
 import model.entity.HotelRoom;
 import model.entity.enums.ReservationStatus;
 import model.entity.roomParameter.ParameterValue;
+import model.exception.SystemException;
 import model.service.AbstractHotelRoomService;
 import model.service.AbstractParameterValueService;
 
@@ -33,8 +34,16 @@ public class HotelRoomService implements AbstractHotelRoomService {
     }
 
     @Override
-    public List<HotelRoom> getAllRoomShortDetails() {
-        return hotelRoomDao.getAllShortDetails(true);
+    public List<HotelRoom> getAllRoomShortDetails(List<Integer> defaultRoomParamsToShow, boolean onlyActive) {
+        List<HotelRoom> hotelRoomList = hotelRoomDao.getAllShortDetails(onlyActive);
+        if(hotelRoomList == null) {
+            throw new SystemException(); //TODO: системная ошибка со списком комнат при загрузке
+        }
+        hotelRoomList.stream().forEach(hotelRoom -> {
+            hotelRoom.setParametersIds(defaultRoomParamsToShow);
+            appendReformattedRoomParams(hotelRoom);
+        });
+        return hotelRoomList;
     }
 
     @Override
@@ -51,6 +60,9 @@ public class HotelRoomService implements AbstractHotelRoomService {
 
     private void appendReformattedRoomParams(HotelRoom hotelRoom) {
         List<ParameterValue> result = parameterValueService.getAllParams(hotelRoom.getParametersIds());
+        if(result == null){
+            throw new SystemException(); //TODO: ошибка с загрузкой данный о возможных параметрах комнат
+        }
         hotelRoom.setParameters(result);
     }
 

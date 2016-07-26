@@ -1,6 +1,6 @@
 package controller.command;
 
-import model.service.manager.GenericServiceManager;
+import manager.GenericServiceManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

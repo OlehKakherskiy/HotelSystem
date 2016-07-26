@@ -9,6 +9,14 @@ public class Value {
 
     String value;
 
+    public Value(int id, String value) {
+        this.id = id;
+        this.value = value;
+    }
+
+    public Value() {
+    }
+
     public int getId() {
         return id;
     }

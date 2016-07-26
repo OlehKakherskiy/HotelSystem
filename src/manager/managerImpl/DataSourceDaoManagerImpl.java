@@ -2,7 +2,7 @@ package manager.managerImpl;
 
 import manager.DaoManager;
 import model.dao.GenericDao;
-import model.exceptions.ManagerConfigException;
+import model.exception.ManagerConfigException;
 
 import javax.sql.DataSource;
 import java.beans.IntrospectionException;
@@ -27,29 +27,29 @@ public class DataSourceDaoManagerImpl extends DaoManager {
     }
 
     @Override
-    protected <V extends GenericDao> V instantiate(Class<V> objectClass) throws ManagerConfigException{
-        V result = null;
+    protected <V extends GenericDao> V instantiate(Class<V> objectClass) throws ManagerConfigException {
+        V result;
         try {
             result = objectClass.newInstance();
             Field dataSourceField = getDataSourceField(objectClass);
-            if(dataSourceField == null){
-                throw new ManagerConfigException("There's no DataSource type field declared in Dao class "+objectClass.getName());
+            if (dataSourceField == null) {
+                throw new ManagerConfigException("There's no DataSource type field declared in Dao class " + objectClass.getName());
             }
-            PropertyDescriptor propertyDescriptor = new PropertyDescriptor(dataSourceField.getName(),objectClass);
+            PropertyDescriptor propertyDescriptor = new PropertyDescriptor(dataSourceField.getName(), objectClass);
             Method setMethod = propertyDescriptor.getWriteMethod();
-            if(setMethod == null){
-                throw new ManagerConfigException("There's no set method for DataSource type field in class "+objectClass.getName());
+            if (setMethod == null) {
+                throw new ManagerConfigException("There's no set method for DataSource type field in class " + objectClass.getName());
             }
-            setMethod.invoke(result,dataSource);
-        } catch (InstantiationException|IllegalAccessException|IntrospectionException|InvocationTargetException e) {
-            throw new ManagerConfigException("Exception caused while creating object of type "+objectClass.getName()+"or injecting dataSource to instance");
+            setMethod.invoke(result, dataSource);
+        } catch (InstantiationException | IllegalAccessException | IntrospectionException | InvocationTargetException e) {
+            throw new ManagerConfigException("Exception caused while creating object of type " + objectClass.getName() + " or injecting dataSource to instance");
         }
         return result;
     }
 
-    private Field getDataSourceField(Class objectClass ){
+    private Field getDataSourceField(Class objectClass) {
         return Arrays.stream(objectClass.getDeclaredFields())
-                .filter(f->f.getType().isAssignableFrom(DataSource.class))
+                .filter(f -> f.getType().isAssignableFrom(DataSource.class))
                 .findFirst()
                 .orElse(null);
     }

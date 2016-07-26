@@ -126,7 +126,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
             preparedStatement.setInt(object.getHotelRoom().getRoomID(), object.getStatus().getId());
             wasUpdate = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: addToLog
         }
 
         return wasUpdate;
@@ -149,11 +149,11 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
             preparedStatement.setString(4, startDateStr);
             preparedStatement.setString(5, endDateStr);
             ResultSet res = preparedStatement.executeQuery();
-            return buildReservationList(res); //TODO: exception handling.
+            return buildReservationList(res);
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: addToLog
         }
-        return Collections.emptyList();
+        return null;
     }
 
 

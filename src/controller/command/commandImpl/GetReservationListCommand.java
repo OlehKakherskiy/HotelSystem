@@ -23,10 +23,9 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
  */
 public class GetReservationListCommand extends AbstractCommand {
 
-    AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
-
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
+        AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
         HttpSession session = request.getSession(false);
         User currentUser = (User) session.getAttribute(GlobalContextConstant.USER.getName());
 

@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,16 +26,16 @@ public class GenericMobilePhoneDaoImpl extends GenericMobilePhoneDao {
 
     @Override
     public List<MobilePhone> getAll(int userID) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(getMobilePhoneList);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(getMobilePhoneList)) {
+
             statement.setInt(1, userID);
             return buildList(statement.executeQuery());
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: лог
         }
-        return Collections.emptyList();
+        return null;
     }
 
 

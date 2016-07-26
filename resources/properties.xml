@@ -2,9 +2,9 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
-    <entry key="commandManager">controller.commandManager.managerImpl.CommandManagerImpl</entry>
-    <entry key="serviceManager">model.service.manager.managerImpl.ServiceManagerImpl</entry>
-    <entry key="daoManager">model.dao.manager.managerImpl.DaoManagerImpl</entry>
+    <entry key="commandManager">manager.managerImpl.CommandManagerImpl</entry>
+    <entry key="serviceManager">manager.managerImpl.ServiceManagerImpl</entry>
+    <entry key="daoManager">manager.managerImpl.DataSourceDaoManagerImpl</entry>
 
     <entry key="loginCommand">controller.command.commandImpl.LoginCommand</entry>
     <entry key="getReservationListCommand">controller.command.commandImpl.GetReservationListCommand</entry>

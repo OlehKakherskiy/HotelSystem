@@ -1,6 +1,6 @@
 package manager;
 
-import model.exceptions.ManagerConfigException;
+import model.exception.ManagerConfigException;
 
 import java.util.Map;
 

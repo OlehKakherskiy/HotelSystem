@@ -1,10 +1,10 @@
 package manager.managerImpl;
 
-import model.dao.GenericDao;
 import manager.DaoManager;
-import model.exceptions.ManagerConfigException;
-import model.service.AbstractService;
 import manager.GenericServiceManager;
+import model.dao.GenericDao;
+import model.exception.ManagerConfigException;
+import model.service.AbstractService;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -34,23 +34,24 @@ public class ServiceManagerImpl extends GenericServiceManager {
         List<Object> preparedParams = new ArrayList<>(constructor.getParameterCount());
         V result = null;
         List<Class> types = Arrays.asList(constructor.getParameters()).stream().map(Parameter::getType).collect(Collectors.toList());
-        for(Class type: types){
+        for (Class type : types) {
             preparedParams.add(createNewParameterInstance(type));
         }
         try {
-            result = newInstance(constructor, preparedParams);
+            result = newInstance(objectClass, constructor, preparedParams);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             throw new ManagerConfigException(String.format("Exception caused while instantiating service of type %s with params:%s",
-                    objectClass.getName(), Arrays.toString(preparedParams.toArray())));
+                    objectClass.getName(), Arrays.toString(preparedParams.toArray())), e);
         }
         return result;
     }
 
-    private <V extends AbstractService> V newInstance(Constructor<V> constructor, List<Object> paramInstance) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return constructor.newInstance(paramInstance.toArray());
+    private <V extends AbstractService> V newInstance(Class<V> clazz, Constructor<V> constructor, List<Object> paramInstance) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return (paramInstance.isEmpty()) ? clazz.newInstance() : constructor.newInstance(paramInstance.toArray());
     }
 
     private Object createNewParameterInstance(Class clazz) throws ManagerConfigException {
+        System.out.println(clazz);
         if (GenericDao.class.isAssignableFrom(clazz)) {
             return getDaoInstance(clazz);
         } else if (AbstractService.class.isAssignableFrom(clazz)) {
