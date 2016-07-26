@@ -79,5 +79,4 @@ public class User implements Serializable {
     public int hashCode() {
         return idUser;
     }
-//TODO: разобраться с инкапсуляцией
 }
