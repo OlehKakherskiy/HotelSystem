@@ -79,7 +79,7 @@ public class AbstractParameterValueServiceTest {
         GenericParameterValueDao parameterValueDao = getParameterValueDao();
 
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
-        Assert.assertEquals(parameterValueList, parameterValueService.getAllParams(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)));
+        Assert.assertEquals(parameterValueList, parameterValueService.getParamValueList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)));
         Assert.assertEquals(parameterValueList, GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST));
 
         EasyMock.verify(parameterValueDao);
@@ -93,7 +93,7 @@ public class AbstractParameterValueServiceTest {
         ParameterValue pv1 = parameterValueList.get(3);
         ParameterValue pv2 = parameterValueList.get(4);
 
-        Assert.assertEquals(Arrays.asList(pv1, pv2), parameterValueService.getAllParams(Arrays.asList(pv1.getId(), pv2.getId())));
+        Assert.assertEquals(Arrays.asList(pv1, pv2), parameterValueService.getParamValueList(Arrays.asList(pv1.getId(), pv2.getId())));
         EasyMock.verify(parameterValueDao);
     }
 
@@ -106,7 +106,7 @@ public class AbstractParameterValueServiceTest {
         ParameterValue pv2 = parameterValueList.get(4);
         ParameterValue pvExtra = new ParameterValue(100, null, null, 100); //null - just stub
 
-        Assert.assertEquals(Arrays.asList(pv1, pv2), parameterValueService.getAllParams(Arrays.asList(pv1.getId(), pv2.getId(), pvExtra.getId())));
+        Assert.assertEquals(Arrays.asList(pv1, pv2), parameterValueService.getParamValueList(Arrays.asList(pv1.getId(), pv2.getId(), pvExtra.getId())));
         EasyMock.verify(parameterValueDao);
     }
 
@@ -118,7 +118,7 @@ public class AbstractParameterValueServiceTest {
         EasyMock.expect(parameterValueDao.getAllFullInfo()).andThrow(new AssertionError()).anyTimes();
         EasyMock.replay(parameterValueDao);
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
-        parameterValueService.getAllParams(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
+        parameterValueService.getParamValueList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
         Assert.assertEquals(parameterValueList, parameterValueList);
     }
 
@@ -129,7 +129,7 @@ public class AbstractParameterValueServiceTest {
         EasyMock.replay(dao);
 
         parameterValueService = new ParameterValueServiceImpl(dao);
-        parameterValueService.getAllParams(Arrays.asList(100));
+        parameterValueService.getParamValueList(Arrays.asList(100));
         EasyMock.verify(dao);
     }
 

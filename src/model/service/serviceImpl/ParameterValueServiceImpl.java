@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -26,15 +27,21 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
     }
 
     @Override
-    public List<ParameterValue> getAllParams(List<Integer> ids) { //возвращаем paramValue со списка по id
+    public List<ParameterValue> getParamValueList(List<Integer> parameterValueIdList) { //возвращаем paramValue со списка по id
+        return getParamValueListUsingIdList(parameterValueIdList,
+                (paramValueId, parameterValue) -> parameterValue.getId() == paramValueId);
+    }
+
+    @Override
+    public List<ParameterValue> getParamValueListFromParamIdList(List<Integer> parameterIdList) {
+        return getParamValueListUsingIdList(parameterIdList,
+                (id, parameterValue) -> parameterValue.getParameter().getId() == id);
+    }
+
+    private List<ParameterValue> getParamValueListUsingIdList(List<Integer> idList, BiPredicate<Integer, ParameterValue> filterCriteria) {
         List<ParameterValue> fullParamList = getAllParams();
         List<ParameterValue> result = new ArrayList<>();
-        ids.stream()
-                .forEach(id -> fullParamList.stream()
-                        .filter(parameterValue -> parameterValue.getId() == id)
-                        .findFirst().
-                                ifPresent(result::add)
-                );
+        idList.stream().forEach(id -> fullParamList.stream().filter(parameterValue -> filterCriteria.test(id, parameterValue)).findFirst().ifPresent(result::add));
         return result;
     }
 
