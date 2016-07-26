@@ -2,8 +2,13 @@ package model.service.serviceImpl;
 
 import model.dao.GenericMobilePhoneDao;
 import model.dao.GenericUserDao;
+import model.entity.MobilePhone;
 import model.entity.User;
+import model.exception.RequestException;
+import model.exception.SystemException;
 import model.service.AbstractUserService;
+
+import java.util.List;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -22,20 +27,41 @@ public class UserService implements AbstractUserService {
     @Override
     public User login(String login, String password) {
         User result = userDao.tryLogin(login, password);
-        if (result == null) {
-            throw new RuntimeException(); //TODO: переделать
-        }
-        result.setMobilePhoneList(mobilePhoneDao.getAll(result.getIdUser()));
+
+        resultIsNullCheck(result);
+        noSuchUserCheck(result, ""); //TODO: неверный пользователь или пароль
+
+        appendMobilePhoneList(result);
         return result;
     }
 
     @Override
     public User getSimpleUserInfo(int ID) {
         User user = userDao.read(ID);
-        if(user == null){
-            throw new RuntimeException();
-        }
-        user.setMobilePhoneList(mobilePhoneDao.getAll(user.getIdUser()));
+
+        resultIsNullCheck(user);
+        noSuchUserCheck(user, ""); //TODO: не существует пользователя с таким ID
+        appendMobilePhoneList(user);
         return user;
+    }
+
+    private void appendMobilePhoneList(User user) {
+        List<MobilePhone> mobilePhones = mobilePhoneDao.getAll(user.getIdUser());
+
+        resultIsNullCheck(mobilePhones);
+
+        user.setMobilePhoneList(mobilePhones);
+    }
+
+    private void noSuchUserCheck(User user, String exceptionMessage) {
+        if (user.getIdUser() == -1) {
+            throw new RequestException(exceptionMessage);
+        }
+    }
+
+    private void resultIsNullCheck(Object userOrPhones) {
+        if (userOrPhones == null) {
+            throw new SystemException(); //TODO: текст ошибки
+        }
     }
 }

@@ -60,5 +60,24 @@ public class User implements Serializable {
         this.userType = userType;
     }
 
-    //TODO: разобраться с инкапсуляцией
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (idUser != user.idUser) return false;
+        if (!name.equals(user.name)) return false;
+        if (!lastName.equals(user.lastName)) return false;
+        if (userType != user.userType) return false;
+        return mobilePhoneList.equals(user.mobilePhoneList);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return idUser;
+    }
+//TODO: разобраться с инкапсуляцией
 }

@@ -25,6 +25,11 @@ public class GenericUserDaoImpl extends GenericUserDao {
                     "FROM USER " +
                     "WHERE login=? AND password=?";
 
+    private static final User noUserStub = new User();
+
+    static {
+        noUserStub.setIdUser(-1);
+    }
 
     private DataSource dataSource;
 
@@ -38,7 +43,7 @@ public class GenericUserDaoImpl extends GenericUserDao {
 
             user = buildUserObject(statement.executeQuery());
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: тут добавить лог
         }
         return user;
     }
@@ -54,7 +59,7 @@ public class GenericUserDaoImpl extends GenericUserDao {
 
             result = buildUserObject(statement.executeQuery());
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: тут добавить лог
         }
         return result;
     }
@@ -68,7 +73,8 @@ public class GenericUserDaoImpl extends GenericUserDao {
             user.setLastName(resultSet.getString(3));
             user.setUserType(UserType.fromID(resultSet.getInt(4)));
         }
-        return user;
+        resultSet.close();
+        return user != null ? user : noUserStub;
     }
 
     public void setDataSource(DataSource dataSource) {

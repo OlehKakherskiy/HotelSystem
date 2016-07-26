@@ -9,6 +9,14 @@ public class MobilePhone {
 
     private String mobilePhone;
 
+    public MobilePhone() {
+    }
+
+    public MobilePhone(int idMobilePhone, String mobilePhone) {
+        this.idMobilePhone = idMobilePhone;
+        this.mobilePhone = mobilePhone;
+    }
+
     public int getIdMobilePhone() {
         return idMobilePhone;
     }
