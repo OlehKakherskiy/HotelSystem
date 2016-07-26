@@ -35,12 +35,22 @@ public class GenericParameterValueDaoImpl extends GenericParameterValueDao {
 
             List<Parameter> parameters = getAllParameters(connection, valuePool);
 
-            PreparedStatement preparedStatement = connection.prepareStatement(allParamValues);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            parameterValues = getParameterValueMapAndBuild(connection, parameters, valuePool);
 
+        } catch (SQLException e) {
+            parameterValues = null;
+            e.printStackTrace(); //TODO: логируем ошибку
+        }
+        return parameterValues;
+    }
+
+    private List<ParameterValue> getParameterValueMapAndBuild(Connection c, List<Parameter> parameters, List<Value> valuePool) throws SQLException {
+        List<ParameterValue> parameterValues = null;
+        try (PreparedStatement preparedStatement = c.prepareStatement(allParamValues);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             parameterValues = buildResultList(resultSet, parameters, valuePool);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Exception caused while was request of selecting parameter-value map data from DB.", e);
         }
         return parameterValues;
     }
@@ -58,10 +68,17 @@ public class GenericParameterValueDaoImpl extends GenericParameterValueDao {
         return list;
     }
 
+    private Parameter getParameter(int paramId, List<Parameter> parameters) {
+        return parameters.stream().filter(parameter -> parameter.getId() == paramId).findFirst().orElse(null);
+    }
+
     private List<Parameter> getAllParameters(Connection connection, List<Value> values) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(allParams);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        return buildParameters(resultSet, values);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(allParams);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            return buildParameters(resultSet, values);
+        } catch (SQLException e) {
+            throw new SQLException(String.format("Exception caused while was request of selecting data for building list of %s", Parameter.class.getName()), e);
+        }
     }
 
     private List<Parameter> buildParameters(ResultSet resultSet, List<Value> values) throws SQLException {
@@ -77,19 +94,21 @@ public class GenericParameterValueDaoImpl extends GenericParameterValueDao {
         return list;
     }
 
-    private Parameter getParameter(int paramId, List<Parameter> parameters) {
-        return parameters.stream().filter(parameter -> parameter.getId() == paramId).findFirst().get();
-    }
-
     private Value getValue(int valueId, List<Value> values) {
-        return values.stream().filter(value -> value.getId() == valueId).findFirst().get();
+        return values.stream().filter(value -> value.getId() == valueId).findFirst().orElse(null);
     }
 
     private List<Value> getValuePool(Connection connection) throws SQLException {
-        //TODO: когда закрывать стейтменты, коннекшены и резалт сэты?
-        PreparedStatement preparedStatement = connection.prepareStatement(allValues);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        List<Value> result = buildList(resultSet);
+        List<Value> result = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(allValues);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            result = buildList(resultSet);
+
+        } catch (SQLException e) {
+            throw new SQLException(String.format("Exception caused while was request for all data for building list of %s", Value.class.getName()), e);
+        }
         return result;
     }
 

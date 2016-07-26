@@ -6,6 +6,7 @@ import model.dao.GenericParameterValueDao;
 import model.entity.roomParameter.Parameter;
 import model.entity.roomParameter.ParameterValue;
 import model.entity.roomParameter.Value;
+import model.exception.SystemException;
 import model.service.AbstractParameterValueService;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
                 .map(id -> fullParamList.stream()
                         .filter(parameterValue -> parameterValue.getId() == id)
                         .findFirst()
-                        .get())
+                        .orElse(null))
                 .collect(Collectors.toList());
     }
 
@@ -62,14 +63,14 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
     }
 
     private List<ParameterValue> getAllParams() {
-        List<ParameterValue> parameterValues = (List<ParameterValue>) GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST);
+        List<ParameterValue> parameterValues = (List<ParameterValue>) GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST); //TODO: тут нужно аккуратно - многопоточность
         return (parameterValues != null) ? parameterValues : addToCacheAndReturn();
     }
 
     private List<ParameterValue> addToCacheAndReturn() {
         List<ParameterValue> parameterValues = parameterValueDao.getAllFullInfo();
-        if (parameterValues == null || parameterValues.isEmpty()) {
-            throw new RuntimeException(); //TODO: параметров запроса нету - такого не может быть просто!!
+        if (parameterValues == null) {
+            throw new SystemException(); //TODO: Системная ошибка при загрузке возможных параметров комнат
         }
         GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValues);
         return parameterValues;
