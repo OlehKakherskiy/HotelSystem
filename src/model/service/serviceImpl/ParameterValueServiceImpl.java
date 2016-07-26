@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -27,19 +26,30 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
     }
 
     @Override
-    public List<ParameterValue> getAllParams(List<Integer> ids) {
+    public List<ParameterValue> getAllParams(List<Integer> ids) { //возвращаем paramValue со списка по id
         List<ParameterValue> fullParamList = getAllParams();
-        return ids.stream()
-                .map(id -> fullParamList.stream()
+        List<ParameterValue> result = new ArrayList<>();
+        ids.stream()
+                .forEach(id -> fullParamList.stream()
                         .filter(parameterValue -> parameterValue.getId() == id)
-                        .findFirst()
-                        .orElse(null))
-                .collect(Collectors.toList());
+                        .findFirst().
+                                ifPresent(result::add)
+                );
+        return result;
     }
 
     @Override
     public Map<Parameter, List<Value>> getParameterValueMap() {
-        return parameterValueMapFromList(getAllParams());
+        Map<Parameter, List<Value>> result = (Map<Parameter, List<Value>>) GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_MAP);
+
+        if (result != null) {
+            return result;
+        } else {
+            result = parameterValueMapFromList(getAllParams());
+            GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_MAP, result);
+        }
+
+        return result;
     }
 
     private Map<Parameter, List<Value>> parameterValueMapFromList(List<ParameterValue> list) {
