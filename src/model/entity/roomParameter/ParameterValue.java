@@ -44,4 +44,27 @@ public class ParameterValue {
     public void setPrice(int price) {
         this.price = price;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ParameterValue)) return false;
+
+        ParameterValue that = (ParameterValue) o;
+
+        if (id != that.id) return false;
+        if (price != that.price) return false;
+        if (!parameter.equals(that.parameter)) return false;
+        return value.equals(that.value);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + parameter.hashCode();
+        result = 31 * result + value.hashCode();
+        result = 31 * result + price;
+        return result;
+    }
 }

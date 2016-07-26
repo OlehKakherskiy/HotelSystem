@@ -70,4 +70,25 @@ public class HotelRoom implements Serializable {
     public void setParametersIds(List<Integer> parametersIds) {
         this.parametersIds = parametersIds;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HotelRoom)) return false;
+
+        HotelRoom hotelRoom = (HotelRoom) o;
+
+        if (roomID != hotelRoom.roomID) return false;
+        if (isActiveStatus != hotelRoom.isActiveStatus) return false;
+        return roomName.equals(hotelRoom.roomName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = roomID;
+        result = 31 * result + roomName.hashCode();
+        result = 31 * result + (isActiveStatus ? 1 : 0);
+        return result;
+    }
 }

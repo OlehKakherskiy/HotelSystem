@@ -24,4 +24,23 @@ public class Value {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Value)) return false;
+
+        Value value1 = (Value) o;
+
+        if (id != value1.id) return false;
+        return value.equals(value1.value);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }
