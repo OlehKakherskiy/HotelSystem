@@ -17,4 +17,5 @@ public abstract class GenericReservationDao extends TransparentGenericDao<Reserv
 
     public abstract List<Reservation> getAllReservationsShortInfoInPeriod(ReservationStatus status, LocalDate startDate, LocalDate endDate);
 
+    public abstract List<Reservation> getAllReservationsShortInfo(ReservationStatus status);
 }

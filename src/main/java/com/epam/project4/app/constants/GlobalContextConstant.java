@@ -15,7 +15,7 @@ public enum GlobalContextConstant {
 
     DATA_SOURCE("dataSource"),
 
-    COMMAND_NAME("command"),
+    COMMAND_NAME("commandName"),
 
     USER("user"),
 
@@ -31,7 +31,9 @@ public enum GlobalContextConstant {
 
     PARAMETER_VALUE_MAP("parameterValueMap"),
 
-    DEFAULT_ROOM_PARAMS_TO_SHOW("defaultRoomParamsToShow");
+    DEFAULT_ROOM_PARAMS_TO_SHOW("defaultRoomParamsToShow"),
+
+    CURRENT_HOTEL_ROOM("currentHotelRoom");
 
     private String name;
 

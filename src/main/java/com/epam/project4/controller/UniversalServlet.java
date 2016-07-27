@@ -5,6 +5,7 @@ import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
+import main.java.com.epam.project4.model.exception.SystemException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,21 +22,29 @@ public class UniversalServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String newUrl = processCommand(req, resp);
         System.out.println("doGet");
+        if (req.getParameter(GlobalContextConstant.COMMAND_NAME.getName()) == null) {
+            req.getRequestDispatcher(String.format("%s?command=%s", WebPageConstant.LOGIN.getPath(), CommandConstant.LOGIN_COMMAND.name())).include(req, resp);
+        } else {
+            throw new SystemException("blabla");
+        }
+        String newUrl = processCommand(req, resp);
         req.getRequestDispatcher(newUrl).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        throw new SystemException("syska");
         System.out.println("doPost");
         String newUrl = processCommand(req, resp);
         req.getRequestDispatcher(newUrl).forward(req, resp);
     }
 
     private String processCommand(HttpServletRequest req, HttpServletResponse resp) {
-        String commandName = (String) req.getAttribute(GlobalContextConstant.COMMAND_NAME.getName());
+        String commandName = req.getParameter(GlobalContextConstant.COMMAND_NAME.getName());
+        System.out.println("commandName = " + commandName);
         if (commandName == null) {
+            System.out.println(WebPageConstant.LOGIN.getPath());
             return WebPageConstant.LOGIN.getPath();
         } else {
             return commandFactory.getInstance(CommandConstant.fromValue(commandName)).process(req, resp);

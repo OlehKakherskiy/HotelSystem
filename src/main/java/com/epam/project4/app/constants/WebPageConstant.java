@@ -5,7 +5,6 @@ package main.java.com.epam.project4.app.constants;
  */
 public enum WebPageConstant {
 
-
     LOGIN("login"),
 
     INDEX("index"),
@@ -22,7 +21,7 @@ public enum WebPageConstant {
 
 
     WebPageConstant(String path) {
-        this.path = "main/webapp/WEB-INF/" + path + ".jsp";
+        this.path = String.format("/%s.jsp", path);
     }
 
     public String getPath() {
