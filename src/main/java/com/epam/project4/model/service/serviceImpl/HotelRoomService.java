@@ -45,25 +45,7 @@ public class HotelRoomService implements AbstractHotelRoomService {
     }
 
     @Override
-    public HotelRoom getFullDetailsWithMonthReservationsDetails(int ID, Month month, Year year,
-                                                                ReservationStatus status) {
-        HotelRoom result = hotelRoomDao.read(ID);
-        if (result == null) {
-            throw new SystemException(); //TODO: ошибка - не считалась с бд комната
-        }
-
-        appendReformattedRoomParams(result);
-
-        appendSubmittedReservations(result, month, year, status);
-
-        return result;
-    }
-
-    private void appendReformattedRoomParams(HotelRoom hotelRoom) {
-        hotelRoom.setParameters(parameterValueService.getParamValueList(hotelRoom.getParametersIds()));
-    }
-
-    private void appendSubmittedReservations(HotelRoom hotelRoom, Month month, Year year, ReservationStatus status) {
+    public void appendSubmittedReservations(HotelRoom hotelRoom, Month month, Year year, ReservationStatus status) {
         LocalDate startDate = LocalDate.of(year.getValue(), month.getValue(), 1);
         LocalDate endMonthDate = startDate.with(lastDayOfMonth());
         List<Reservation> periodReservations = reservationDao.getAllRoomReservationsInPeriod(hotelRoom.getRoomID(), status, startDate, endMonthDate);
@@ -73,4 +55,20 @@ public class HotelRoomService implements AbstractHotelRoomService {
         }
         hotelRoom.setReservationList(periodReservations);
     }
+
+    @Override
+    public HotelRoom getFullDetails(int id) {
+        HotelRoom result = hotelRoomDao.read(id);
+        if (result == null) {
+            throw new SystemException(); //TODO: ошибка - не считалась с бд комната
+        }
+        appendReformattedRoomParams(result);
+        return result;
+    }
+
+    private void appendReformattedRoomParams(HotelRoom hotelRoom) {
+        hotelRoom.setParameters(parameterValueService.getParamValueList(hotelRoom.getParametersIds()));
+    }
+
+
 }

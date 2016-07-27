@@ -36,7 +36,7 @@ public class UserService implements AbstractUserService {
     }
 
     @Override
-    public User getSimpleUserInfo(int ID) {
+    public User getUserInfo(int ID) {
         User user = userDao.read(ID);
 
         resultIsNullCheck(user);

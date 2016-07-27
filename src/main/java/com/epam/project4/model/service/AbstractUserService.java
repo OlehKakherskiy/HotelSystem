@@ -9,6 +9,6 @@ public interface AbstractUserService extends AbstractService {
 
     User login(String login, String password);
 
-    User getSimpleUserInfo(int ID);
+    User getUserInfo(int ID);
 
 }

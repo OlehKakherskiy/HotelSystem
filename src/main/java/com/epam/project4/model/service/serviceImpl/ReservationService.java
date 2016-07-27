@@ -1,17 +1,16 @@
 package main.java.com.epam.project4.model.service.serviceImpl;
 
-import main.java.com.epam.project4.model.entity.HotelRoom;
-import main.java.com.epam.project4.model.entity.User;
-import main.java.com.epam.project4.model.service.AbstractUserService;
 import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
 import main.java.com.epam.project4.model.dao.GenericReservationDao;
+import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.Reservation;
+import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
-import main.java.com.epam.project4.model.entity.enums.UserType;
+import main.java.com.epam.project4.model.exception.SystemException;
 import main.java.com.epam.project4.model.service.AbstractParameterValueService;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
+import main.java.com.epam.project4.model.service.AbstractUserService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -41,18 +40,13 @@ public class ReservationService implements AbstractReservationService {
     }
 
     @Override
-    public List<Reservation> getShortInfoAboutAllReservationsForAdminInPeriod(ReservationStatus reservationStatus, LocalDate dateFrom, LocalDate dateTo) {
-        return dao.getAllReservationsShortInfoInPeriod(reservationStatus, dateFrom, dateTo);
+    public List<Reservation> getShortInfoAboutAllReservations(ReservationStatus reservationStatus) {
+        return dao.getAllReservationsShortInfo(reservationStatus);
     }
 
     @Override
-    public Reservation getReservationDetailInfo(int reservationID, User user) {
+    public Reservation getReservationDetailInfo(int reservationID) {
         Reservation reservation = dao.read(reservationID);
-        if (user.getUserType() == UserType.ADMIN) {
-            reservation.setUser(userService.getSimpleUserInfo(reservation.getUser().getIdUser()));
-            reservation.setHotelRoom(hotelRoomDao.read(reservation.getHotelRoomID()));
-        }
-
         parameterValueService.getParamValueList(reservation.getRequestParametersIds());
         reservation.getRequestParametersIds().clear();
         reservation.setRequestParametersIds(null);
@@ -104,7 +98,7 @@ public class ReservationService implements AbstractReservationService {
         }
         boolean wasUpdated = (status != ReservationStatus.ALL) && dao.update(reservation);
         if (!wasUpdated) {
-            throw new RuntimeException(); //TODO: exception!!!
+            throw new SystemException(); //TODO: exception!!!
         }
     }
 

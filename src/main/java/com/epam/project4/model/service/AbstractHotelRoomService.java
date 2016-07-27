@@ -14,6 +14,8 @@ public interface AbstractHotelRoomService extends AbstractService {
 
     List<HotelRoom> getAllRoomFullDetails(boolean onlyActive);
 
-    HotelRoom getFullDetailsWithMonthReservationsDetails(int ID, Month month, Year year, ReservationStatus status);
+    HotelRoom getFullDetails(int id);
+
+    void appendSubmittedReservations(HotelRoom hotelRoom, Month month, Year year, ReservationStatus status);
 
 }

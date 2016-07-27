@@ -1,14 +1,16 @@
 package main.java.com.epam.project4.model.dao.daoImpl;
 
+import main.java.com.epam.project4.model.dao.GenericReservationDao;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
-import main.java.com.epam.project4.model.dao.GenericReservationDao;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -46,8 +48,9 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
     @Override
     public Reservation read(Integer id) {
         Reservation reservation = null;
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(fullInfoRequest);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(fullInfoRequest)) {
+
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -80,24 +83,33 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
     @Override
     public Integer save(Reservation object) {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, object.getDateFrom().toString());
-            preparedStatement.setString(2, object.getDateTo().toString());
-            preparedStatement.setInt(3, object.getUserID());
-            preparedStatement.setString(4, object.getRequestDate().toString());
-            preparedStatement.setString(5, object.getComment());
-            preparedStatement.setInt(6, object.getHotelRoomID());
-            preparedStatement.setInt(7, object.getStatus().getId());
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS)) {
+            connection.setAutoCommit(false);
+
+            insertReservationParams(preparedStatement, object);
+
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            //TODO: if not insert
+            int paramsSaved = saveRequestParams(connection, object);
 
-            saveRequestParams(connection, object);
             return generatedKeys.next() ? generatedKeys.getInt(1) : -1;
         } catch (SQLException e) {
             e.printStackTrace();
+            //TODO: в лог занести
         }
         return -1;
+    }
+
+    private void insertReservationParams(PreparedStatement preparedStatement, Reservation object) throws SQLException {
+        preparedStatement.setString(1, object.getDateFrom().toString());
+        preparedStatement.setString(2, object.getDateTo().toString());
+        preparedStatement.setInt(3, object.getUserID());
+        preparedStatement.setString(4, object.getRequestDate().toString());
+        preparedStatement.setString(5, object.getComment());
+        preparedStatement.setInt(6, object.getHotelRoomID());
+        preparedStatement.setInt(7, object.getStatus().getId());
     }
 
     private int saveRequestParams(Connection connection, Reservation reservation) throws SQLException {
@@ -106,15 +118,19 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         for (int i = 0; i < reservation.getRequestParameters().size(); i++) {
             joiner.add(template);
         }
-        PreparedStatement preparedStatement = connection.prepareStatement(joiner.toString());
+        try (PreparedStatement preparedStatement = connection.prepareStatement(joiner.toString());) {
 
-        int rowCount = 0;
-        for (ParameterValue pv : reservation.getRequestParameters()) {
-            preparedStatement.setInt(rowCount++, pv.getId());
+            int rowCount = 0;
+            for (ParameterValue pv : reservation.getRequestParameters()) {
+                preparedStatement.setInt(rowCount++, pv.getId());
+            }
+
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            connection.rollback();
+            throw new SQLException("Exception caused while was inserting parameters " + reservation.getRequestParameters() +
+                    " in create new Reservation operation", e);
         }
-
-        int insertedRows = preparedStatement.executeUpdate();
-        return insertedRows; //TODO: exception if caused!!! TRANSACTION!!!!!!!!
     }
 
     @Override
@@ -154,6 +170,12 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         } catch (SQLException e) {
             e.printStackTrace(); //TODO: addToLog
         }
+        return null;
+    }
+
+    @Override
+    public List<Reservation> getAllReservationsShortInfo(ReservationStatus status) {
+        //TODO:
         return null;
     }
 
