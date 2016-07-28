@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <jsp:useBean id="user" type="main.java.com.epam.project4.model.entity.User" scope="session"/>
-<jsp:useBean id="reservationList" type="java.util.List" scope="session"/>
+<jsp:useBean id="reservationList" type="java.util.List" scope="request"/>
 <head>
     <title>HotelSystem</title>
     <!-- Latest compiled and minified CSS -->
@@ -13,7 +13,6 @@
     <script src="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="<c:url value="../css/login.css"/>">
 </head>
 <body>
 
@@ -62,26 +61,42 @@
     <div class="col-md-10">
         <div class="row">
             <div class="reservationTitle pull-left"><h4>Reservations</h4></div>
-            <button type="button" class="btn btn-primary pull-right">New reservation</button>
+            <c:if test="${user.userType.id != 1}">
+                <a type="button" class="btn btn-primary pull-right"
+                   href="./controller?commandName=prepareReservationPageCommand">New reservation</a>
+            </c:if>
             <div class="dropdown pull-right">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Reservation
-                    type
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Reservation type
                     <span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                    <li><a href="#">HTML</a></li>
-                    <li><a href="#">CSS</a></li>
-                    <li><a href="#">JavaScript</a></li>
+                    <li>
+                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=1">processing</a>
+                    </li>
+                    <li>
+                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=2">answered</a>
+                    </li>
+                    <li>
+                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=3">refused</a>
+                    </li>
+                    <li>
+                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=4">submitted</a>
+                    </li>
+                    <li>
+                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=-1">all</a>
+                    </li>
+
                 </ul>
             </div>
         </div>
 
         <div class="panel-group">
-            <c:forEach var="reservation" items="reservationList">
-
+            <c:forEach var="reservation" items="${reservationList}">
                 <div class="panel panel-default">
                     <div class="panel-heading">Reservation ${reservation.id}
-                        <a href=""><span class="glyphicon glyphicon-remove pull-right"></span> </a>
-                        <label class="pull-right">${reservation}</label>
+                        <c:if test="${user.userType.id != 1}">
+                            <a href=""><span class="glyphicon glyphicon-remove pull-right"></span> </a>
+                        </c:if>
+                        <label class="pull-right">${reservation.requestDate}</label>
                     </div>
                     <div class="panel-body">
                         <ul class="list-group">
@@ -91,12 +106,9 @@
                             </li>
                             <li class="list-group-item">Status<span class="pull-right">${reservation.status}</span></li>
                         </ul>
-                        <button type="button" class="btn btn-default pull-right">Details</button>
+                        <a type="button" class="btn btn-default pull-right"
+                           href="./controller?commandName=getReservationProfileCommand&currentReservation=${reservation.id}">Details</a>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">Header2</div>
-                    <div class="panel-body">Panel Content</div>
                 </div>
             </c:forEach>
         </div>

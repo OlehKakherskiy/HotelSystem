@@ -69,6 +69,4 @@ public class HotelRoomService implements AbstractHotelRoomService {
     private void appendReformattedRoomParams(HotelRoom hotelRoom) {
         hotelRoom.setParameters(parameterValueService.getParamValueList(hotelRoom.getParametersIds()));
     }
-
-
 }

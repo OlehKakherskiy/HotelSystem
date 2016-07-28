@@ -55,6 +55,7 @@ public class Parameter {
         this.paramName = paramName;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,19 +63,12 @@ public class Parameter {
 
         Parameter parameter = (Parameter) o;
 
-        if (id != parameter.id) return false;
-        if (optional != parameter.optional) return false;
-        if (!defaultValue.equals(parameter.defaultValue)) return false;
-        return paramName.equals(parameter.paramName);
+        return id == parameter.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (optional ? 1 : 0);
-        result = 31 * result + defaultValue.hashCode();
-        result = 31 * result + paramName.hashCode();
-        return result;
+        return id;
     }
 }

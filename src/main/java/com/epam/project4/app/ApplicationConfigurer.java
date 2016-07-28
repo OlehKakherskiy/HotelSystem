@@ -3,17 +3,17 @@ package main.java.com.epam.project4.app;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.manager.DaoManager;
 import main.java.com.epam.project4.manager.GenericServiceManager;
-import main.java.com.epam.project4.manager.AbstractCommandManager;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -23,6 +23,11 @@ import java.util.Properties;
  */
 public class ApplicationConfigurer {
 
+    public ApplicationConfigurer() {
+
+        configureApplication();
+    }
+
     public static void main(String[] args) {
         new ApplicationConfigurer().configureApplication();
     }
@@ -30,11 +35,14 @@ public class ApplicationConfigurer {
     private void configureApplication() {
         Properties mainProperties = new Properties();
         try {
-            mainProperties.loadFromXML(new BufferedInputStream(new FileInputStream("resources/properties.xml")));
+            mainProperties.loadFromXML(new BufferedInputStream(this.getClass().getResourceAsStream("/properties.xml")));
+            System.out.println(Arrays.toString(mainProperties.stringPropertyNames().toArray()));
             Class<? extends AbstractCommandManager> commandManager = (Class<? extends AbstractCommandManager>) Class.forName(mainProperties.getProperty("commandManager"));
+            System.out.println("commandManager = " + commandManager);
             configureCommandManager(getPropsUsingKeyEnding(mainProperties, "Command"), commandManager);
 
             //TODO: вызвать метод configureDataSource, когда будет деплоймент
+            configureDataSource();
 
             Class<? extends DaoManager> daoManager = (Class<? extends DaoManager>) Class.forName(mainProperties.getProperty("daoManager"));
             configureManager(getPropsUsingKeyEnding(mainProperties, "Dao"), daoManager, GlobalContextConstant.DAO_MANAGER, GlobalContext.getValue(GlobalContextConstant.DATA_SOURCE));
@@ -77,8 +85,7 @@ public class ApplicationConfigurer {
         Map<Class<? extends V>, Class<? extends V>> result = new HashMap<>();
         map.entrySet().forEach(entry -> {
             try {
-                Class<? extends V> clazz = (Class<? extends V>) Class.forName((String) entry.getValue());
-                result.put(clazz, clazz);
+                result.put((Class<? extends V>) Class.forName((String) entry.getKey()), (Class<? extends V>) Class.forName((String) entry.getValue()));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -88,11 +95,11 @@ public class ApplicationConfigurer {
         GlobalContext.addToGlobalContext(saveAs, manager);
     }
 
-    private void configureDataSource(){
+    private void configureDataSource() {
         try {
             InitialContext initialContext = new InitialContext();
             DataSource dataSource = (DataSource) initialContext.lookup("java:/comp/env/jdbc/mysql");
-            GlobalContext.addToGlobalContext(GlobalContextConstant.DATA_SOURCE,dataSource);
+            GlobalContext.addToGlobalContext(GlobalContextConstant.DATA_SOURCE, dataSource);
         } catch (NamingException e) {
             e.printStackTrace();
         }

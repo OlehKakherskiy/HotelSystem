@@ -13,13 +13,19 @@ public enum CommandConstant {
 
     LOGOUT_COMMAND("logoutCommand"),
 
-    GET_RESERVATION_FULL_INFO_COMMAND("getReservationFullInfoCommand"),
+    GET_RESERVATION_PROFILE_COMMAND("getReservationProfileCommand"),
 
     FILL_NEW_RESERVATION_COMMAND("fillNewReservationCommand"),
 
     REFUSE_HOTEL_ROOM_OFFER_COMMAND("refuseHotelRoomOfferCommand"),
 
-    SUBMIT_HOTEL_ROOM_OFFER_COMMAND("submitHotelRoomOfferCommand");
+    SUBMIT_HOTEL_ROOM_OFFER_COMMAND("submitHotelRoomOfferCommand"),
+
+    OFFER_HOTEL_ROOM_COMMAND("offerHotelRoomCommand"),
+
+    GET_HOTEL_ROOM_LIST_COMMAND("getHotelRoomListCommand"),
+
+    PREPARE_RESERVATION_PAGE_COMMAND("prepareReservationPageCommand");
 
     private String commandName;
 
@@ -32,5 +38,9 @@ public enum CommandConstant {
             return null; //TODO: exception
         return Arrays.asList(CommandConstant.values()).
                 stream().filter(name -> name.commandName.equals(commandName)).findFirst().orElse(null);
+    }
+
+    public String getName() {
+        return commandName;
     }
 }

@@ -3,8 +3,8 @@ package main.java.com.epam.project4.controller.command.commandImpl;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
-import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.Reservation;
+import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.enums.UserType;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
@@ -30,23 +30,25 @@ public class GetReservationListCommand extends AbstractCommand {
         HttpSession session = request.getSession(false);
         User currentUser = (User) session.getAttribute(GlobalContextConstant.USER.getName());
 
-        ReservationStatus reservationStatus = (ReservationStatus) request.getAttribute("reservationStatus");
+        System.out.println("currentUser = " + currentUser);
+
+        String parameterID = request.getParameter("reservationStatus");
+
+        ReservationStatus reservationStatus = (parameterID == null)
+                ? ReservationStatus.fromId((Integer) request.getAttribute("reservationStatus"))
+                : ReservationStatus.fromId(Integer.parseInt(parameterID));
+
+        System.out.println("reservationStatus = " + reservationStatus);
 
         List<Reservation> reservationList;
-
         if (currentUser.getUserType() == UserType.ADMIN) {
-            LocalDate current = (LocalDate) request.getAttribute("monthDate");
-//            reservationList = reservationService.getShortInfoAboutAllReservationsForAdminInPeriod(reservationStatus,
-//                    getStartDateOfMonth(current), getEndDateOfMonth(current));
+            reservationList = reservationService.getShortInfoAboutAllReservations(reservationStatus);
+        } else {
+            reservationList = reservationService.getShortInfoAboutAllReservations(currentUser, reservationStatus);
         }
-
-//        reservationList = reservationService.getShortInfoAboutAllReservations(currentUser,
-//                reservationStatus);
-//TODO:раскомментировать строки - BL!!
-        reservationList = new ArrayList<>();
-        reservationList.add(new Reservation());
+        System.out.println(Arrays.toString(reservationList.toArray()));
         request.setAttribute("reservationList", reservationList);
-        return WebPageConstant.HOTEL_ROOM_LIST.getPath();
+        return WebPageConstant.INDEX.getPath();
     }
 
 

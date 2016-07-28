@@ -1,3 +1,5 @@
-<Resource name="jdbc/mysql" auth="Container" type="javax.sql.DataSource" maxActive="15" maxIdle="30"
-          username="root" password="11051995" driverClassName="com.mysql.jdbc.Driver"
-          url="jdbc:mysql://localhost:3306/hotelSystem?connectTimeout=10000&amp;cachePrepStmts=true&amp;useServerPrepStmts=true"/>
+<Context>
+    <Resource name="jdbc/mysql" auth="Container" type="javax.sql.DataSource" maxActive="15" maxIdle="30"
+              username="root" password="11051995" driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/mydb?connectTimeout=10000&amp;cachePrepStmts=true&amp;useServerPrepStmts=true"/>
+</Context>

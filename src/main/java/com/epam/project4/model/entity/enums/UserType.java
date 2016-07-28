@@ -11,19 +11,18 @@ public enum UserType {
 
     REGISTERED_USER(2);
 
-    private int ID;
+    private int id;
 
     UserType(int id) {
-        ID = id;
+        this.id = id;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-
-    public static UserType fromID(int ID) {
+    public static UserType fromID(int id) {
         return Arrays.asList(UserType.values()).stream().
-                filter(t -> t.getID() == ID).findFirst().orElse(REGISTERED_USER);
+                filter(t -> t.getId() == id).findFirst().orElse(REGISTERED_USER);
     }
 }

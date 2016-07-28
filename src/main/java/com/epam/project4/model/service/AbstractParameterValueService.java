@@ -14,7 +14,7 @@ public interface AbstractParameterValueService extends AbstractService {
 
     List<ParameterValue> getParamValueList(List<Integer> ids);
 
-    List<ParameterValue> getParamValueListFromParamIdList(List<Integer> ids);
+//    List<ParameterValue> getParamValueListFromParamIdList(List<Integer> ids);
 
     Map<Parameter, List<Value>> getParameterValueMap();
 }

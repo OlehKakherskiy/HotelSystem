@@ -32,11 +32,11 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
                 (paramValueId, parameterValue) -> parameterValue.getId() == paramValueId);
     }
 
-    @Override
-    public List<ParameterValue> getParamValueListFromParamIdList(List<Integer> parameterIdList) {
-        return getParamValueListUsingIdList(parameterIdList,
-                (id, parameterValue) -> parameterValue.getParameter().getId() == id);
-    }
+//    @Override
+//    public List<ParameterValue> getParamValueListFromParamIdList(List<Integer> parameterIdList) { //TODO: переделать!!!!!
+//        return getParamValueListUsingIdList(parameterIdList,
+//                (id, parameterValue) -> parameterValue.getParameter().getId() == id);
+//    }
 
     private List<ParameterValue> getParamValueListUsingIdList(List<Integer> idList, BiPredicate<Integer, ParameterValue> filterCriteria) {
         List<ParameterValue> fullParamList = getAllParams();

@@ -38,9 +38,9 @@ public class LoginCommand extends AbstractCommand {
 
         if (user.getUserType() == UserType.ADMIN) {
             request.setAttribute("monthDate", LocalDate.now());
-            request.setAttribute("reservationStatus", ReservationStatus.PROCESSING);
+            request.setAttribute("reservationStatus", ReservationStatus.PROCESSING.getId());
         } else {
-            request.setAttribute("reservationStatus", ReservationStatus.ALL);
+            request.setAttribute("reservationStatus", -1);
         }
 
         return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))

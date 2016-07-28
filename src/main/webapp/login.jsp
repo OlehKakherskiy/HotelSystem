@@ -7,7 +7,7 @@
     <link rel="stylesheet"
           href="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> "
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="<c:url value="/main/webapp/resources/css/login.css"/>">
+    <link rel="stylesheet" href="<c:url value="/main/webapp/WEB-INF/css/login.css"/>">
 </head>
 <body>
 <div class="card card-container text-center">

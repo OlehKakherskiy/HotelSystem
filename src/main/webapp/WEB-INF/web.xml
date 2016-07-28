@@ -14,20 +14,13 @@
     <servlet>
         <servlet-name>universalServlet</servlet-name>
         <servlet-class>main.java.com.epam.project4.controller.UniversalServlet</servlet-class>
+
     </servlet>
 
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
-    <!--<servlet>-->
-    <!--<servlet-name>login</servlet-name>-->
-    <!--<jsp-file>/login.jsp</jsp-file>-->
-    <!--</servlet>-->
-    <!---->
-    <!--<servlet-mapping>-->
-    <!--<servlet-name>login</servlet-name>-->
-    <!--<url-pattern>/</url-pattern>-->
-    <!--</servlet-mapping>-->
+
     <servlet-mapping>
         <servlet-name>universalServlet</servlet-name>
         <url-pattern>/controller/*</url-pattern>

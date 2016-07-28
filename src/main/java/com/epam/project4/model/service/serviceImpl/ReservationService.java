@@ -36,12 +36,20 @@ public class ReservationService implements AbstractReservationService {
 
     @Override
     public List<Reservation> getShortInfoAboutAllReservations(User user, ReservationStatus reservationStatus) {
-        return dao.getAllUserReservationsShortInfo(user.getIdUser(), reservationStatus);
+        List<Reservation> reservations = dao.getAllUserReservationsShortInfo(user.getIdUser(), reservationStatus);
+        if (reservations == null) {
+            throw new SystemException();
+        }
+        return reservations;
     }
 
     @Override
     public List<Reservation> getShortInfoAboutAllReservations(ReservationStatus reservationStatus) {
-        return dao.getAllReservationsShortInfo(reservationStatus);
+        List<Reservation> reservations = dao.getAllReservationsShortInfo(reservationStatus);
+        if (reservations == null) {
+            throw new SystemException();
+        }
+        return reservations;
     }
 
     @Override

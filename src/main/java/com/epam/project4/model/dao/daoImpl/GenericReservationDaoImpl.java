@@ -17,17 +17,20 @@ import java.util.StringJoiner;
  */
 public class GenericReservationDaoImpl extends GenericReservationDao {
 
-    private static final String shortInfoAboutAllForUser = "SELECT ID, date_request, id_Reservation_Status " +
-            "FROM Reservation WHERE id_User = ?";
+    private static final String getShortInfoBase = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +
+            "FROM Reservation ";
 
-    private static final String shortInfoAboutAllForUserFilteringByStatus = "SELECT ID, date_request, id_Reservation_Status " +
-            "FROM Reservation WHERE id_User=? AND id_Reservation_Status=?";
+    private static final String shortInfoAboutAllForUser = getShortInfoBase + " WHERE id_User = ?";
+
+    private static final String getShortInfoAboutAllFilteringByStatus = getShortInfoBase + " WHERE id_Reservation_Status=?";
+
+    private static final String shortInfoAboutAllForUserFilteringByUserAndStatus = shortInfoAboutAllForUser + " AND id_Reservation_Status=?";
 
     private static final String shortInfoAboutAllFilteringByStatusAndDate = "SELECT ID, date_request, id_Reservation_Status " +
             "FROM Reservation WHERE id_Reservation_Status=? AND ((date_from >= STR_TO_DATE(?,'%Y-%m-%d') AND date_from <= STR_TO_DATE(?,'%Y-%m-%d')) " +
             "OR (date_to >= STR_TO_DATE(?,'%Y-%m-%d') AND date_to <= STR_TO_DATE(?,'%Y-%m-%d')))";
 
-    private static final String fullInfoRequest = "SELECT ID, date_request, id_Reservation_Status, date_from, date_to, id_User, comment, id_Hotel_Room FROM " +
+    private static final String fullInfoRequest = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status, id_User, comment, id_Hotel_Room " +
             "FROM Reservation WHERE ID = ?";
 
     private static final String reservationRequestsIds = "SELECT id_parameter_values " +
@@ -37,6 +40,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
             "(date_from, date_to, id_User, date_request, comment, id_Hotel_Room, id_reservation_status)" +
             "VALUES" +
             "(?,?,?,?,?,?,?)";
+
 
     private static final String insertRequestParameters = "INSERT INTO Request_Parameters " +
             "(id_reservation_request, id_Parameter_Values) VALUES ";
@@ -57,8 +61,6 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
             if (resultSet.next()) {
                 reservation = new Reservation();
                 appendMainInfoToReservation(reservation, resultSet);
-                reservation.setDateFrom(LocalDate.parse(resultSet.getString(4)));
-                reservation.setDateTo(LocalDate.parse(resultSet.getString(5)));
                 reservation.setUserID(resultSet.getInt(6));
                 reservation.setComment(resultSet.getString(7));
                 reservation.setHotelRoomID(resultSet.getInt(8));
@@ -69,7 +71,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
             PreparedStatement statement = connection.prepareStatement(reservationRequestsIds);
             statement.setInt(1, reservation.getId());
-            ResultSet set = statement.getResultSet();
+            ResultSet set = statement.executeQuery();
             List<Integer> requestIds = new ArrayList<>();
             while (set.next()) {
                 requestIds.add(set.getInt(1));
@@ -150,7 +152,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
     @Override
     public List<Reservation> getAllRoomReservationsInPeriod(int roomID, ReservationStatus status, LocalDate startDate, LocalDate endDate) {
-        return null; //TODO!!!!!!
+        return null;
     }
 
     @Override
@@ -175,7 +177,16 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
     @Override
     public List<Reservation> getAllReservationsShortInfo(ReservationStatus status) {
-        //TODO:
+        String req = (status == ReservationStatus.ALL) ? getShortInfoBase : getShortInfoAboutAllFilteringByStatus;
+        try (Connection c = dataSource.getConnection();
+             PreparedStatement preparedStatement = c.prepareStatement(req)) {
+            if (status != ReservationStatus.ALL) {
+                preparedStatement.setInt(1, status.getId());
+            }
+            return buildReservationList(preparedStatement.executeQuery());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -200,7 +211,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
     }
 
     private List<Reservation> getAllReservationsForSpecUser(int userId, ReservationStatus status, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(shortInfoAboutAllForUserFilteringByStatus);
+        PreparedStatement preparedStatement = connection.prepareStatement(shortInfoAboutAllForUserFilteringByUserAndStatus);
         preparedStatement.setInt(1, userId);
         preparedStatement.setInt(2, status.getId());
         return buildReservationList(preparedStatement.executeQuery());
@@ -220,7 +231,9 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
     private Reservation appendMainInfoToReservation(Reservation reservation, ResultSet resultSet) throws SQLException {
         reservation.setId(resultSet.getInt(1));
         reservation.setRequestDate(LocalDate.parse(resultSet.getString(2)));
-        reservation.setStatus(ReservationStatus.fromId(resultSet.getInt(3)));
+        reservation.setDateFrom(LocalDate.parse(resultSet.getString(3)));
+        reservation.setDateTo(LocalDate.parse(resultSet.getString(4)));
+        reservation.setStatus(ReservationStatus.fromId(resultSet.getInt(5)));
         return reservation;
     }
 

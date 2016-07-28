@@ -48,4 +48,12 @@ public class MobilePhone {
     public int hashCode() {
         return getIdMobilePhone();
     }
+
+    @Override
+    public String toString() {
+        return "MobilePhone{" +
+                "idMobilePhone=" + idMobilePhone +
+                ", mobilePhone='" + mobilePhone + '\'' +
+                '}';
+    }
 }

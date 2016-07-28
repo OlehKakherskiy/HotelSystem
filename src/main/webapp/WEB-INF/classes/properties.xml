@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <entry key="commandManager">main.java.com.epam.project4.manager.managerImpl.CommandManagerImpl</entry>
+    <entry key="serviceManager">main.java.com.epam.project4.manager.managerImpl.ServiceManagerImpl</entry>
+    <entry key="daoManager">main.java.com.epam.project4.manager.managerImpl.DataSourceDaoManagerImpl</entry>
+
+    <entry key="fillNewReservationCommand">main.java.com.epam.project4.controller.command.commandImpl.FillNewReservationCommand</entry>
+    <entry key="getHotelRoomListCommand">main.java.com.epam.project4.controller.command.commandImpl.GetHotelRoomListCommand</entry>
+    <entry key="getReservationListCommand">main.java.com.epam.project4.controller.command.commandImpl.GetReservationListCommand</entry>
+    <entry key="getReservationProfileCommand">main.java.com.epam.project4.controller.command.commandImpl.GetReservationProfileCommand</entry>
+    <entry key="loginCommand">main.java.com.epam.project4.controller.command.commandImpl.LoginCommand</entry>
+    <entry key="logoutCommand">main.java.com.epam.project4.controller.command.commandImpl.LogoutCommand</entry>
+    <entry key="offerHotelRoomCommand">main.java.com.epam.project4.controller.command.commandImpl.OfferHotelRoomCommand</entry>
+    <entry key="refuseHotelRoomOfferCommand">main.java.com.epam.project4.controller.command.commandImpl.RefuseHotelRoomOfferCommand</entry>
+    <entry key="submitHotelRoomOfferCommand">main.java.com.epam.project4.controller.command.commandImpl.SubmitHotelRoomOfferCommand</entry>
+    <entry key="prepareReservationPageCommand">main.java.com.epam.project4.controller.command.commandImpl.PrepareReservationPageCommand</entry>
+
+    <entry key="main.java.com.epam.project4.model.service.AbstractReservationService">main.java.com.epam.project4.model.service.serviceImpl.ReservationService</entry>
+    <entry key="main.java.com.epam.project4.model.service.AbstractHotelRoomService">main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService</entry>
+    <entry key="main.java.com.epam.project4.model.service.AbstractUserService">main.java.com.epam.project4.model.service.serviceImpl.UserService</entry>
+    <entry key="main.java.com.epam.project4.model.service.AbstractParameterValueService">main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl</entry>
+
+    <entry key="main.java.com.epam.project4.model.dao.GenericUserDao">main.java.com.epam.project4.model.dao.daoImpl.GenericUserDaoImpl</entry>
+    <entry key="main.java.com.epam.project4.model.dao.GenericHotelRoomDao">main.java.com.epam.project4.model.dao.daoImpl.GenericHotelRoomDaoImpl</entry>
+    <entry key="main.java.com.epam.project4.model.dao.GenericMobilePhoneDao">main.java.com.epam.project4.model.dao.daoImpl.GenericMobilePhoneDaoImpl</entry>
+    <entry key="main.java.com.epam.project4.model.dao.GenericReservationDao">main.java.com.epam.project4.model.dao.daoImpl.GenericReservationDaoImpl</entry>
+    <entry key="main.java.com.epam.project4.model.dao.GenericParameterValueDao">main.java.com.epam.project4.model.dao.daoImpl.GenericParameterValueDaoImpl</entry>
+
+    <entry key="exceptionsFile">resources/exceptions.properties</entry>
+
+</properties>
+    

@@ -1,11 +1,11 @@
 package main.java.com.epam.project4.controller;
 
+import main.java.com.epam.project4.app.ApplicationConfigurer;
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
-import main.java.com.epam.project4.model.exception.SystemException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +18,9 @@ import java.io.IOException;
  */
 public class UniversalServlet extends HttpServlet {
 
+    static {
+        new ApplicationConfigurer();
+    }
     private AbstractCommandManager commandFactory = (AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY);
 
     @Override
@@ -25,8 +28,6 @@ public class UniversalServlet extends HttpServlet {
         System.out.println("doGet");
         if (req.getParameter(GlobalContextConstant.COMMAND_NAME.getName()) == null) {
             req.getRequestDispatcher(String.format("%s?command=%s", WebPageConstant.LOGIN.getPath(), CommandConstant.LOGIN_COMMAND.name())).include(req, resp);
-        } else {
-            throw new SystemException("blabla");
         }
         String newUrl = processCommand(req, resp);
         req.getRequestDispatcher(newUrl).forward(req, resp);
@@ -34,8 +35,8 @@ public class UniversalServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        throw new SystemException("syska");
         System.out.println("doPost");
+        System.out.println("commandFactory = " + commandFactory);
         String newUrl = processCommand(req, resp);
         req.getRequestDispatcher(newUrl).forward(req, resp);
     }
@@ -47,6 +48,7 @@ public class UniversalServlet extends HttpServlet {
             System.out.println(WebPageConstant.LOGIN.getPath());
             return WebPageConstant.LOGIN.getPath();
         } else {
+            System.out.println(commandFactory.getInstance(CommandConstant.fromValue(commandName)));
             return commandFactory.getInstance(CommandConstant.fromValue(commandName)).process(req, resp);
         }
     }

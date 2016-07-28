@@ -10,25 +10,20 @@ import java.util.Map;
  */
 public class GlobalContext {
 
-    private Map<GlobalContextConstant, Object> globalContextMap;
-
-    private static final GlobalContext globalContext = new GlobalContext();
-
-    private GlobalContext() {
-        globalContextMap = new HashMap<>();
-    }
+    private static Map<GlobalContextConstant, Object> globalContextMap = new HashMap<>();
 
     public static synchronized void addToGlobalContext(GlobalContextConstant key, Object value) { //TODO: нужно ли
         //todo: null check
-        globalContext.globalContextMap.put(key, value);
+        System.out.println("key = " + key);
+        System.out.println("value = " + value);
+        globalContextMap.put(key, value);
     }
 
     public static Object getValue(GlobalContextConstant key) {
-        return globalContext.globalContextMap.get(key);
+        return globalContextMap.get(key);
     }
 
     public static void removeValue(GlobalContextConstant key) {
-        globalContext.globalContextMap.remove(key);
+        globalContextMap.remove(key);
     }
-
 }

@@ -90,4 +90,15 @@ public class User implements Serializable {
     public int hashCode() {
         return idUser;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "idUser=" + idUser +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userType=" + userType +
+                ", mobilePhoneList=" + mobilePhoneList +
+                '}';
+    }
 }
