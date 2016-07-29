@@ -141,7 +141,12 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         boolean wasUpdate = false;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(object.getHotelRoom().getRoomID(), object.getStatus().getId());
+            if (object.getHotelRoomID() == -1) {
+                preparedStatement.setNull(1, java.sql.Types.INTEGER);
+            } else {
+                preparedStatement.setInt(1, object.getHotelRoomID());
+            }
+            preparedStatement.setInt(2, object.getStatus().getId());
             wasUpdate = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace(); //TODO: addToLog

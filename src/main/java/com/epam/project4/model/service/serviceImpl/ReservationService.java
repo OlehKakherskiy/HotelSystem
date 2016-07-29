@@ -101,8 +101,8 @@ public class ReservationService implements AbstractReservationService {
     private void update(Reservation reservation, ReservationStatus status, HotelRoom room, boolean updateHotelRoom) {
         reservation.setStatus(status);
         if (updateHotelRoom) {
-            reservation.setHotelRoomID(room.getRoomID());
             reservation.setHotelRoom(room);
+            reservation.setHotelRoomID((room == null) ? -1 : room.getRoomID());
         }
         boolean wasUpdated = (status != ReservationStatus.ALL) && dao.update(reservation);
         if (!wasUpdated) {

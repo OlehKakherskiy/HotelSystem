@@ -24,8 +24,8 @@
         <c:forEach items="${hotelRoomList}" var="hotelRoom">
             <div class="panel-group">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Room № ${hotelRoom.id}
-                        <label class="pull-right">price</label>
+                    <div class="panel-heading">Room № ${hotelRoom.roomID}
+                        <label class="pull-right">${hotelRoom.price}</label>
                     </div>
                     <div class="panel-body">
                         <ul class="list-group">
@@ -34,7 +34,7 @@
                                         class="pull-right">${parameterValue.value.value}</span></li>
                             </c:forEach>
                         </ul>
-                        <label class="pull-left">isActive=${hotelRoom.isActiveStatus}</label>
+                        <label class="pull-left">isActive=${hotelRoom.activationStatus}</label>
 
                         <a type="button" class="btn btn-default pull-right"
                            href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${hotelRoom.roomID}">Details</a>

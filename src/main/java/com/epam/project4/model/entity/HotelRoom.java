@@ -14,7 +14,7 @@ public class HotelRoom implements Serializable {
 
     private String roomName;
 
-    private boolean isActiveStatus;
+    private boolean activationStatus;
 
     private List<Reservation> reservationList;
 
@@ -22,11 +22,14 @@ public class HotelRoom implements Serializable {
 
     private List<Integer> parametersIds;
 
-    public HotelRoom(int roomID, String roomName, boolean isActiveStatus, List<ParameterValue> parameters) {
+    private int price;
+
+    public HotelRoom(int roomID, String roomName, boolean activationStatus, List<ParameterValue> parameters, int price) {
         this.roomID = roomID;
         this.roomName = roomName;
-        this.isActiveStatus = isActiveStatus;
+        this.activationStatus = activationStatus;
         this.parameters = parameters;
+        this.price = price;
     }
 
     public HotelRoom() {
@@ -48,12 +51,12 @@ public class HotelRoom implements Serializable {
         this.roomName = roomName;
     }
 
-    public boolean isActiveStatus() {
-        return isActiveStatus;
+    public boolean getActivationStatus() {
+        return activationStatus;
     }
 
-    public void setIsActiveStatus(boolean isActiveStatus) {
-        this.isActiveStatus = isActiveStatus;
+    public void setActivationStatus(boolean isActiveStatus) {
+        this.activationStatus = isActiveStatus;
     }
 
     public List<Reservation> getReservationList() {
@@ -72,7 +75,6 @@ public class HotelRoom implements Serializable {
         this.parameters = parameters;
     }
 
-
     public List<Integer> getParametersIds() {
         return parametersIds;
     }
@@ -89,7 +91,8 @@ public class HotelRoom implements Serializable {
         HotelRoom hotelRoom = (HotelRoom) o;
 
         if (roomID != hotelRoom.roomID) return false;
-        if (isActiveStatus != hotelRoom.isActiveStatus) return false;
+        if (activationStatus != hotelRoom.activationStatus) return false;
+        if (price != hotelRoom.price) return false;
         return roomName.equals(hotelRoom.roomName);
 
     }
@@ -98,7 +101,16 @@ public class HotelRoom implements Serializable {
     public int hashCode() {
         int result = roomID;
         result = 31 * result + roomName.hashCode();
-        result = 31 * result + (isActiveStatus ? 1 : 0);
+        result = 31 * result + (activationStatus ? 1 : 0);
+        result = 31 * result + price;
         return result;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

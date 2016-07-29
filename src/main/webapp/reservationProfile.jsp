@@ -157,24 +157,41 @@
     </div>
     <div class="col-md-2"></div>
 </div>
+
+<c:if test="${!newReservation && currentReservation.status.id == 2}">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <ul class="list-group">
+                <li class="list-group-item">Room Offer<span
+                        class="pull-right"><a class="btn btn-default"
+                                              href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${currentReservation.hotelRoomID}">Show</a> </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</c:if>
+
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
         <c:choose>
             <c:when test="${newReservation}">
-                <button type="submit" form="reservationForm" class="btn btn-success">Add reservation</button>
+                <a type="submit" form="reservationForm" class="btn btn-success"
+                   href="./controller?commandName=fillNewReservationCommand">Add reservation</a>
             </c:when>
             <c:when test="${!newReservation && user.userType.id == 1}">
                 <a type="button" class="btn btn-default" href="./controller?commandName=getHotelRoomListCommand">Choose
                     room</a>
             </c:when>
-            <c:otherwise>
+            <c:when test="${!newReservation && currentReservation.status.id == 2}">
                 <div class="btn-group pull-right" role="group">
                     <a type="button" class="btn btn-success"
                        href="./controller?commandName=submitHotelRoomOfferCommand">Accept</a>
                     <a type="button" class="btn btn-danger" href="./controller?commandName=refuseHotelRoomOfferCommand">Refuse</a>
                 </div>
-            </c:otherwise>
+            </c:when>
         </c:choose>
     </div>
     <div class="col-md-2"></div>

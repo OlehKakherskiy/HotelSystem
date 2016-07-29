@@ -37,7 +37,7 @@ public class LoginCommand extends AbstractCommand {
         httpSession.setAttribute(GlobalContextConstant.USER.getName(), user);
 
         if (user.getUserType() == UserType.ADMIN) {
-            request.setAttribute("monthDate", LocalDate.now());
+            request.setAttribute("monthDate", LocalDate.now()); //TODO: убрать!!!
             request.setAttribute("reservationStatus", ReservationStatus.PROCESSING.getId());
         } else {
             request.setAttribute("reservationStatus", -1);

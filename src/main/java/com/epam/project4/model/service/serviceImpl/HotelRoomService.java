@@ -5,6 +5,7 @@ import main.java.com.epam.project4.model.dao.GenericReservationDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
 import main.java.com.epam.project4.model.exception.SystemException;
 import main.java.com.epam.project4.model.service.AbstractHotelRoomService;
 import main.java.com.epam.project4.model.service.AbstractParameterValueService;
@@ -41,6 +42,8 @@ public class HotelRoomService implements AbstractHotelRoomService {
             throw new SystemException(); //TODO: системная ошибка со списком комнат при загрузке
         }
         hotelRoomList.stream().forEach(this::appendReformattedRoomParams);
+        hotelRoomList.forEach(room -> room.setPrice(room.getParameters().stream().map(ParameterValue::getPrice)
+                .reduce((integer, integer2) -> integer + integer2).orElseGet(() -> 0)));
         return hotelRoomList;
     }
 

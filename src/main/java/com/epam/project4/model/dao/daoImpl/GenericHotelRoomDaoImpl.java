@@ -1,8 +1,8 @@
 package main.java.com.epam.project4.model.dao.daoImpl;
 
+import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.exception.SystemException;
-import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -39,7 +39,9 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                hotelRooms.add(buildRoom(resultSet));
+                HotelRoom current = buildRoom(resultSet);
+                current.setParametersIds(getRoomParamsIDs(current.getRoomID(), connection));
+                hotelRooms.add(current);
             }
 
         } catch (SQLException e) {
@@ -86,7 +88,7 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
             HotelRoom hotelRoom = new HotelRoom();
             hotelRoom.setRoomID(resultSet.getInt(1));
             hotelRoom.setRoomName(resultSet.getString(2));
-            hotelRoom.setIsActiveStatus(resultSet.getBoolean(3));
+            hotelRoom.setActivationStatus(resultSet.getBoolean(3));
             return hotelRoom;
         } catch (SQLException e) {
             throw new SQLException(String.format("Exception caused while was attempt to map ResultSet object to %s", HotelRoom.class.getName()), e);
