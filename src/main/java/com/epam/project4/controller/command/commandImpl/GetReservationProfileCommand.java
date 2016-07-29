@@ -4,7 +4,6 @@ import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.model.entity.Reservation;
-import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.exception.RequestException;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
 
@@ -19,22 +18,20 @@ public class GetReservationProfileCommand extends AbstractCommand {
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
-
-        String reservationId = request.getParameter(GlobalContextConstant.CURRENT_RESERVATION.getName());
-        if (reservationId == null) {
-            throw new RequestException();
-        }
-
-        int id = Integer.parseInt(reservationId);
-
-        AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
-
         HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute(GlobalContextConstant.USER.getName());
+        if (session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName()) == null) {
 
-        Reservation currentReservation = reservationService.getReservationDetailInfo(id);
+            String reservationId = request.getParameter(GlobalContextConstant.CURRENT_RESERVATION.getName());
+            if (reservationId == null) {
+                throw new RequestException();
+            }
 
-        session.setAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName(), currentReservation);
+            int id = Integer.parseInt(reservationId);
+            AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
+            Reservation currentReservation = reservationService.getReservationDetailInfo(id);
+
+            session.setAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName(), currentReservation);
+        }
         request.setAttribute("newReservation", false);
         return WebPageConstant.RESERVATION_PROFILE.getPath();
     }

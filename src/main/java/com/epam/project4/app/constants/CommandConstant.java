@@ -25,7 +25,9 @@ public enum CommandConstant {
 
     GET_HOTEL_ROOM_LIST_COMMAND("getHotelRoomListCommand"),
 
-    PREPARE_RESERVATION_PAGE_COMMAND("prepareReservationPageCommand");
+    PREPARE_RESERVATION_PAGE_COMMAND("prepareReservationPageCommand"),
+
+    GET_HOTEL_ROOM_PROFILE_COMMAND("getHotelRoomProfileCommand");
 
     private String commandName;
 

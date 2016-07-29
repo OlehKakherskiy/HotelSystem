@@ -42,8 +42,7 @@ public class HotelRoomService implements AbstractHotelRoomService {
             throw new SystemException(); //TODO: системная ошибка со списком комнат при загрузке
         }
         hotelRoomList.stream().forEach(this::appendReformattedRoomParams);
-        hotelRoomList.forEach(room -> room.setPrice(room.getParameters().stream().map(ParameterValue::getPrice)
-                .reduce((integer, integer2) -> integer + integer2).orElseGet(() -> 0)));
+        hotelRoomList.forEach(this::calculateRoomBasicPrice);
         return hotelRoomList;
     }
 
@@ -66,10 +65,15 @@ public class HotelRoomService implements AbstractHotelRoomService {
             throw new SystemException(); //TODO: ошибка - не считалась с бд комната
         }
         appendReformattedRoomParams(result);
+        result.setPrice(calculateRoomBasicPrice(result));
         return result;
     }
 
     private void appendReformattedRoomParams(HotelRoom hotelRoom) {
         hotelRoom.setParameters(parameterValueService.getParamValueList(hotelRoom.getParametersIds()));
+    }
+
+    private int calculateRoomBasicPrice(HotelRoom room) {
+        return room.getParameters().stream().map(ParameterValue::getPrice).reduce((accumulator, price) -> accumulator + price).orElse(0);
     }
 }

@@ -31,7 +31,6 @@
     <link rel="stylesheet"
           href="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> "
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="<c:url value="/main/webapp/WEB-INF/css/login.css"/>">
 </head>
 <body>
 
@@ -60,7 +59,7 @@
                     <label class="col-sm-2 control-label" for="requestDate">Request Date:</label>
                     <div class="col-sm-10">
 
-                        <input type="date" class="form-control" id="requestDate"
+                        <input type="date" class="form-control" id="requestDate" pattern="yyyy-MM-dd"
                                value="<c:out value="${reqDate}"/>">
                         <div>
                             <c:out value="${reqDate}"/>
@@ -78,7 +77,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="startDate">Start Date:</label>
                 <div class="col-sm-10">
-                    <input type="date" class="form-control" id="startDate"
+                    <input type="date" class="form-control" id="startDate" pattern="yyyy-MM-dd"
                     <c:if test="${!newReservation}">
                            placeholder="${dateFrom}" readonly
                     </c:if>>
@@ -88,7 +87,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="dateEnd">End Date:</label>
                 <div class="col-sm-10">
-                    <input type="date" class="form-control" id="dateEnd"
+                    <input type="date" class="form-control" id="dateEnd" pattern="yyyy-MM-dd"
                     <c:if test="${!newReservation}">
                            placeholder="${dateTo}"
                            readonly
@@ -158,14 +157,13 @@
     <div class="col-md-2"></div>
 </div>
 
-<c:if test="${!newReservation && currentReservation.status.id == 2}">
+<c:if test="${!newReservation && currentReservation.status.id != 2}">
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <ul class="list-group">
-                <li class="list-group-item">Room Offer<span
-                        class="pull-right"><a class="btn btn-default"
-                                              href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${currentReservation.hotelRoomID}">Show</a> </span>
+                <li class="list-group-item">Room Offer<span class="pull-right">
+                    <a class="btn btn-default" href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${currentReservation.hotelRoomID}">Show</a></span>
                 </li>
             </ul>
         </div>
