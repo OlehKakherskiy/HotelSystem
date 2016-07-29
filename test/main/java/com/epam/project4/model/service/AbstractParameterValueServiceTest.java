@@ -27,7 +27,7 @@ public class AbstractParameterValueServiceTest {
     static AbstractParameterValueService parameterValueService;
 
 
-    static Map<Parameter, List<Value>> pvMap = new HashMap<>();
+    static Map<Parameter, List<ParameterValue>> pvMap = new HashMap<>();
 
     static List<ParameterValue> parameterValueList;
 
@@ -64,8 +64,8 @@ public class AbstractParameterValueServiceTest {
         parameterValueList = Arrays.asList(pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13);
 
 
-        pvMap.put(p1, Arrays.asList(v1, v2, v3, v4, v5));
-        pvMap.put(p2, Arrays.asList(v6, v7, v8, v9, v10, v4, v2, v1));
+        pvMap.put(p1, Arrays.asList(pv1, pv2, pv3, pv4, pv5));
+        pvMap.put(p2, Arrays.asList(pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13));
     }
 
     @After

@@ -1,8 +1,7 @@
 package main.java.com.epam.project4.model.service;
 
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
-import main.java.com.epam.project4.model.entity.roomParameter.Value;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
 
 import java.util.List;
 import java.util.Map;
@@ -16,5 +15,5 @@ public interface AbstractParameterValueService extends AbstractService {
 
 //    List<ParameterValue> getParamValueListFromParamIdList(List<Integer> ids);
 
-    Map<Parameter, List<Value>> getParameterValueMap();
+    Map<Parameter, List<ParameterValue>> getParameterValueMap();
 }

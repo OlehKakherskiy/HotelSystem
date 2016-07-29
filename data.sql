@@ -274,6 +274,29 @@ INSERT INTO `Parameter_Values` (`ID`, `id_Value_Pool`, `id_Room_Parameter`,`pric
 
 
 
+INSERT INTO `Request_Parameters` (`id_Reservation_Request`,`id_Parameter_Values`)
+VALUES (1,46),(2,45),(3,44),(4,45),(5,45),(6,47),(7,45),(8,44),(9,43),(10,44);
+INSERT INTO `Request_Parameters` (`id_Reservation_Request`,`id_Parameter_Values`)
+VALUES (11,44),(12,47),(13,44),(14,43),(15,45),(16,43),(17,47),(18,46),(19,46),(20,46);
+
+INSERT INTO `Request_Parameters` (`id_Reservation_Request`,`id_Parameter_Values`) VALUES (1,50),(2,50),(3,50),(4,51),(5,48),(6,49),
+(7,48),(8,50),(9,49),(10,50),(11,49),(12,51),(13,50),(14,49),(15,50),(16,50),(17,48),(18,51),(19,49),(20,50);
+
+INSERT INTO `Request_Parameters` (`id_Reservation_Request`,`id_Parameter_Values`) VALUES (1,56),(2,56),(3,52),(4,55),(5,55),(6,53),(7,53),(8,55),
+(9,55),(10,52),(11,52),(12,54),(13,55),(14,56),(15,52),(16,53),(17,52),(18,55),(19,54),(20,52);
+
+
+
+INSERT INTO `hotel_room_characteristics` (`id_Hotel_Room`,`id_Parameter_Values`)
+VALUES (1,46),(2,45),(3,44),(4,45),(5,45),(6,47),(7,45),(8,44),(9,43),(10,44);
+INSERT INTO `hotel_room_characteristics` (`id_Hotel_Room`,`id_Parameter_Values`)
+VALUES (11,44),(12,47),(13,44),(14,43),(15,45),(16,43),(17,47),(18,46),(19,46),(20,46);
+
+INSERT INTO `hotel_room_characteristics` (`id_Hotel_Room`,`id_Parameter_Values`) VALUES (1,50),(2,50),(3,50),(4,51),(5,48),(6,49),
+(7,48),(8,50),(9,49),(10,50),(11,49),(12,51),(13,50),(14,49),(15,50),(16,50),(17,48),(18,51),(19,49),(20,50);
+
+INSERT INTO `hotel_room_characteristics` (`id_Hotel_Room`,`id_Parameter_Values`) VALUES (1,56),(2,56),(3,52),(4,55),(5,55),(6,53),(7,53),(8,55),
+(9,55),(10,52),(11,52),(12,54),(13,55),(14,56),(15,52),(16,53),(17,52),(18,55),(19,54),(20,52);
 
 INSERT INTO `Reservation_Status` (`id_Reservation_status`, `status`) VALUES (1,'processing');
 INSERT INTO `Reservation_Status` (`id_Reservation_status`, `status`) VALUES (2,'answered');

@@ -10,10 +10,10 @@ import main.java.com.epam.project4.model.exception.SystemException;
 import main.java.com.epam.project4.model.service.AbstractParameterValueService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -46,8 +46,8 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
     }
 
     @Override
-    public Map<Parameter, List<Value>> getParameterValueMap() {
-        Map<Parameter, List<Value>> result = (Map<Parameter, List<Value>>) GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_MAP);
+    public Map<Parameter, List<ParameterValue>> getParameterValueMap() {
+        Map<Parameter, List<ParameterValue>> result = (Map<Parameter, List<ParameterValue>>) GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_MAP);
 
         if (result != null) {
             return result;
@@ -59,13 +59,8 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
         return result;
     }
 
-    private Map<Parameter, List<Value>> parameterValueMapFromList(List<ParameterValue> list) {
-        Map<Parameter, List<Value>> parameterListMap = new HashMap<>();
-
-        list.forEach(parameterValue -> getTargetList(parameterListMap, parameterValue.getParameter())
-                .add(parameterValue.getValue()));
-
-        return parameterListMap;
+    private Map<Parameter, List<ParameterValue>> parameterValueMapFromList(List<ParameterValue> list) {
+        return list.stream().collect(Collectors.groupingBy(ParameterValue::getParameter));
     }
 
     private List<Value> getTargetList(Map<Parameter, List<Value>> map, Parameter parameter) {

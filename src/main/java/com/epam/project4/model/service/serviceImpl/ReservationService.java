@@ -55,7 +55,7 @@ public class ReservationService implements AbstractReservationService {
     @Override
     public Reservation getReservationDetailInfo(int reservationID) {
         Reservation reservation = dao.read(reservationID);
-        parameterValueService.getParamValueList(reservation.getRequestParametersIds());
+        reservation.setRequestParameters(parameterValueService.getParamValueList(reservation.getRequestParametersIds()));
         reservation.getRequestParametersIds().clear();
         reservation.setRequestParametersIds(null);
 

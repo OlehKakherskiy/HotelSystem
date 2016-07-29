@@ -10,6 +10,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <jsp:useBean id="newReservation" scope="request" type="java.lang.Boolean"/>
 <jsp:useBean id="user" scope="session" type="main.java.com.epam.project4.model.entity.User"/>
+<c:if test="${newReservation}">
+    <jsp:useBean id="requestParameters" scope="request" type="java.util.Map"/>
+</c:if>
 <c:if test="${!newReservation}">
     <jsp:useBean id="currentReservation" scope="session" type="main.java.com.epam.project4.model.entity.Reservation"/>
 
@@ -20,7 +23,6 @@
     <fmt:formatDate value="${fDate}" pattern="dd.mm.yyyy" var="dateFrom"/>
 
     <fmt:parseDate value="${currentReservation.dateFrom}" var="dateTo" pattern="yyyy-MM-dd"/>
-
 </c:if>
 <html>
 <head>
@@ -32,7 +34,6 @@
     <link rel="stylesheet" href="<c:url value="/main/webapp/WEB-INF/css/login.css"/>">
 </head>
 <body>
-
 
 <div class="page-header text-center">
     <c:choose>
@@ -73,6 +74,7 @@
                     </div>
                 </div>
             </c:if>
+
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="startDate">Start Date:</label>
                 <div class="col-sm-10">
@@ -88,7 +90,6 @@
                 <div class="col-sm-10">
                     <input type="date" class="form-control" id="dateEnd"
                     <c:if test="${!newReservation}">
-
                            placeholder="${dateTo}"
                            readonly
                     </c:if>>
@@ -122,17 +123,36 @@
     <div class="col-md-8">
         <h4>Reservation Requirements</h4>
         <form class="form-horizontal">
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="sel1">Select list:</label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="sel1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                    </select>
-                </div>
-            </div>
+            <c:choose>
+                <c:when test="${newReservation == true}">
+                    <c:forEach items="${requestParameters}" var="requestParameter" varStatus="loop">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   for="p${loop.index}">${requestParameter.key.paramName}</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="p${loop.index}">
+                                    <c:forEach items="${requestParameter.value}" var="requestValue">
+                                        <option value="${requestValue.id}">${requestValue.value.value}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach items="${currentReservation.requestParameters}" var="parameterValue">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   for="p${parameterValue.id}">${parameterValue.parameter.paramName}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="p${parameterValue.id}"
+                                       readonly placeholder="${parameterValue.value.value}"
+                                />
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
         </form>
     </div>
     <div class="col-md-2"></div>

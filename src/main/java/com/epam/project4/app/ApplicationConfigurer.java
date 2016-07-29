@@ -38,7 +38,6 @@ public class ApplicationConfigurer {
             mainProperties.loadFromXML(new BufferedInputStream(this.getClass().getResourceAsStream("/properties.xml")));
             System.out.println(Arrays.toString(mainProperties.stringPropertyNames().toArray()));
             Class<? extends AbstractCommandManager> commandManager = (Class<? extends AbstractCommandManager>) Class.forName(mainProperties.getProperty("commandManager"));
-            System.out.println("commandManager = " + commandManager);
             configureCommandManager(getPropsUsingKeyEnding(mainProperties, "Command"), commandManager);
 
             //TODO: вызвать метод configureDataSource, когда будет деплоймент
