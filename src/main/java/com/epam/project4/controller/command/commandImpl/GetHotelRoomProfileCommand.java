@@ -35,13 +35,15 @@ public class GetHotelRoomProfileCommand extends AbstractCommand {
 
     private void appendReservationInfo(HttpServletRequest request, HotelRoom hotelRoom, AbstractHotelRoomService hotelRoomService) {
         LocalDate now = LocalDate.now();
+        String monthStr = request.getParameter("reservationMonth");
+        Month month = (monthStr == null || monthStr.isEmpty()) ? now.getMonth() : Month.of(Integer.valueOf(monthStr));
 
-        String monthStr = (String) request.getAttribute("month");
-        Month month = (monthStr == null || monthStr.isEmpty()) ? now.getMonth() : Month.of(Integer.valueOf(monthStr)); //TODO: разобраться когда месяц = 13
+        String yearStr = request.getParameter("reservationYear");
+        Year year = (yearStr == null || yearStr.isEmpty()) ? Year.of(now.getYear()) : Year.of(Integer.valueOf(yearStr));
 
-        String yearStr = (String) request.getAttribute("year");
 
-        Year year = (yearStr == null || yearStr.isEmpty()) ? Year.of(now.getYear()) : Year.of(Integer.valueOf(monthStr));
         hotelRoomService.appendSubmittedReservations(hotelRoom, month, year, ReservationStatus.SUBMITTED);
+        request.setAttribute("reservationMonth", month);
+        request.setAttribute("reservationYear", year);
     }
 }
