@@ -13,22 +13,19 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class SubmitHotelRoomOfferCommand extends AbstractCommand {
+public class RefuseReservationProcessingCommand extends AbstractCommand {
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
+        AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
         HttpSession session = request.getSession(false);
         Reservation reservation = (Reservation) session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
-
-        AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
-        reservationService.submitReservationOffer(reservation);
-        session.removeAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
-
-        request.setAttribute("reservationStatus", -1);
-        return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY)).
-                getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
-
+        reservation.setHotelRoomID(-1);
+        reservationService.refuseReservationProcessing(reservation);
+        return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
+                .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
     }
+
 }

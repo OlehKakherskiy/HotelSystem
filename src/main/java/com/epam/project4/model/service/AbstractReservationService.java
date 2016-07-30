@@ -20,10 +20,14 @@ public interface AbstractReservationService extends AbstractService {
 
     void offerHotelRoom(Reservation reservation, HotelRoom hotelRoom);
 
-    void setStatusToRefused(Reservation reservation);
+    void refuseReservationOffer(Reservation reservation);
 
-    void setStatusToSubmitted(Reservation reservation);
+    void submitReservationOffer(Reservation reservation);
+
+    void refuseReservationProcessing(Reservation reservation);
 
     void addReservation(Reservation reservation, User user);
+
+    void deleteReservation(int reservationId);
 
 }

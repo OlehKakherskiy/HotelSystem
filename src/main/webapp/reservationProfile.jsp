@@ -168,9 +168,25 @@
                 <a type="submit" form="reservationForm" class="btn btn-success"
                    href="./controller?commandName=fillNewReservationCommand">Add reservation</a>
             </c:when>
-            <c:when test="${!newReservation && user.userType.id == 1 && (currentReservation.status.id == 1 || currentReservation.status.id == 3)}">
-                <a type="button" class="btn btn-default" href="./controller?commandName=getHotelRoomListCommand">Choose
-                    room</a>
+            <c:when test="${!newReservation && user.userType.id == 1}">
+                <c:choose>
+                    <c:when test="${currentReservation.status.id == 1}">
+                        <div class="btn-group pull-right" role="group">
+                            <a type="button" class="btn btn-default"
+                               href="./controller?commandName=getHotelRoomListCommand">Choose room</a>
+                            <a type="button" class="btn btn-default"
+                               href="./controller?commandName=refuseReservationProcessingCommand">Refuse processing</a>
+                        </div>
+                    </c:when>
+                    <c:when test="${currentReservation.status.id == 3}">
+                        <a type="button" class="btn btn-default pull-right"
+                           href="./controller?commandName=getHotelRoomListCommand">Choose room</a>
+                    </c:when>
+                    <c:when test="${currentReservation.status.id == 4}">
+                        <a type="button" class="btn btn-default pull-right"
+                           href="./controller?commandName=refuseReservationProcessingCommand">Refuse processing</a>
+                    </c:when>
+                </c:choose>
             </c:when>
             <c:when test="${!newReservation && user.userType.id != 1 && currentReservation.status.id == 2}">
                 <div class="btn-group pull-right" role="group">

@@ -107,7 +107,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Reservation ${reservation.id}
                         <c:if test="${user.userType.id != 1}">
-                            <a href=""><span class="glyphicon glyphicon-remove pull-right"></span> </a>
+                            <a href="./controller?commandName=deleteReservationCommand&reservationId=${reservation.id}"><span
+                                    class="glyphicon glyphicon-remove pull-right"></span></a>
                         </c:if>
                         <label class="pull-right">${reservation.requestDate}</label>
                     </div>

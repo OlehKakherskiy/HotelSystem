@@ -68,13 +68,18 @@ public class ReservationService implements AbstractReservationService {
     }
 
     @Override
-    public void setStatusToRefused(Reservation reservation) {
+    public void refuseReservationOffer(Reservation reservation) {
         update(reservation, ReservationStatus.PROCESSING, null, true);
     }
 
     @Override
-    public void setStatusToSubmitted(Reservation reservation) {
+    public void submitReservationOffer(Reservation reservation) {
         update(reservation, ReservationStatus.SUBMITTED, null, false);
+    }
+
+    @Override
+    public void refuseReservationProcessing(Reservation reservation) {
+        update(reservation, ReservationStatus.REFUSED, null, false);
     }
 
     @Override
@@ -86,6 +91,11 @@ public class ReservationService implements AbstractReservationService {
             throw new RuntimeException(); //TODO: не вернул первичный ключ - ошибка
         }
         reservation.setId(newID);
+    }
+
+    @Override
+    public void deleteReservation(int reservationId) {
+        dao.delete(reservationId);
     }
 
 
@@ -100,6 +110,7 @@ public class ReservationService implements AbstractReservationService {
      */
     private void update(Reservation reservation, ReservationStatus status, HotelRoom room, boolean updateHotelRoom) {
         reservation.setStatus(status);
+        System.out.println("reservation = " + reservation);
         if (updateHotelRoom) {
             reservation.setHotelRoom(room);
             reservation.setHotelRoomID((room == null) ? -1 : room.getRoomID());

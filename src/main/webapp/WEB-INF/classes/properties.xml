@@ -17,6 +17,8 @@
     <entry key="submitHotelRoomOfferCommand">main.java.com.epam.project4.controller.command.commandImpl.SubmitHotelRoomOfferCommand</entry>
     <entry key="prepareReservationPageCommand">main.java.com.epam.project4.controller.command.commandImpl.PrepareReservationPageCommand</entry>
     <entry key="getHotelRoomProfileCommand">main.java.com.epam.project4.controller.command.commandImpl.GetHotelRoomProfileCommand</entry>
+    <entry key="deleteReservationCommand">main.java.com.epam.project4.controller.command.commandImpl.DeleteReservationCommand</entry>
+    <entry key="refuseReservationProcessingCommand">main.java.com.epam.project4.controller.command.commandImpl.RefuseReservationProcessingCommand</entry>
 
     <entry key="main.java.com.epam.project4.model.service.AbstractReservationService">main.java.com.epam.project4.model.service.serviceImpl.ReservationService</entry>
     <entry key="main.java.com.epam.project4.model.service.AbstractHotelRoomService">main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService</entry>

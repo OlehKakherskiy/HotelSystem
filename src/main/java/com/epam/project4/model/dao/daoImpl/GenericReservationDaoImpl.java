@@ -36,7 +36,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
             "FROM Reservation WHERE ID = ?";
 
     private static final String reservationRequestsIds = "SELECT id_parameter_values " +
-            "from Request_Parameters WHERE id_reservation_request = ?";
+            "FROM Request_Parameters WHERE id_reservation_request = ?";
 
     private static final String insertNewReservation = "INSERT INTO Reservation" +
             "(date_from, date_to, id_User, date_request, comment, id_Hotel_Room, id_reservation_status)" +
@@ -196,6 +196,19 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         return null;
     }
 
+    @Override
+    public boolean delete(Integer id) {
+        boolean isSuccessfully = false;
+        String query = "DELETE FROM Reservation WHERE ID = ?";
+        try (Connection c = dataSource.getConnection();
+             PreparedStatement preparedStatement = c.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return isSuccessfully;
+    }
 
     //---------------------------------QUERIES FOR USER_ID----------------------------------------//
     @Override
