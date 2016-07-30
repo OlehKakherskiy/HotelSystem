@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<jsp:useBean id="hotelRoomList" type="java.util.List" scope="request"/>
+<jsp:useBean id="hotelRoomList" type="java.util.List" scope="session"/>
 <html>
 <head>
     <title>HotelSystem</title>
@@ -24,7 +24,7 @@
         <c:forEach items="${hotelRoomList}" var="hotelRoom">
             <div class="panel-group">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Room № ${hotelRoom.roomID}
+                    <div class="panel-heading">Room № ${hotelRoom.roomName}
                         <label class="pull-right">${hotelRoom.price}</label>
                     </div>
                     <div class="panel-body">
