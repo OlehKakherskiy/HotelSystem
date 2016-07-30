@@ -19,18 +19,17 @@ public class GetReservationProfileCommand extends AbstractCommand {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
-        if (session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName()) == null) {
-
-            String reservationId = request.getParameter(GlobalContextConstant.CURRENT_RESERVATION.getName());
-            if (reservationId == null) {
-                throw new RequestException();
-            }
-
+        String reservationId = request.getParameter(GlobalContextConstant.CURRENT_RESERVATION.getName());
+        if (reservationId != null) {
             int id = Integer.parseInt(reservationId);
             AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
             Reservation currentReservation = reservationService.getReservationDetailInfo(id);
 
             session.setAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName(), currentReservation);
+        }else{
+            if(session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName()) == null){
+                throw new RequestException();
+            }
         }
         request.setAttribute("newReservation", false);
         return WebPageConstant.RESERVATION_PROFILE.getPath();

@@ -21,7 +21,7 @@
             <a class="navbar-brand" href="./controller?commandName=getReservationListCommand">Hotel System</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="./controller?commandName=getReservationListCommand">Home</a></li>
+            <li><a href="./controller?commandName=getReservationListCommand">Home</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="./controller?commandName=logoutCommand"><span class="glyphicon glyphicon-log-out"></span>
@@ -73,7 +73,7 @@
     <div class="col-md-1"></div>
     <div class="col-md-10">
         <div class="row">
-            <div class="reservationTitle pull-left"><h4>Reservations</h4></div>
+            <div class="pull-left"><h4>Reservations</h4></div>
             <c:if test="${user.userType.id != 1}">
                 <a type="button" class="btn btn-primary pull-right"
                    href="./controller?commandName=prepareReservationPageCommand">New reservation</a>

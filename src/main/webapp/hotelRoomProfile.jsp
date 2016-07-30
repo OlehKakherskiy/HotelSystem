@@ -43,7 +43,6 @@
         <c:param name="hotelRoomId" value="${hotelRoom.roomID}"/>
     </c:url>
 </c:if>
-
 <html>
 <head>
     <title>HotelSystem</title>
@@ -64,7 +63,7 @@
             <a class="navbar-brand" href="./controller?commandName=getReservationListCommand">Hotel System</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="./controller?commandName=getReservationListCommand">Home</a></li>
+            <li><a href="./controller?commandName=getReservationListCommand">Home</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="./controller?commandName=logoutCommand"><span class="glyphicon glyphicon-log-out"></span>
