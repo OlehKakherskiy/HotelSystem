@@ -26,9 +26,11 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
     private static final String shortInfoAboutAllForUserFilteringByUserAndStatus = shortInfoAboutAllForUser + " AND id_Reservation_Status=?";
 
-    private static final String shortInfoAboutAllFilteringByStatusAndDate = "SELECT ID, date_request, id_Reservation_Status " +
-            "FROM Reservation WHERE id_Reservation_Status=? AND ((date_from >= STR_TO_DATE(?,'%Y-%m-%d') AND date_from <= STR_TO_DATE(?,'%Y-%m-%d')) " +
+    private static final String shortInfoAboutRoomFilteringByDate = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +
+            "FROM Reservation WHERE ((date_from >= STR_TO_DATE(?,'%Y-%m-%d') AND date_from <= STR_TO_DATE(?,'%Y-%m-%d')) " +
             "OR (date_to >= STR_TO_DATE(?,'%Y-%m-%d') AND date_to <= STR_TO_DATE(?,'%Y-%m-%d')))";
+
+    private static final String shortInfoAboutRoomFilteringByDateAndStatus = shortInfoAboutRoomFilteringByDate + " AND id_Reservation_Status=?";
 
     private static final String fullInfoRequest = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status, id_User, comment, id_Hotel_Room " +
             "FROM Reservation WHERE ID = ?";
@@ -120,7 +122,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         for (int i = 0; i < reservation.getRequestParameters().size(); i++) {
             joiner.add(template);
         }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(joiner.toString());) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(joiner.toString())) {
 
             int rowCount = 0;
             for (ParameterValue pv : reservation.getRequestParameters()) {
@@ -157,21 +159,20 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
     @Override
     public List<Reservation> getAllRoomReservationsInPeriod(int roomID, ReservationStatus status, LocalDate startDate, LocalDate endDate) {
-        return null;
-    }
-
-    @Override
-    public List<Reservation> getAllReservationsShortInfoInPeriod(ReservationStatus status, LocalDate startDate, LocalDate endDate) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(shortInfoAboutAllFilteringByStatusAndDate);
-
+            PreparedStatement preparedStatement;
+            if (status == ReservationStatus.ALL) {
+                preparedStatement = connection.prepareStatement(shortInfoAboutRoomFilteringByDate);
+            } else {
+                preparedStatement = connection.prepareStatement(shortInfoAboutRoomFilteringByDateAndStatus);
+                preparedStatement.setInt(5, status.getId());
+            }
             String startDateStr = startDate.toString();
             String endDateStr = endDate.toString();
-            preparedStatement.setInt(1, status.getId());
-            preparedStatement.setString(2, startDateStr);
-            preparedStatement.setString(3, endDateStr);
-            preparedStatement.setString(4, startDateStr);
-            preparedStatement.setString(5, endDateStr);
+            preparedStatement.setString(1, startDateStr);
+            preparedStatement.setString(2, endDateStr);
+            preparedStatement.setString(3, startDateStr);
+            preparedStatement.setString(4, endDateStr);
             ResultSet res = preparedStatement.executeQuery();
             return buildReservationList(res);
         } catch (SQLException e) {
