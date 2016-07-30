@@ -12,12 +12,9 @@ import main.java.com.epam.project4.model.service.AbstractReservationService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
-
-import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
-import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -28,6 +25,7 @@ public class GetReservationListCommand extends AbstractCommand {
     public String process(HttpServletRequest request, HttpServletResponse response) {
         AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
         HttpSession session = request.getSession(false);
+        clearSessionExceptUser(session);
         User currentUser = (User) session.getAttribute(GlobalContextConstant.USER.getName());
 
         System.out.println("currentUser = " + currentUser);
@@ -50,13 +48,13 @@ public class GetReservationListCommand extends AbstractCommand {
         return WebPageConstant.INDEX.getPath();
     }
 
-
-    private LocalDate getStartDateOfMonth(LocalDate currentDate) {
-        return currentDate.with(firstDayOfMonth());
+    private void clearSessionExceptUser(HttpSession session) {
+        Enumeration attrs = session.getAttributeNames();
+        while (attrs.hasMoreElements()) {
+            String att = (String) attrs.nextElement();
+            if (!att.equals(GlobalContextConstant.USER.getName())) {
+                session.removeAttribute(att);
+            }
+        }
     }
-
-    private LocalDate getEndDateOfMonth(LocalDate currentDate) {
-        return currentDate.with(lastDayOfMonth());
-    }
-
 }
