@@ -53,10 +53,10 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
     @Override
     public HotelRoom read(Integer id) {
         HotelRoom room = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(readRoom);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(readRoom);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 room = buildRoom(resultSet);
             }
