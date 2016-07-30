@@ -1,5 +1,6 @@
 package main.java.com.epam.project4.controller.command.commandImpl;
 
+import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.model.entity.HotelRoom;
@@ -29,6 +30,7 @@ public class GetHotelRoomProfileCommand extends AbstractCommand {
             appendReservationInfo(request, hotelRoom, hotelRoomService);
         }
         request.setAttribute("hotelRoom", hotelRoom);
+        request.getSession(false).setAttribute(GlobalContextConstant.CURRENT_HOTEL_ROOM.getName(), hotelRoom);
         return WebPageConstant.HOTEL_ROOM_PROFILE.getPath();
     }
 

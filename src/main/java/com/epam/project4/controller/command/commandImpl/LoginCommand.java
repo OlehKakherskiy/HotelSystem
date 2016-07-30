@@ -3,17 +3,14 @@ package main.java.com.epam.project4.controller.command.commandImpl;
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
-import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.entity.User;
-import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
-import main.java.com.epam.project4.model.entity.enums.UserType;
 import main.java.com.epam.project4.model.service.AbstractUserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -35,13 +32,6 @@ public class LoginCommand extends AbstractCommand {
 
         HttpSession httpSession = request.getSession(true);
         httpSession.setAttribute(GlobalContextConstant.USER.getName(), user);
-
-        if (user.getUserType() == UserType.ADMIN) {
-            request.setAttribute("monthDate", LocalDate.now()); //TODO: убрать!!!
-            request.setAttribute("reservationStatus", ReservationStatus.PROCESSING.getId());
-        } else {
-            request.setAttribute("reservationStatus", -1);
-        }
 
         return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
                 .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);

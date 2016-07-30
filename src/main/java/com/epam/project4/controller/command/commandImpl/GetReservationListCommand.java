@@ -35,11 +35,10 @@ public class GetReservationListCommand extends AbstractCommand {
         String parameterID = request.getParameter("reservationStatus");
 
         ReservationStatus reservationStatus = (parameterID == null)
-                ? ReservationStatus.fromId((Integer) request.getAttribute("reservationStatus"))
+                ? ReservationStatus.PROCESSING
                 : ReservationStatus.fromId(Integer.parseInt(parameterID));
 
         System.out.println("reservationStatus = " + reservationStatus);
-
         List<Reservation> reservationList;
         if (currentUser.getUserType() == UserType.ADMIN) {
             reservationList = reservationService.getShortInfoAboutAllReservations(reservationStatus);

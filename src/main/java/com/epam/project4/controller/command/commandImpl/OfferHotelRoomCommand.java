@@ -1,8 +1,10 @@
 package main.java.com.epam.project4.controller.command.commandImpl;
 
+import main.java.com.epam.project4.app.GlobalContext;
+import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
-import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
@@ -27,6 +29,7 @@ public class OfferHotelRoomCommand extends AbstractCommand {
         session.removeAttribute(GlobalContextConstant.CURRENT_HOTEL_ROOM.getName());
         session.removeAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
 
-        return WebPageConstant.INDEX.getPath();
+        return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
+                .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
     }
 }
