@@ -42,7 +42,7 @@ public class HotelRoomService implements AbstractHotelRoomService {
             throw new SystemException(); //TODO: системная ошибка со списком комнат при загрузке
         }
         hotelRoomList.stream().forEach(this::appendReformattedRoomParams);
-        hotelRoomList.forEach(this::calculateRoomBasicPrice);
+        hotelRoomList.forEach(hotelRoom -> hotelRoom.setPrice(calculateRoomBasicPrice(hotelRoom)));
         return hotelRoomList;
     }
 
