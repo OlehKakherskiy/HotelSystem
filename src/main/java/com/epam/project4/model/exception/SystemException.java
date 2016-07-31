@@ -1,9 +1,13 @@
 package main.java.com.epam.project4.model.exception;
 
+import java.util.Locale;
+
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class SystemException extends RuntimeException{
+public class SystemException extends RuntimeException {
+
+    private Locale locale;
 
     public SystemException() {
     }
@@ -18,5 +22,14 @@ public class SystemException extends RuntimeException{
 
     public SystemException(Throwable cause) {
         super(cause);
+    }
+
+    @Override
+    public String getLocalizedMessage() {
+        return super.getLocalizedMessage();
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }

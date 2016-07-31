@@ -1,9 +1,13 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id="hotelRoomList" type="java.util.List" scope="session"/>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setLocale value="ru"/>
+<fmt:setBundle basename="roomList" var="rList"/>
+<fmt:setBundle basename="main" var="main"/>
 <html>
 <head>
-    <title>HotelSystem</title>
+    <title><fmt:message key="brand" bundle="${main}"/></title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
           href="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> "
@@ -18,20 +22,22 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="./controller?commandName=getReservationListCommand">Hotel System</a>
+            <a class="navbar-brand" href="./controller?commandName=getReservationListCommand"><fmt:message key="brand"
+                                                                                                           bundle="${main}"/></a>
         </div>
         <ul class="nav navbar-nav">
-            <li><a href="./controller?commandName=getReservationListCommand">Home</a></li>
+            <li><a href="./controller?commandName=getReservationListCommand"><fmt:message key="homeLink"
+                                                                                          bundle="${main}"/></a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="./controller?commandName=logoutCommand"><span class="glyphicon glyphicon-log-out"></span>
-                Logout</a></li>
+                <fmt:message key="logoutLink" bundle="${main}"/></a></li>
         </ul>
     </div>
 </nav>
 
 <div class="page-header text-center">
-    <h1>Room list</h1>
+    <h1><fmt:message key="roomListHeader" bundle="${rList}"/></h1>
 </div>
 <div class="row">
     <div class="col-md-1"></div>
@@ -39,7 +45,7 @@
         <c:forEach items="${hotelRoomList}" var="hotelRoom">
             <div class="panel-group">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Room № ${hotelRoom.roomName}
+                    <div class="panel-heading"><fmt:message key="room" bundle="${rList}"/> № ${hotelRoom.roomName}
                         <label class="pull-right">${hotelRoom.price}</label>
                     </div>
                     <div class="panel-body">
@@ -49,10 +55,12 @@
                                         class="pull-right">${parameterValue.value.value}</span></li>
                             </c:forEach>
                         </ul>
-                        <label class="pull-left">isActive=${hotelRoom.activationStatus}</label>
+                        <label class="pull-left"><fmt:message key="isActive" bundle="${rList}"/>
+                            ${hotelRoom.activationStatus}</label>
 
                         <a type="button" class="btn btn-default pull-right"
-                           href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${hotelRoom.roomID}">Details</a>
+                           href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${hotelRoom.roomID}"><fmt:message
+                                key="details" bundle="${rList}"/></a>
                     </div>
                 </div>
             </div>

@@ -42,14 +42,14 @@ public class FillNewReservationCommand extends AbstractCommand {
         Reservation reservation = new Reservation();
 
         String startDateStr = request.getParameter("dateFrom");
-//        if (startDateStr == null || startDateStr.isEmpty()) {
-//            throw new RequestException(); //TODO: нужно
-//        }
+        if (startDateStr == null || startDateStr.isEmpty()) {
+            throw new RequestException();
+        }
 
         String endDateStr = request.getParameter("dateTo");
-//        if (endDateStr == null || endDateStr.isEmpty()) {
-//            throw new RequestException();
-//        }
+        if (endDateStr == null || endDateStr.isEmpty()) {
+            throw new RequestException();
+        }
         LocalDate dateFrom = LocalDate.parse(startDateStr);
         LocalDate dateTo = LocalDate.parse(endDateStr);
         LocalDate reqDate = LocalDate.now();

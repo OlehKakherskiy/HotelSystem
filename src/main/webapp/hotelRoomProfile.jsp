@@ -43,9 +43,13 @@
         <c:param name="hotelRoomId" value="${hotelRoom.roomID}"/>
     </c:url>
 </c:if>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setLocale value="ru"/>
+<fmt:setBundle basename="hotelRoom" var="hRoom"/>
+<fmt:setBundle basename="main" var="main"/>
 <html>
 <head>
-    <title>HotelSystem</title>
+    <title><fmt:message key="brand" bundle="${main}"/></title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
           href="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> "
@@ -60,19 +64,22 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="./controller?commandName=getReservationListCommand">Hotel System</a>
+            <a class="navbar-brand" href="./controller?commandName=getReservationListCommand"><fmt:message key="brand"
+                                                                                                           bundle="${main}"/></a>
         </div>
         <ul class="nav navbar-nav">
-            <li><a href="./controller?commandName=getReservationListCommand">Home</a></li>
+            <li><a href="./controller?commandName=getReservationListCommand"><fmt:message key="homeLink"
+                                                                                          bundle="${main}"/></a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="./controller?commandName=logoutCommand"><span class="glyphicon glyphicon-log-out"></span>
-                Logout</a></li>
+                <fmt:message key="logoutLink" bundle="${main}"/></a></li>
         </ul>
     </div>
 </nav>
 
-<div class="page-header text-center"><h1>Room № ${hotelRoom.roomName} profile</h1></div>
+<div class="page-header text-center"><h1><fmt:message key="roomProfileHeader"
+                                                      bundle="${hRoom}"/> ${hotelRoom.roomName}</h1></div>
 
 <div class="row">
     <div class="col-md-1"></div>
@@ -86,8 +93,9 @@
                                     class="pull-right">${parameterValue.value.value}</span></li>
                         </c:forEach>
                     </ul>
-                    <label class="pull-left">isActive=${hotelRoom.activationStatus}</label>
-                    <label class="pull-right">price =${hotelRoom.price}</label>
+                    <label class="pull-left"><fmt:message key="isActive"
+                                                          bundle="${hRoom}"/> ${hotelRoom.activationStatus}</label>
+                    <label class="pull-right"><fmt:message key="price" bundle="${hRoom}"/>${hotelRoom.price}</label>
                 </div>
             </div>
         </div>
@@ -96,28 +104,28 @@
 </div>
 
 <c:if test="${isAdmin == true}">
-    <div class="text-center">Reservation details for ${reservationMonth} ${reservationYear}</div>
+    <div class="text-center"><fmt:message key="monthReservationDetails"
+                                          bundle="${hRoom}"/> ${reservationMonth} ${reservationYear}</div>
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
             <div class="panel-group">
                 <c:forEach var="reservation" items="${hotelRoom.reservationList}">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Reservation ${reservation.id}
+                        <div class="panel-heading"><fmt:message key="reservation" bundle="${hRoom}"/> ${reservation.id}
                             <label class="pull-right">${reservation.requestDate}</label>
                         </div>
                         <div class="panel-body">
                             <ul class="list-group">
-                                <li class="list-group-item">Start Date<span
+                                <li class="list-group-item"><fmt:message key="startDate" bundle="${hRoom}"/><span
                                         class="pull-right">${reservation.dateFrom}</span></li>
-                                <li class="list-group-item">End Date<span
+                                <li class="list-group-item"><fmt:message key="endDate" bundle="${hRoom}"/><span
                                         class="pull-right">${reservation.dateTo}</span>
                                 </li>
-                                <li class="list-group-item">Status<span class="pull-right">${reservation.status}</span>
+                                <li class="list-group-item"><fmt:message key="status" bundle="${hRoom}"/>
+                                    <span class="pull-right">${reservation.status}</span>
                                 </li>
                             </ul>
-                                <%--<a type="button" class="btn btn-default pull-right"--%>
-                                <%--href="./controller?commandName=getReservationProfileCommand&currentReservation=${reservation.id}">Details</a>--%>
                         </div>
                     </div>
                 </c:forEach>
@@ -129,8 +137,10 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
-            <a type="button" class="btn btn-default pull-left" href="${prevMonthUrl}">Prev</a>
-            <a type="button" class="btn btn-default pull-right" href="${nextMonthUrl}">Next</a>
+            <a type="button" class="btn btn-default pull-left" href="${prevMonthUrl}"><fmt:message key="prevMonthBtn"
+                                                                                                   bundle="${hRoom}"/></a>
+            <a type="button" class="btn btn-default pull-right" href="${nextMonthUrl}"><fmt:message key="nextMonthBtn"
+                                                                                                    bundle="${hRoom}"/></a>
         </div>
         <div class="col-md-1"></div>
     </div>
@@ -143,13 +153,14 @@
             <c:when test="${isAdmin == true}">
                 <c:set var="backLink" scope="page" value="./controller?commandName=getHotelRoomListCommand"/>
                 <c:set var="offerLink" scope="page" value="./controller?commandName=offerHotelRoomCommand"/>
-                <a type="button" class="btn btn-default pull-right" href="${offerLink}">Offer</a>
+                <a type="button" class="btn btn-default pull-right" href="${offerLink}"><fmt:message key="offerBtn"
+                                                                                                     bundle="${hRoom}"/></a>
             </c:when>
             <c:otherwise>
                 <c:set var="backLink" scope="page" value="./controller?commandName=getReservationProfileCommand"/>
             </c:otherwise>
         </c:choose>
-        <a type="button" class="btn btn-default pull-right" href="${backLink}">Back</a>
+        <a type="button" class="btn btn-default pull-right" href="${backLink}"><fmt:message key="backBtn" bundle="${hRoom}"/></a>
     </div>
     <div class="col-md-1"></div>
 </div>

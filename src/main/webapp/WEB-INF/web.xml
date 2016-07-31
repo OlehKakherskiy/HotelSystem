@@ -14,7 +14,6 @@
     <servlet>
         <servlet-name>universalServlet</servlet-name>
         <servlet-class>main.java.com.epam.project4.controller.UniversalServlet</servlet-class>
-
     </servlet>
 
     <welcome-file-list>

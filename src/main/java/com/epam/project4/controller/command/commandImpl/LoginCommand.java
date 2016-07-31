@@ -11,6 +11,7 @@ import main.java.com.epam.project4.model.service.AbstractUserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -19,7 +20,11 @@ public class LoginCommand extends AbstractCommand {
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
-
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         AbstractUserService userService = serviceManager.getInstance(AbstractUserService.class);
 
         String login = request.getParameter(GlobalContextConstant.LOGIN.getName());

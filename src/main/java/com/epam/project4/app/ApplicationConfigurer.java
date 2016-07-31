@@ -40,7 +40,6 @@ public class ApplicationConfigurer {
             Class<? extends AbstractCommandManager> commandManager = (Class<? extends AbstractCommandManager>) Class.forName(mainProperties.getProperty("commandManager"));
             configureCommandManager(getPropsUsingKeyEnding(mainProperties, "Command"), commandManager);
 
-            //TODO: вызвать метод configureDataSource, когда будет деплоймент
             configureDataSource();
 
             Class<? extends DaoManager> daoManager = (Class<? extends DaoManager>) Class.forName(mainProperties.getProperty("daoManager"));

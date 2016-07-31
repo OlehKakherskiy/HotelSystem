@@ -86,7 +86,6 @@ public class ReservationService implements AbstractReservationService {
     public void addReservation(Reservation reservation, User user) {
         reservation.setUserID(user.getIdUser());
         int newID = dao.save(reservation);
-        //TODO: в дао также инфу по параметрам сохранять
         if (newID == -1) {
             throw new RuntimeException(); //TODO: не вернул первичный ключ - ошибка
         }
@@ -113,7 +112,6 @@ public class ReservationService implements AbstractReservationService {
      */
     private void update(Reservation reservation, ReservationStatus status, HotelRoom room, boolean updateHotelRoom) {
         reservation.setStatus(status);
-        System.out.println("reservation = " + reservation);
         if (updateHotelRoom) {
             reservation.setHotelRoom(room);
             reservation.setHotelRoomID((room == null) ? -1 : room.getRoomID());
