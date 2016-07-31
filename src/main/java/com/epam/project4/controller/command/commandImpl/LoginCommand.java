@@ -25,9 +25,6 @@ public class LoginCommand extends AbstractCommand {
         String login = request.getParameter(GlobalContextConstant.LOGIN.getName());
         String password = request.getParameter(GlobalContextConstant.PASSWORD.getName());
 
-        System.out.println("login = " + login);
-        System.out.println("password = " + password);
-
         User user = userService.login(login, password);
 
         HttpSession httpSession = request.getSession(true);

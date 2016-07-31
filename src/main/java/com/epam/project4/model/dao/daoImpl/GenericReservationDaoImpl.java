@@ -4,6 +4,7 @@ import main.java.com.epam.project4.model.dao.GenericReservationDao;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.exception.SystemException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -45,7 +46,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
 
     private static final String insertRequestParameters = "INSERT INTO Request_Parameters " +
-            "(id_reservation_request, id_Parameter_Values) VALUES ";
+            "(id_Parameter_Values , id_reservation_request) VALUES ";
 
 
     private DataSource dataSource;
@@ -87,21 +88,32 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
 
     @Override
     public Integer save(Reservation object) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS)) {
+                insertReservationParams(preparedStatement, object);
+                preparedStatement.executeUpdate();
 
-            insertReservationParams(preparedStatement, object);
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                int newId = (generatedKeys.next()) ? generatedKeys.getInt(1) : -1;
+                if (newId == -1) {
+                    throw new SQLException(); //TODO: не вставились данные в бд
+                }
+                object.setId(newId);
+                int paramsSaved = saveRequestParams(connection, object);
+                if (paramsSaved < object.getRequestParameters().size()) {
+                    throw new SQLException(); //TODO: вставилось меньше параметров, чем нужно
+                }
+                connection.commit();
+                return newId;
 
-            preparedStatement.executeUpdate();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            //TODO: if not insert
-            int paramsSaved = saveRequestParams(connection, object);
-
-            return generatedKeys.next() ? generatedKeys.getInt(1) : -1;
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new SystemException(e.getMessage(), e);
+            }
         } catch (SQLException e) {
+            //TODO: не открылся коннекшн
             e.printStackTrace();
-            //TODO: в лог занести
         }
         return -1;
     }
@@ -112,7 +124,7 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         preparedStatement.setInt(3, object.getUserID());
         preparedStatement.setString(4, object.getRequestDate().toString());
         preparedStatement.setString(5, object.getComment());
-        preparedStatement.setInt(6, object.getHotelRoomID());
+        preparedStatement.setNull(6, java.sql.Types.INTEGER);
         preparedStatement.setInt(7, object.getStatus().getId());
     }
 
@@ -122,11 +134,12 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         for (int i = 0; i < reservation.getRequestParameters().size(); i++) {
             joiner.add(template);
         }
+        System.out.println("method saveRequestParams query: " + joiner.toString());
         try (PreparedStatement preparedStatement = connection.prepareStatement(joiner.toString())) {
 
             int rowCount = 0;
             for (ParameterValue pv : reservation.getRequestParameters()) {
-                preparedStatement.setInt(rowCount++, pv.getId());
+                preparedStatement.setInt(++rowCount, pv.getId());
             }
 
             return preparedStatement.executeUpdate();
@@ -203,8 +216,8 @@ public class GenericReservationDaoImpl extends GenericReservationDao {
         try (Connection c = dataSource.getConnection();
              PreparedStatement preparedStatement = c.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
         return isSuccessfully;

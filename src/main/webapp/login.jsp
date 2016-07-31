@@ -19,11 +19,11 @@
                     <form action="./controller" name="sign" method="post" class="form-signin">
                         <input type="hidden" name="commandName" value="loginCommand"/>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="usr" name="login" placeholder="Name">
+                            <input type="text" class="form-control" id="usr" name="login" placeholder="Name" required>
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" id="password" name="password"
-                                   placeholder="Password">
+                                   placeholder="Password" required>
                         </div>
                         <c:if test="${param.submitBtn && param.login == null && param.login.length() == 0}">
                             <p>exception</p>

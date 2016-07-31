@@ -55,33 +55,45 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-
         <c:choose>
             <c:when test="${newReservation == true}">
-                <h4>General information</h4>
                 <form class="form-horizontal" action="./controller" method="post" id="reservationForm">
                     <input type="hidden" name="commandName" value="fillNewReservationCommand">
-
+                    <h4>General information</h4>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="startDate">Start Date:</label>
                         <div class="col-sm-10">
-                            <input type="date" class="form-control" id="startDate" pattern="yyyy-MM-dd"/>
+                            <input type="date" class="form-control" id="startDate" name="dateFrom" pattern="yyyy-MM-dd" required/>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="dateEnd">End Date:</label>
                         <div class="col-sm-10">
-                            <input type="date" class="form-control" id="dateEnd" pattern="yyyy-MM-dd"/>
+                            <input type="date" class="form-control" id="dateEnd" name="dateTo" pattern="yyyy-MM-dd" required/>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="comment">Comment:</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                            <textarea class="form-control" rows="5" id="comment" name="comment"></textarea>
                         </div>
                     </div>
+                    <h4>Reservation Requirements</h4>
+                    <c:forEach items="${requestParameters}" var="requestParameter" varStatus="loop">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   for="${requestParameter.key.paramName}">${requestParameter.key.paramName}</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="${requestParameter.key.paramName}" name="${requestParameter.key.paramName}" required>
+                                    <c:forEach items="${requestParameter.value}" var="requestValue">
+                                        <option value="${requestValue.id}">${requestValue.value.value}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                    </c:forEach>
                 </form>
             </c:when>
             <c:otherwise>
@@ -107,40 +119,19 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <c:choose>
-            <c:when test="${newReservation == true}">
-                <h4>Reservation Requirements</h4>
-                <form class="form-horizontal">
-                    <c:forEach items="${requestParameters}" var="requestParameter" varStatus="loop">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"
-                                   for="p${loop.index}">${requestParameter.key.paramName}</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" id="p${loop.index}">
-                                    <c:forEach items="${requestParameter.value}" var="requestValue">
-                                        <option value="${requestValue.id}">${requestValue.value.value}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </form>
-            </c:when>
-            <c:otherwise>
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h4>Reservation Requirements</h4></div>
-                    <div class="panel-body">
-                        <ul class="list-group">
-                            <c:forEach items="${currentReservation.requestParameters}" var="parameterValue">
-                                <li class="list-group-item">${parameterValue.parameter.paramName}<span
-                                        class="pull-right">${parameterValue.value.value}</span></li>
-                            </c:forEach>
-                        </ul>
-
-                    </div>
+        <c:if test="${!newReservation}">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>Reservation Requirements</h4></div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <c:forEach items="${currentReservation.requestParameters}" var="parameterValue">
+                            <li class="list-group-item">${parameterValue.parameter.paramName}<span
+                                    class="pull-right">${parameterValue.value.value}</span></li>
+                        </c:forEach>
+                    </ul>
                 </div>
-            </c:otherwise>
-        </c:choose>
+            </div>
+        </c:if>
     </div>
     <div class="col-md-2"></div>
 </div>
@@ -150,9 +141,9 @@
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <ul class="list-group">
-                <li class="list-group-item">Room Offer<span class="pull-right">
-                    <a class="btn btn-default"
-                       href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${currentReservation.hotelRoomID}">Show</a></span>
+                <li class="list-group-item">Room Offer
+                    <a class="btn btn-default pull-right"
+                       href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${currentReservation.hotelRoomID}">Show</a>
                 </li>
             </ul>
         </div>
@@ -165,8 +156,7 @@
     <div class="col-md-8">
         <c:choose>
             <c:when test="${newReservation}">
-                <a type="submit" form="reservationForm" class="btn btn-success"
-                   href="./controller?commandName=fillNewReservationCommand">Add reservation</a>
+                <button type="submit" form="reservationForm" class="btn btn-success pull-right">Add reservation</button>
             </c:when>
             <c:when test="${!newReservation && user.userType.id == 1}">
                 <c:choose>

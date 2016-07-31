@@ -95,7 +95,10 @@ public class ReservationService implements AbstractReservationService {
 
     @Override
     public void deleteReservation(int reservationId) {
-        dao.delete(reservationId);
+        boolean wasDelete = dao.delete(reservationId);
+        if (!wasDelete) {
+            throw new SystemException();
+        }
     }
 
 
