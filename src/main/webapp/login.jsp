@@ -37,8 +37,8 @@
                     <div class="form-group">
                         <label for="language"><fmt:message key="interfaceLanguage" bundle="${login}"/></label>
                         <select name="language" id="language">
-                            <option value="en_EN" selected>English</option>
-                            <option value="ru_RU">Русский</option>
+                            <option value="en_EN">English</option>
+                            <option value="ru_RU" selected>Русский</option>
                         </select>
                     </div>
                 </form>

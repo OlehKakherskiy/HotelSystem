@@ -15,6 +15,16 @@
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
 
+    <filter>
+        <filter-name>securityFilter</filter-name>
+        <filter-class>main.java.com.epam.project4.controller.SecurityFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/controller/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>universalServlet</servlet-name>
         <servlet-class>main.java.com.epam.project4.controller.UniversalServlet</servlet-class>

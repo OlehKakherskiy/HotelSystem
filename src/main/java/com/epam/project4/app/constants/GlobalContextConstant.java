@@ -31,9 +31,9 @@ public enum GlobalContextConstant {
 
     PARAMETER_VALUE_MAP("parameterValueMap"),
 
-    DEFAULT_ROOM_PARAMS_TO_SHOW("defaultRoomParamsToShow"),
+    CURRENT_HOTEL_ROOM("currentHotelRoom"),
 
-    CURRENT_HOTEL_ROOM("currentHotelRoom");
+    SECURE_CONFIGURATION("secureConfiguration");
 
     private String name;
 

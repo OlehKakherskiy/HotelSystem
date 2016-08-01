@@ -21,10 +21,10 @@ public enum WebPageConstant {
 
 
     WebPageConstant(String path) {
-        this.path = String.format("/%s.jsp", path);
+        this.path = path;
     }
 
     public String getPath() {
-        return path;
+        return (this == LOGIN) ? String.format("/%s.jsp", path) : String.format("/WEB-INF/%s.jsp", path);
     }
 }

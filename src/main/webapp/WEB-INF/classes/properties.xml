@@ -20,6 +20,26 @@
     <entry key="deleteReservationCommand">main.java.com.epam.project4.controller.command.commandImpl.DeleteReservationCommand</entry>
     <entry key="refuseReservationProcessingCommand">main.java.com.epam.project4.controller.command.commandImpl.RefuseReservationProcessingCommand</entry>
 
+    <entry key="ADMIN_1">getHotelRoomListCommand</entry>
+    <entry key="ADMIN_2">getReservationListCommand</entry>
+    <entry key="ADMIN_3">getReservationProfileCommand</entry>
+    <entry key="ADMIN_4">loginCommand</entry>
+    <entry key="ADMIN_5">logoutCommand</entry>
+    <entry key="ADMIN_6">offerHotelRoomCommand</entry>
+    <entry key="ADMIN_7">getHotelRoomProfileCommand</entry>
+    <entry key="ADMIN_8">refuseReservationProcessingCommand</entry>
+
+    <entry key="REGISTERED_USER_1">fillNewReservationCommand</entry>
+    <entry key="REGISTERED_USER_3">getReservationListCommand</entry>
+    <entry key="REGISTERED_USER_4">getReservationProfileCommand</entry>
+    <entry key="REGISTERED_USER_5">loginCommand</entry>
+    <entry key="REGISTERED_USER_6">logoutCommand</entry>
+    <entry key="REGISTERED_USER_7">refuseHotelRoomOfferCommand</entry>
+    <entry key="REGISTERED_USER_8">submitHotelRoomOfferCommand</entry>
+    <entry key="REGISTERED_USER_8">prepareReservationPageCommand</entry>
+    <entry key="REGISTERED_USER_8">getHotelRoomProfileCommand</entry>
+    <entry key="REGISTERED_USER_8">deleteReservationCommand</entry>
+
     <entry key="main.java.com.epam.project4.model.service.AbstractReservationService">main.java.com.epam.project4.model.service.serviceImpl.ReservationService</entry>
     <entry key="main.java.com.epam.project4.model.service.AbstractHotelRoomService">main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService</entry>
     <entry key="main.java.com.epam.project4.model.service.AbstractUserService">main.java.com.epam.project4.model.service.serviceImpl.UserService</entry>
