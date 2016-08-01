@@ -11,7 +11,9 @@ public enum MessageCode {
 
     WRONG_USER_ID("wrongUserId"),
 
-    READ_USER_OPERATION_SYSTEM_EXCEPTION("readUserSystemException");
+    READ_USER_OPERATION_SYSTEM_EXCEPTION("readUserSystemException"),
+
+    GET_MOBILE_PHONE_LIST_SYSTEM_EXCEPTION("getMobilePhoneListSystemException");
 
     private String code;
 
