@@ -3,6 +3,7 @@ package main.java.com.epam.project4.model.dao.daoImpl;
 import main.java.com.epam.project4.model.dao.GenericUserDao;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.UserType;
+import main.java.com.epam.project4.exception.DaoException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class GenericUserDaoImpl extends GenericUserDao {
+public class UserDaoImpl extends GenericUserDao {
 
     private static final String getUserFromID =
             "SELECT idUser, name, last_name, idUserType, " +
@@ -34,7 +35,7 @@ public class GenericUserDaoImpl extends GenericUserDao {
     private DataSource dataSource;
 
     @Override
-    public User read(Integer id) {
+    public User read(Integer id) throws DaoException {
         User user = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(getUserFromID)) {
@@ -49,7 +50,7 @@ public class GenericUserDaoImpl extends GenericUserDao {
     }
 
     @Override
-    public User tryLogin(String login, String password) {
+    public User tryLogin(String login, String password) throws DaoException {
         User result = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(getUserFromLoginAndPassword)) {

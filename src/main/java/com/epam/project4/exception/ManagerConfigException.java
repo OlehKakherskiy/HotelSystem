@@ -1,4 +1,4 @@
-package main.java.com.epam.project4.model.exception;
+package main.java.com.epam.project4.exception;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
