@@ -7,27 +7,34 @@ import java.util.Arrays;
  */
 public enum ReservationStatus {
 
-    PROCESSING(1),
+    PROCESSING(1,"processing"),
 
-    ANSWERED(2),
+    WAITING_FOR_ANSWER(2,"waitingForAnswer"),
 
-    REFUSED(3),
+    REFUSED(3,"refused"),
 
-    SUBMITTED(4),
+    SUBMITTED(4,"submitted"),
 
-    ALL(-1);
+    ALL(-1,"all");
 
-    private int Id;
+    private int id;
 
-    ReservationStatus(int id) {
-        Id = id;
+    private String name;
+
+    ReservationStatus(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public int getId() {
-        return Id;
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public static ReservationStatus fromId(int id) {
-        return Arrays.asList(ReservationStatus.values()).stream().filter(status -> status.getId() == id).findFirst().orElse(ALL);//TODO: если нету id, то возвращаем все
+        return Arrays.asList(ReservationStatus.values()).stream().filter(status -> status.getId() == id).findFirst().orElse(ALL);
     }
 }

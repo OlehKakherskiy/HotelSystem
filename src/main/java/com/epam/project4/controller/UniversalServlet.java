@@ -6,12 +6,15 @@ import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
+import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
@@ -21,6 +24,12 @@ public class UniversalServlet extends HttpServlet {
     static {
         new ApplicationConfigurer();
     }
+
+    @Override
+    public void init() throws ServletException {
+        getServletContext().setAttribute("reservationStatusList", Arrays.stream(ReservationStatus.values()).collect(Collectors.toList()));
+    }
+
     private AbstractCommandManager commandFactory = (AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY);
 
     @Override
@@ -30,7 +39,9 @@ public class UniversalServlet extends HttpServlet {
             req.getRequestDispatcher(String.format("%s?command=%s", WebPageConstant.LOGIN.getPath(), CommandConstant.LOGIN_COMMAND.name())).include(req, resp);
         }
         String newUrl = processCommand(req, resp);
-        req.getRequestDispatcher(newUrl).forward(req, resp);
+        if (!newUrl.isEmpty()) {
+            req.getRequestDispatcher(newUrl).forward(req, resp);
+        }
     }
 
     @Override

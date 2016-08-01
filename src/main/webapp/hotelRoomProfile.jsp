@@ -44,9 +44,11 @@
     </c:url>
 </c:if>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="ru"/>
 <fmt:setBundle basename="hotelRoom" var="hRoom"/>
 <fmt:setBundle basename="main" var="main"/>
+<fmt:setBundle basename="valueListBundle" var="valueList"/>
+<fmt:setBundle basename="parameterListResource" var="rList"/>
+<fmt:setBundle basename="reservationTypeBundle" var="reservationType"/>
 <html>
 <head>
     <title><fmt:message key="brand" bundle="${main}"/></title>
@@ -80,7 +82,6 @@
 
 <div class="page-header text-center"><h1><fmt:message key="roomProfileHeader"
                                                       bundle="${hRoom}"/> ${hotelRoom.roomName}</h1></div>
-
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
@@ -89,8 +90,10 @@
                 <div class="panel-body">
                     <ul class="list-group">
                         <c:forEach items="${hotelRoom.parameters}" var="parameterValue">
-                            <li class="list-group-item">${parameterValue.parameter.paramName}<span
-                                    class="pull-right">${parameterValue.value.value}</span></li>
+                            <li class="list-group-item"><fmt:message key="${parameterValue.parameter.paramName}"
+                                                                     bundle="${rList}"/> <span
+                                    class="pull-right"><fmt:message key="${parameterValue.value.value}"
+                                                                    bundle="${valueList}"/> </span></li>
                         </c:forEach>
                     </ul>
                     <label class="pull-left"><fmt:message key="isActive"
@@ -123,7 +126,8 @@
                                         class="pull-right">${reservation.dateTo}</span>
                                 </li>
                                 <li class="list-group-item"><fmt:message key="status" bundle="${hRoom}"/>
-                                    <span class="pull-right">${reservation.status}</span>
+                                    <span class="pull-right"><fmt:message key="${reservation.status.name}"
+                                                                          bundle="${reservationType}"/> </span>
                                 </li>
                             </ul>
                         </div>
@@ -160,7 +164,8 @@
                 <c:set var="backLink" scope="page" value="./controller?commandName=getReservationProfileCommand"/>
             </c:otherwise>
         </c:choose>
-        <a type="button" class="btn btn-default pull-right" href="${backLink}"><fmt:message key="backBtn" bundle="${hRoom}"/></a>
+        <a type="button" class="btn btn-default pull-right" href="${backLink}"><fmt:message key="backBtn"
+                                                                                            bundle="${hRoom}"/></a>
     </div>
     <div class="col-md-1"></div>
 </div>

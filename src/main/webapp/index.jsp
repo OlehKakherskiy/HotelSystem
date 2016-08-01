@@ -1,12 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <jsp:useBean id="user" type="main.java.com.epam.project4.model.entity.User" scope="session"/>
 <jsp:useBean id="reservationList" type="java.util.List" scope="request"/>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="ru"/>
+<jsp:useBean id="lang" class="java.lang.String" scope="session"/>
+<jsp:useBean id="reservationStatusList" type="java.util.List" scope="application"/>
+
+<fmt:setLocale value="${sessionScope['lang']}" scope="session"/>
 <fmt:setBundle basename="index" var="index"/>
 <fmt:setBundle basename="main" var="main"/>
+<html>
 <head>
     <title><fmt:message key="brand" bundle="${main}"/></title>
     <!-- Latest compiled and minified CSS -->
@@ -91,23 +95,14 @@
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><fmt:message
                         key="reservationStatus" bundle="${index}"/>
                     <span class="caret"></span></button>
+                <fmt:setBundle basename="reservationTypeBundle" var="reservationType"/>
                 <ul class="dropdown-menu">
-                    <li>
-                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=1">processing</a>
-                    </li>
-                    <li>
-                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=2">answered</a>
-                    </li>
-                    <li>
-                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=3">refused</a>
-                    </li>
-                    <li>
-                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=4">submitted</a>
-                    </li>
-                    <li>
-                        <a href="./controller?commandName=getReservationListCommand&reservationStatus=-1">all</a>
-                    </li>
-
+                    <c:forEach items="${reservationStatusList}" var="status">
+                        <li>
+                            <a href="./controller?commandName=getReservationListCommand&reservationStatus=${status.id}"><fmt:message
+                                    key="${status.name}" bundle="${reservationType}"/></a>
+                        </li>
+                    </c:forEach>
                 </ul>
             </div>
         </div>
@@ -133,7 +128,8 @@
                             </li>
                             <li class="list-group-item"><fmt:message key="reservationStatus"
                                                                      bundle="${index}"/><span
-                                    class="pull-right">${reservation.status}</span></li>
+                                    class="pull-right"><fmt:message key="${reservation.status.name}"
+                                                                    bundle="${reservationType}"/></span></li>
                         </ul>
                         <a type="button" class="btn btn-default pull-right"
                            href="./controller?commandName=getReservationProfileCommand&currentReservation=${reservation.id}"><fmt:message

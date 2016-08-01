@@ -9,9 +9,10 @@
     <jsp:useBean id="currentReservation" scope="session" type="main.java.com.epam.project4.model.entity.Reservation"/>
 </c:if>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="ru"/>
 <fmt:setBundle basename="reservationProfile" var="reservBundle"/>
 <fmt:setBundle basename="main" var="main"/>
+<fmt:setBundle basename="valueListBundle" var="valueList"/>
+<fmt:setBundle basename="parameterListResource" var="paramList"/>
 <html>
 <head>
     <title><fmt:message key="brand" bundle="${main}"/></title>
@@ -87,12 +88,14 @@
                     <c:forEach items="${requestParameters}" var="requestParameter" varStatus="loop">
                         <div class="form-group">
                             <label class="col-sm-2 control-label"
-                                   for="${requestParameter.key.paramName}">${requestParameter.key.paramName}</label>
+                                   for="${requestParameter.key.paramName}"><fmt:message
+                                    key="${requestParameter.key.paramName}" bundle="${paramList}"/> </label>
                             <div class="col-sm-10">
                                 <select class="form-control" id="${requestParameter.key.paramName}"
                                         name="${requestParameter.key.paramName}" required>
                                     <c:forEach items="${requestParameter.value}" var="requestValue">
-                                        <option value="${requestValue.id}">${requestValue.value.value}</option>
+                                        <option value="${requestValue.id}"><fmt:message
+                                                key="${requestValue.value.value}" bundle="${valueList}"/></option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -102,14 +105,17 @@
             </c:when>
             <c:otherwise>
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h4>General information</h4></div>
+                    <div class="panel-heading"><h4><fmt:message key="generalInfo" bundle="${reservBundle}"/></h4></div>
                     <div class="panel-body">
                         <ul class="list-group">
-                            <li class="list-group-item">Date From<span
+                            <li class="list-group-item"><fmt:message key="startDate"
+                                                                     bundle="${reservBundle}"/><span
                                     class="pull-right">${currentReservation.dateFrom}</span></li>
-                            <li class="list-group-item">Date To<span
+                            <li class="list-group-item"><fmt:message key="endDate"
+                                                                     bundle="${reservBundle}"/><span
                                     class="pull-right">${currentReservation.dateTo}</span></li>
-                            <li class="list-group-item">Comment<span
+                            <li class="list-group-item"><fmt:message key="comment"
+                                                                     bundle="${reservBundle}"/><span
                                     class="pull-right">${currentReservation.comment}</span>
                             </li>
                         </ul>
@@ -129,8 +135,10 @@
                 <div class="panel-body">
                     <ul class="list-group">
                         <c:forEach items="${currentReservation.requestParameters}" var="parameterValue">
-                            <li class="list-group-item">${parameterValue.parameter.paramName}<span
-                                    class="pull-right">${parameterValue.value.value}</span></li>
+                            <li class="list-group-item"><fmt:message key="${parameterValue.parameter.paramName}"
+                                                                     bundle="${paramList}"/> <span
+                                    class="pull-right"><fmt:message key="${parameterValue.value.value}"
+                                                                    bundle="${valueList}"/> </span></li>
                         </c:forEach>
                     </ul>
                 </div>

@@ -11,14 +11,14 @@
         <res-auth>Container</res-auth>
     </resource-ref>
 
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
+
     <servlet>
         <servlet-name>universalServlet</servlet-name>
         <servlet-class>main.java.com.epam.project4.controller.UniversalServlet</servlet-class>
     </servlet>
-
-    <welcome-file-list>
-        <welcome-file>login.jsp</welcome-file>
-    </welcome-file-list>
 
     <servlet-mapping>
         <servlet-name>universalServlet</servlet-name>

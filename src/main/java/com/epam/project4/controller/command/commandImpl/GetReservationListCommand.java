@@ -52,7 +52,7 @@ public class GetReservationListCommand extends AbstractCommand {
         Enumeration attrs = session.getAttributeNames();
         while (attrs.hasMoreElements()) {
             String att = (String) attrs.nextElement();
-            if (!att.equals(GlobalContextConstant.USER.getName())) {
+            if (!att.equals(GlobalContextConstant.USER.getName()) && !att.equals("lang")) {
                 session.removeAttribute(att);
             }
         }

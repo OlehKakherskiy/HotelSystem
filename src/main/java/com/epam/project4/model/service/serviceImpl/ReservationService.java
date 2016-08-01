@@ -64,7 +64,7 @@ public class ReservationService implements AbstractReservationService {
 
     @Override
     public void offerHotelRoom(Reservation reservation, HotelRoom hotelRoom) {
-        update(reservation, ReservationStatus.ANSWERED, hotelRoom, true);
+        update(reservation, ReservationStatus.WAITING_FOR_ANSWER, hotelRoom, true);
     }
 
     @Override

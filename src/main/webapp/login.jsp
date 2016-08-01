@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charser=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="ru"/>
+<fmt:setLocale value="${param['lang']}" scope="page"/>
 <fmt:setBundle basename="login" var="login"/>
 <html>
 <head>
@@ -20,29 +20,28 @@
 
             <h3 class="card-header"><fmt:message key="header" bundle="${login}"/></h3>
             <div class="card-block">
-                <c:catch var="error">
-                    <form action="./controller" name="sign" method="post" class="form-signin">
-                        <input type="hidden" name="commandName" value="loginCommand"/>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="usr" name="login"
-                                   placeholder="<fmt:message key="login" bundle="${login}"/>" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="password" class="form-control" id="password" name="password"
-                                   placeholder="<fmt:message key="password" bundle="${login}"/>" required>
-                        </div>
-                        <c:if test="${param.submitBtn && param.login == null && param.login.length() == 0}">
-                            <p>exception</p>
-                        </c:if>
-                        <button type="submit" class="btn btn-default btn-block" name="submitBtn"><fmt:message
-                                key="loginBtn" bundle="${login}"/></button>
-                    </form>
-                </c:catch>
-                <c:if test="${error != null}">
-                    <p>There has been an exception raised in the above
-                        arithmetic operation. Please fix the error.
-                        Exception is: ${error}</p>
-                </c:if>
+                <form action="./controller" name="sign" method="post" class="form-signin">
+                    <input type="hidden" name="commandName" value="loginCommand"/>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="usr" name="login"
+                               placeholder="<fmt:message key="login" bundle="${login}"/>" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="<fmt:message key="password" bundle="${login}"/>" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-default btn-block" name="submitBtn"><fmt:message
+                            key="loginBtn" bundle="${login}"/></button>
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <label for="language"><fmt:message key="interfaceLanguage" bundle="${login}"/></label>
+                        <select name="language" id="language">
+                            <option value="en_EN" selected>English</option>
+                            <option value="ru_RU">Русский</option>
+                        </select>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
