@@ -1,8 +1,8 @@
 package main.java.com.epam.project4.model.dao.daoImpl;
 
+import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
-import main.java.com.epam.project4.model.exception.SystemException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -17,23 +17,29 @@ import java.util.List;
  */
 public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
 
+    private static final String SELECT_ROOM_REQUEST = "SELECT * FROM Hotel_Room WHERE id_room = ? AND is_active = 1";
 
-    private static final String readRoom = "SELECT * FROM Hotel_Room WHERE id_room = ? AND is_active = 1";
+    private static final String READ_ROOM_PARAMS_REQUEST = "Select id_Parameter_Values from Hotel_Room_Characteristics " +
+            "WHERE id_hotel_room = ?";
 
-    private static final String readRoomParams =
-            "Select id_Parameter_Values from Hotel_Room_Characteristics " +
-                    "WHERE id_hotel_room = ?";
+    private static final String GET_ALL_ROOMS_REQUEST = "SELECT * FROM Hotel_Room";
 
-    private static final String getAllRooms = "SELECT * FROM Hotel_Room";
+    private static final String GET_ALL_ACTIVE_ROOMS_REQUEST = "SELECT * FROM Hotel_Room WHERE is_active = 1";
 
-    private static final String getAllActiveRooms = "SELECT * FROM Hotel_Room WHERE is_active = 1";
+    private static final String getAllHotelRoomsDetailsException = "Exception caused during executing SQL request for getting details about hotel rooms";
+
+    private static final String GET_HOTEL_ROOM_DATA_EXCEPTION = "Exception caused during the executing SQL request for getting HotelRoom data process";
+
+    private static final String GET_HOTEL_ROOM_PARAMS_EXCEPTION = "Exception caused while was attempt to read from BD or ResultSet all room parameters for room's ID = %d";
+
+    private static final String BUILD_HOTEL_ROOM_FROM_RESULT_SET_EXCEPTION = "Exception caused while was attempt to map ResultSet object to %s";
 
     private DataSource dataSource;
 
     @Override
-    public List<HotelRoom> getAllFullDetails(boolean onlyActive) { //TODO:
+    public List<HotelRoom> getAllFullDetails(boolean onlyActive) throws DaoException { //TODO:
         List<HotelRoom> hotelRooms = new ArrayList<>();
-        String req = onlyActive ? getAllActiveRooms : getAllRooms;
+        String req = onlyActive ? GET_ALL_ACTIVE_ROOMS_REQUEST : GET_ALL_ROOMS_REQUEST;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(req);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -45,32 +51,34 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
             }
 
         } catch (SQLException e) {
-            hotelRooms = null;
+            throw new DaoException(getAllHotelRoomsDetailsException);
         }
         return hotelRooms;
     }
 
     @Override
-    public HotelRoom read(Integer id) {
+    public HotelRoom read(Integer id) throws DaoException {
         HotelRoom room = null;
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(readRoom);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROOM_REQUEST)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 room = buildRoom(resultSet);
             }
 
-            room.setParametersIds(getRoomParamsIDs(room.getRoomID(), connection));
+            if (room != null) {
+                room.setParametersIds(getRoomParamsIDs(room.getRoomID(), connection));
+            }
+            resultSet.close();
         } catch (SQLException e) {
-            room.setParametersIds(new ArrayList<>());
-            throw new SystemException(); //TODO: exceptionMessage
+            throw new DaoException(GET_HOTEL_ROOM_DATA_EXCEPTION, e);
         }
         return room;
     }
 
-    private List<Integer> getRoomParamsIDs(int roomId, Connection connection) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(readRoomParams)) {
+    private List<Integer> getRoomParamsIDs(int roomId, Connection connection) throws DaoException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(READ_ROOM_PARAMS_REQUEST)) {
             preparedStatement.setInt(1, roomId);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Integer> list = new ArrayList<>();
@@ -79,11 +87,11 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new SQLException(String.format("Exception caused while was attempt to read from BD or ResultSet all room parameters for room's ID = %d", roomId), e);
+            throw new DaoException(String.format(GET_HOTEL_ROOM_PARAMS_EXCEPTION, roomId), e);
         }
     }
 
-    private HotelRoom buildRoom(ResultSet resultSet) throws SQLException {
+    private HotelRoom buildRoom(ResultSet resultSet) throws DaoException {
         try {
             HotelRoom hotelRoom = new HotelRoom();
             hotelRoom.setRoomID(resultSet.getInt(1));
@@ -91,7 +99,7 @@ public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
             hotelRoom.setActivationStatus(resultSet.getBoolean(3));
             return hotelRoom;
         } catch (SQLException e) {
-            throw new SQLException(String.format("Exception caused while was attempt to map ResultSet object to %s", HotelRoom.class.getName()), e);
+            throw new DaoException(String.format(BUILD_HOTEL_ROOM_FROM_RESULT_SET_EXCEPTION, HotelRoom.class.getName()), e);
         }
     }
 

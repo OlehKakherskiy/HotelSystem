@@ -41,7 +41,13 @@ public enum MessageCode {
 
     GET_RESERVATION_LIST_SYSTEM_EXCEPTION("getReservationListSystemException"),
 
-    GET_USER_RESERVATION_LIST_SYSTEM_EXCEPTION("getUserReservationListSystemException");
+    GET_USER_RESERVATION_LIST_SYSTEM_EXCEPTION("getUserReservationListSystemException"),
+
+    GET_ROOM_MONTH_RESERVATION_LIST_SYSTEM_EXCEPTION("getRoomMonthReservationListSystemException"),
+
+    WRONG_ROOM_ID_SYSTEM_EXCEPTION("wrongRoomIdSystemException"),
+
+    READ_ROOM_SYSTEM_EXCEPTION("readRoomSystemException");
 
     private String code;
 
