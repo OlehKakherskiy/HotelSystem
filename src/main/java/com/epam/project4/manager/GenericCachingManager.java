@@ -1,8 +1,10 @@
 package main.java.com.epam.project4.manager;
 
-import main.java.com.epam.project4.model.exception.ManagerConfigException;
-import main.java.com.epam.project4.model.exception.SystemException;
+import main.java.com.epam.project4.app.constants.MessageCode;
+import main.java.com.epam.project4.exception.ManagerConfigException;
+import main.java.com.epam.project4.exception.SystemException;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,10 @@ import java.util.Map;
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E, T> {
+
+    private static final String NULL_KEY_EXCEPTION = "The key param in method createAndCache of manager {0} is null";
+
+    private static final String NO_SUCH_KEY_EXCEPTION = "There is no key element in template map with the key: {0} in manager {1}";
 
     protected Map<K, E> cache;
 
@@ -23,11 +29,11 @@ public abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E
     public <V extends E> V getInstance(K key) {
         try {
             if (key == null) {
-                throw new ManagerConfigException(String.format("The key param in method createAndCache of manager %s is null", this.getClass()));
+                throw new ManagerConfigException(MessageFormat.format(NULL_KEY_EXCEPTION, this.getClass().getName()));
             }
             return (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
         } catch (RuntimeException | ManagerConfigException e) {
-            throw new SystemException(e.getMessage(), e); //TODO: системная ошибка просто описание
+            throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e);
         }
     }
 
@@ -36,7 +42,7 @@ public abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E
         V result;
         T intermediateTemplateElement = keyObjectTemplateMap.get(key);
         if (intermediateTemplateElement == null) {
-            throw new ManagerConfigException(String.format("There is no template element in template map with the key: %s in manager %s", key, this.getClass().getName()));
+            throw new ManagerConfigException(MessageFormat.format(NO_SUCH_KEY_EXCEPTION, key, this.getClass().getName()));
         }
         result = getObjectHook(intermediateTemplateElement);
         cache.put(key, result);

@@ -1,9 +1,9 @@
 package main.java.com.epam.project4.manager.managerImpl;
 
-import main.java.com.epam.project4.manager.DaoManager;
-import main.java.com.epam.project4.manager.GenericServiceManager;
+import main.java.com.epam.project4.exception.ManagerConfigException;
+import main.java.com.epam.project4.manager.AbstractDaoManager;
+import main.java.com.epam.project4.manager.AbstractServiceManager;
 import main.java.com.epam.project4.model.dao.GenericDao;
-import main.java.com.epam.project4.model.exception.ManagerConfigException;
 import main.java.com.epam.project4.model.service.AbstractService;
 
 import java.lang.reflect.Constructor;
@@ -18,12 +18,17 @@ import java.util.stream.Collectors;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class ServiceManagerImpl extends GenericServiceManager {
+public class ServiceManagerImpl extends AbstractServiceManager {
 
-    private DaoManager daoManager;
+    private static final String INSTANTIATION_EXCEPTION_MESSAGE = "Exception caused while instantiating service of type %s with params:%s";
+
+    private static final String NO_INSTANTIATION_STRATEGY = "Exception caused because of %s service's constructor parameter of type %s. There is no" +
+            "strategy how to instantiate this type.";
+
+    private AbstractDaoManager daoManager;
 
     public ServiceManagerImpl(Map<Class<? extends AbstractService>, Class<? extends AbstractService>> keyObjectTemplateMap,
-                              DaoManager daoManager) {
+                              AbstractDaoManager daoManager) {
         super(keyObjectTemplateMap);
         this.daoManager = daoManager;
     }
@@ -40,7 +45,7 @@ public class ServiceManagerImpl extends GenericServiceManager {
         try {
             result = newInstance(objectClass, constructor, preparedParams);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            throw new ManagerConfigException(String.format("Exception caused while instantiating service of type %s with params:%s",
+            throw new ManagerConfigException(String.format(INSTANTIATION_EXCEPTION_MESSAGE,
                     objectClass.getName(), Arrays.toString(preparedParams.toArray())), e);
         }
         return result;
@@ -57,8 +62,8 @@ public class ServiceManagerImpl extends GenericServiceManager {
         } else if (AbstractService.class.isAssignableFrom(clazz)) {
             return this.getInstance(clazz);
         } else {
-            throw new ManagerConfigException(String.format("Exception caused because of %s service's constructor parameter of type %s. There is no" +
-                    "strategy how to instantiate this type.", this.getClass().getCanonicalName(), clazz.getCanonicalName()));
+            throw new ManagerConfigException(String.format(NO_INSTANTIATION_STRATEGY,
+                    this.getClass().getCanonicalName(), clazz.getCanonicalName()));
         }
     }
 

@@ -4,8 +4,8 @@ import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
-import main.java.com.epam.project4.manager.DaoManager;
-import main.java.com.epam.project4.manager.GenericServiceManager;
+import main.java.com.epam.project4.manager.AbstractDaoManager;
+import main.java.com.epam.project4.manager.AbstractServiceManager;
 import main.java.com.epam.project4.model.entity.enums.UserType;
 
 import javax.naming.InitialContext;
@@ -40,11 +40,11 @@ public class ApplicationConfigurer {
 
             configureDataSource();
 
-            Class<? extends DaoManager> daoManager = (Class<? extends DaoManager>) Class.forName(mainProperties.getProperty("daoManager"));
+            Class<? extends AbstractDaoManager> daoManager = (Class<? extends AbstractDaoManager>) Class.forName(mainProperties.getProperty("daoManager"));
             configureManager(getPropsUsingKeyEnding(mainProperties, "Dao"), daoManager, GlobalContextConstant.DAO_MANAGER, GlobalContext.getValue(GlobalContextConstant.DATA_SOURCE));
 
-            Class<? extends GenericServiceManager> serviceManager = (Class<? extends GenericServiceManager>) Class.forName(mainProperties.getProperty("serviceManager"));
-            configureManager(getPropsUsingKeyEnding(mainProperties, "Service"), serviceManager, GlobalContextConstant.SERVICE_MANAGER, (DaoManager) GlobalContext.getValue(GlobalContextConstant.DAO_MANAGER));
+            Class<? extends AbstractServiceManager> serviceManager = (Class<? extends AbstractServiceManager>) Class.forName(mainProperties.getProperty("serviceManager"));
+            configureManager(getPropsUsingKeyEnding(mainProperties, "Service"), serviceManager, GlobalContextConstant.SERVICE_MANAGER, (AbstractDaoManager) GlobalContext.getValue(GlobalContextConstant.DAO_MANAGER));
 
             configureSecurityMap(mainProperties);
 

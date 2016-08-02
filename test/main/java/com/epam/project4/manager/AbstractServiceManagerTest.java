@@ -1,9 +1,9 @@
 package main.java.com.epam.project4.manager;
 
+import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.manager.managerImpl.DataSourceDaoManagerImpl;
 import main.java.com.epam.project4.manager.managerImpl.ServiceManagerImpl;
-import main.java.com.epam.project4.model.dao.GenericMobilePhoneDao;
-import main.java.com.epam.project4.model.exception.SystemException;
+import main.java.com.epam.project4.model.dao.AbstractMobilePhoneDao;
 import main.java.com.epam.project4.model.service.AbstractHotelRoomService;
 import main.java.com.epam.project4.model.service.AbstractService;
 import org.junit.Assert;
@@ -16,12 +16,12 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class GenericServiceManagerTest {
+public class AbstractServiceManagerTest {
 
-    private static GenericServiceManager serviceManager;
+    private static AbstractServiceManager serviceManager;
 
     private class ExtraConstructorParamServiceStub implements AbstractService {
-        public ExtraConstructorParamServiceStub(String string, GenericMobilePhoneDao genericMobilePhoneDao, AbstractHotelRoomService hotelRoomService) {
+        public ExtraConstructorParamServiceStub(String string, AbstractMobilePhoneDao abstractMobilePhoneDao, AbstractHotelRoomService hotelRoomService) {
         }
     }
 

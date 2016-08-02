@@ -47,7 +47,9 @@ public enum MessageCode {
 
     WRONG_ROOM_ID_SYSTEM_EXCEPTION("wrongRoomIdSystemException"),
 
-    READ_ROOM_SYSTEM_EXCEPTION("readRoomSystemException");
+    READ_ROOM_SYSTEM_EXCEPTION("readRoomSystemException"),
+
+    GENERAL_SYSTEM_EXCEPTION("generalSystemException");
 
     private String code;
 

@@ -1,10 +1,10 @@
 package main.java.com.epam.project4.manager;
 
 import com.mysql.fabric.jdbc.FabricMySQLDataSource;
+import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.manager.managerImpl.DataSourceDaoManagerImpl;
 import main.java.com.epam.project4.model.dao.GenericDao;
 import main.java.com.epam.project4.model.dao.TransparentGenericDao;
-import main.java.com.epam.project4.model.exception.SystemException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,10 +15,10 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class DaoManagerTest {
+public class AbstractDaoManagerTest {
 
 
-    private static DaoManager daoManager;
+    private static AbstractDaoManager daoManager;
 
     private class DaoStubWithoutConstructor extends TransparentGenericDao {
         public DaoStubWithoutConstructor(String stub) {

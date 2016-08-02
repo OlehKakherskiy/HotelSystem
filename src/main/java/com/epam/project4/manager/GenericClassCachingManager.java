@@ -1,15 +1,15 @@
 package main.java.com.epam.project4.manager;
 
-import main.java.com.epam.project4.model.exception.ManagerConfigException;
+import main.java.com.epam.project4.exception.ManagerConfigException;
 
 import java.util.Map;
 
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public abstract class GenericCachingClassManager<K, E> extends GenericCachingManager<K, E, Class<? extends E>> {
+public abstract class GenericClassCachingManager<K, E> extends GenericCachingManager<K, E, Class<? extends E>> {
 
-    public GenericCachingClassManager(Map<K, Class<? extends E>> keyObjectTemplateMap) {
+    public GenericClassCachingManager(Map<K, Class<? extends E>> keyObjectTemplateMap) {
         super(keyObjectTemplateMap);
     }
 
@@ -19,5 +19,4 @@ public abstract class GenericCachingClassManager<K, E> extends GenericCachingMan
     }
 
     protected abstract <V extends E> V instantiate(Class<V> fromClass) throws ManagerConfigException;
-
 }

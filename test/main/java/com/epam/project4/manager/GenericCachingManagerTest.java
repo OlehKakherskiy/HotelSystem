@@ -1,19 +1,19 @@
 package main.java.com.epam.project4.manager;
 
-import main.java.com.epam.project4.app.constants.CommandConstant;
-import main.java.com.epam.project4.model.dao.*;
-import main.java.com.epam.project4.model.dao.daoImpl.*;
-import main.java.com.epam.project4.model.service.*;
 import com.mysql.fabric.jdbc.FabricMySQLDataSource;
+import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.FillNewReservationCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.GetReservationListCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.LogoutCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.RefuseHotelRoomOfferCommand;
+import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.manager.managerImpl.CommandManagerImpl;
 import main.java.com.epam.project4.manager.managerImpl.DataSourceDaoManagerImpl;
 import main.java.com.epam.project4.manager.managerImpl.ServiceManagerImpl;
-import main.java.com.epam.project4.model.exception.SystemException;
+import main.java.com.epam.project4.model.dao.*;
+import main.java.com.epam.project4.model.dao.daoImpl.*;
+import main.java.com.epam.project4.model.service.*;
 import main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService;
 import main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl;
 import main.java.com.epam.project4.model.service.serviceImpl.ReservationService;
@@ -30,15 +30,15 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class GenericCachingManagerTest { //TODO: протестить сервисы на наличие ошибки когда в конструкторе левый параметр передан, дао - когда нет датасорса, гет-сет методов или конструктор по умолчанию не доступен.
+public class GenericCachingManagerTest {
 
     private static List<GenericCachingManager> cachingManagers = new ArrayList<>();
 
     private static AbstractCommandManager commandManager;
 
-    private static GenericServiceManager serviceManager;
+    private static AbstractServiceManager serviceManager;
 
-    private static DaoManager daoManager;
+    private static AbstractDaoManager daoManager;
 
     private static List<Map> initMapsForManagers = new ArrayList<>();
 
@@ -66,10 +66,10 @@ public class GenericCachingManagerTest { //TODO: протестить серви
     private static void initDaoManager() {
         Map<Class<? extends GenericDao>, Class<? extends GenericDao>> daoManagerConfigs = new HashMap<>();
         daoManagerConfigs.put(GenericHotelRoomDao.class, GenericHotelRoomDaoImpl.class);
-        daoManagerConfigs.put(GenericMobilePhoneDao.class, GenericMobilePhoneDaoImpl.class);
-        daoManagerConfigs.put(GenericParameterValueDao.class, GenericParameterValueDaoImpl.class);
+        daoManagerConfigs.put(AbstractMobilePhoneDao.class, MobilePhoneDaoImpl.class);
+        daoManagerConfigs.put(AbstractParameterValueDao.class, ParameterValueDaoImpl.class);
         daoManagerConfigs.put(GenericReservationDao.class, GenericReservationDaoImpl.class);
-        daoManagerConfigs.put(GenericUserDao.class, GenericUserDaoImpl.class);
+        daoManagerConfigs.put(AbstractUserDao.class, UserDaoImpl.class);
 
         daoManager = new DataSourceDaoManagerImpl(daoManagerConfigs, new FabricMySQLDataSource());
         cachingManagers.add(daoManager);//stub datasource
@@ -83,7 +83,7 @@ public class GenericCachingManagerTest { //TODO: протестить серви
         serviceMap.put(AbstractReservationService.class, ReservationService.class);
         serviceMap.put(AbstractUserService.class, UserService.class);
 
-        serviceManager = new ServiceManagerImpl(serviceMap, (DaoManager) cachingManagers.get(1));
+        serviceManager = new ServiceManagerImpl(serviceMap, (AbstractDaoManager) cachingManagers.get(1));
         cachingManagers.add(serviceManager);
         initMapsForManagers.add(serviceMap);
     }

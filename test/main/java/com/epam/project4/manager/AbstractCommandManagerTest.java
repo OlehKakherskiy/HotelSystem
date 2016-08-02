@@ -6,8 +6,8 @@ import main.java.com.epam.project4.controller.command.commandImpl.FillNewReserva
 import main.java.com.epam.project4.controller.command.commandImpl.GetReservationListCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.LogoutCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.RefuseHotelRoomOfferCommand;
+import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.manager.managerImpl.CommandManagerImpl;
-import main.java.com.epam.project4.model.exception.SystemException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
