@@ -13,7 +13,9 @@ public enum MessageCode {
 
     READ_USER_OPERATION_SYSTEM_EXCEPTION("readUserSystemException"),
 
-    GET_MOBILE_PHONE_LIST_SYSTEM_EXCEPTION("getMobilePhoneListSystemException");
+    GET_MOBILE_PHONE_LIST_SYSTEM_EXCEPTION("getMobilePhoneListSystemException"),
+
+    GET_PARAMETER_VALUE_LIST_SYSTEM_EXCEPTION("getParameterValueListException");
 
     private String code;
 

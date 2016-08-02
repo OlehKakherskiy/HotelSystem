@@ -2,11 +2,13 @@ package main.java.com.epam.project4.model.service.serviceImpl;
 
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
-import main.java.com.epam.project4.model.dao.GenericParameterValueDao;
+import main.java.com.epam.project4.app.constants.MessageCode;
+import main.java.com.epam.project4.exception.DaoException;
+import main.java.com.epam.project4.exception.SystemException;
+import main.java.com.epam.project4.model.dao.AbstractParameterValueDao;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
 import main.java.com.epam.project4.model.entity.roomParameter.Value;
-import main.java.com.epam.project4.model.exception.SystemException;
 import main.java.com.epam.project4.model.service.AbstractParameterValueService;
 
 import java.util.ArrayList;
@@ -20,9 +22,9 @@ import java.util.stream.Collectors;
  */
 public class ParameterValueServiceImpl implements AbstractParameterValueService {
 
-    private GenericParameterValueDao parameterValueDao;
+    private AbstractParameterValueDao parameterValueDao;
 
-    public ParameterValueServiceImpl(GenericParameterValueDao parameterValueDao) {
+    public ParameterValueServiceImpl(AbstractParameterValueDao parameterValueDao) {
         this.parameterValueDao = parameterValueDao;
     }
 
@@ -32,22 +34,24 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
                 (paramValueId, parameterValue) -> parameterValue.getId() == paramValueId);
     }
 
-//    @Override
-//    public List<ParameterValue> getParamValueListFromParamIdList(List<Integer> parameterIdList) { //TODO: переделать!!!!!
-//        return getParamValueListUsingIdList(parameterIdList,
-//                (id, parameterValue) -> parameterValue.getParameter().getId() == id);
-//    }
 
-    private List<ParameterValue> getParamValueListUsingIdList(List<Integer> idList, BiPredicate<Integer, ParameterValue> filterCriteria) {
+    private List<ParameterValue> getParamValueListUsingIdList(List<Integer> idList,
+                                                              BiPredicate<Integer, ParameterValue> filterCriteria) {
         List<ParameterValue> fullParamList = getAllParams();
         List<ParameterValue> result = new ArrayList<>();
-        idList.stream().forEach(id -> fullParamList.stream().filter(parameterValue -> filterCriteria.test(id, parameterValue)).findFirst().ifPresent(result::add));
+        idList.stream()
+                .forEach(id -> fullParamList
+                        .stream()
+                        .filter(parameterValue -> filterCriteria.test(id, parameterValue))
+                        .findFirst()
+                        .ifPresent(result::add));
         return result;
     }
 
     @Override
     public Map<Parameter, List<ParameterValue>> getParameterValueMap() {
-        Map<Parameter, List<ParameterValue>> result = (Map<Parameter, List<ParameterValue>>) GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_MAP);
+        Map<Parameter, List<ParameterValue>> result = (Map<Parameter, List<ParameterValue>>)
+                GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_MAP);
 
         if (result != null) {
             return result;
@@ -75,16 +79,20 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
     }
 
     private List<ParameterValue> getAllParams() {
-        List<ParameterValue> parameterValues = (List<ParameterValue>) GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST); //TODO: тут нужно аккуратно - многопоточность
+        List<ParameterValue> parameterValues = (List<ParameterValue>)
+                GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST); //TODO: тут нужно аккуратно - многопоточность
         return (parameterValues != null) ? parameterValues : addToCacheAndReturn();
     }
 
     private List<ParameterValue> addToCacheAndReturn() {
-        List<ParameterValue> parameterValues = parameterValueDao.getAllFullInfo();
-        if (parameterValues == null) {
-            throw new SystemException(); //TODO: Системная ошибка при загрузке возможных параметров комнат
+        try {
+            List<ParameterValue> parameterValues = parameterValueDao.getAllFullInfo();
+
+            GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValues);
+            return parameterValues;
+
+        } catch (DaoException e) {
+            throw new SystemException(MessageCode.GET_PARAMETER_VALUE_LIST_SYSTEM_EXCEPTION, e);
         }
-        GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValues);
-        return parameterValues;
     }
 }
