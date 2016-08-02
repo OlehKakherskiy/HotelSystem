@@ -1,12 +1,12 @@
 package main.java.com.epam.project4.model.service;
 
-import main.java.com.epam.project4.model.dao.GenericMobilePhoneDao;
-import main.java.com.epam.project4.model.dao.GenericUserDao;
+import main.java.com.epam.project4.exception.RequestException;
+import main.java.com.epam.project4.exception.SystemException;
+import main.java.com.epam.project4.model.dao.AbstractMobilePhoneDao;
+import main.java.com.epam.project4.model.dao.AbstractUserDao;
 import main.java.com.epam.project4.model.entity.MobilePhone;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.UserType;
-import main.java.com.epam.project4.model.exception.RequestException;
-import main.java.com.epam.project4.model.exception.SystemException;
 import main.java.com.epam.project4.model.service.serviceImpl.UserService;
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -60,19 +60,19 @@ public class AbstractUserServiceTest {
     @Test
     public void testLogin() throws Exception {
 
-        GenericUserDao genericUserDao = createOkUserDaoLogin();
-        GenericMobilePhoneDao genericMobilePhoneDao = createOkMobilePhoneDaoAll();
-        EasyMock.replay(genericUserDao, genericMobilePhoneDao);
+        AbstractUserDao abstractUserDao = createOkUserDaoLogin();
+        AbstractMobilePhoneDao abstractMobilePhoneDao = createOkMobilePhoneDaoAll();
+        EasyMock.replay(abstractUserDao, abstractMobilePhoneDao);
 
-        abstractUserService = new UserService(genericUserDao, genericMobilePhoneDao);
+        abstractUserService = new UserService(abstractUserDao, abstractMobilePhoneDao);
         Assert.assertEquals(expectation, abstractUserService.login(LOGIN, PASSWORD));
 
-        EasyMock.verify(genericUserDao, genericMobilePhoneDao);
+        EasyMock.verify(abstractUserDao, abstractMobilePhoneDao);
     }
 
     @Test(expected = SystemException.class)
     public void testLoginSystemException() throws Exception {
-        GenericUserDao systemExceptionUserDaoLogin = createSystemExceptionUserDaoLogin();
+        AbstractUserDao systemExceptionUserDaoLogin = createSystemExceptionUserDaoLogin();
         EasyMock.replay(systemExceptionUserDaoLogin);
 
         abstractUserService = new UserService(systemExceptionUserDaoLogin, null);
@@ -83,8 +83,8 @@ public class AbstractUserServiceTest {
 
     @Test(expected = SystemException.class)
     public void testLoginMobilePhoneSystemException() throws Exception {
-        GenericUserDao okUserDao = createOkUserDaoLogin();
-        GenericMobilePhoneDao systemExceptionMobilePhoneDao = createSystemExceptionMobilePhoneDaoAll();
+        AbstractUserDao okUserDao = createOkUserDaoLogin();
+        AbstractMobilePhoneDao systemExceptionMobilePhoneDao = createSystemExceptionMobilePhoneDaoAll();
         EasyMock.replay(okUserDao, systemExceptionMobilePhoneDao);
 
         abstractUserService = new UserService(okUserDao, systemExceptionMobilePhoneDao);
@@ -95,8 +95,8 @@ public class AbstractUserServiceTest {
 
     @Test(expected = RequestException.class)
     public void testLoginInvalidLoginPassword() throws Exception {
-        GenericUserDao requestExceptionUserDao = createRequestExceptionUserDaoLogin();
-        GenericMobilePhoneDao okMobilePhoneDao = createOkMobilePhoneDaoAll();
+        AbstractUserDao requestExceptionUserDao = createRequestExceptionUserDaoLogin();
+        AbstractMobilePhoneDao okMobilePhoneDao = createOkMobilePhoneDaoAll();
         EasyMock.replay(requestExceptionUserDao, okMobilePhoneDao);
 
         abstractUserService = new UserService(requestExceptionUserDao, okMobilePhoneDao);
@@ -110,8 +110,8 @@ public class AbstractUserServiceTest {
         User expected = getActualUser();
         expected.setMobilePhoneList(getActualMobilePhones());
 
-        GenericUserDao okUserDao = createOkUserDaoRead();
-        GenericMobilePhoneDao okMobilePhoneDao = createOkMobilePhoneDaoAll();
+        AbstractUserDao okUserDao = createOkUserDaoRead();
+        AbstractMobilePhoneDao okMobilePhoneDao = createOkMobilePhoneDaoAll();
         EasyMock.replay(okUserDao, okMobilePhoneDao);
 
         abstractUserService = new UserService(okUserDao, okMobilePhoneDao);
@@ -123,7 +123,7 @@ public class AbstractUserServiceTest {
     @Test(expected = RequestException.class)
     public void testGetSimpleUserInfoNoUserException() throws Exception {
 
-        GenericUserDao requestExceptionUserDao = createRequestExceptionUserDaoRead();
+        AbstractUserDao requestExceptionUserDao = createRequestExceptionUserDaoRead();
         EasyMock.replay(requestExceptionUserDao);
 
         abstractUserService = new UserService(requestExceptionUserDao, null);
@@ -135,7 +135,7 @@ public class AbstractUserServiceTest {
     @Test(expected = SystemException.class)
     public void testGetSimpleUserInfoUserDaoSystemException() throws Exception {
 
-        GenericUserDao systemExceptionUserDao = createSystemExceptionUserDaoRead();
+        AbstractUserDao systemExceptionUserDao = createSystemExceptionUserDaoRead();
         EasyMock.replay(systemExceptionUserDao);
 
         abstractUserService = new UserService(systemExceptionUserDao, null);
@@ -147,8 +147,8 @@ public class AbstractUserServiceTest {
     @Test(expected = SystemException.class)
     public void testGetSimpleUserInfoMobilePhonesSystemException() {
 
-        GenericUserDao okUserDao = createOkUserDaoRead();
-        GenericMobilePhoneDao systemExceptionMobilePhoneDao = createSystemExceptionMobilePhoneDaoAll();
+        AbstractUserDao okUserDao = createOkUserDaoRead();
+        AbstractMobilePhoneDao systemExceptionMobilePhoneDao = createSystemExceptionMobilePhoneDaoAll();
         EasyMock.replay(okUserDao, systemExceptionMobilePhoneDao);
 
         abstractUserService = new UserService(okUserDao, systemExceptionMobilePhoneDao);
@@ -157,51 +157,83 @@ public class AbstractUserServiceTest {
         EasyMock.verify(okUserDao, systemExceptionMobilePhoneDao);
     }
 
-    private static GenericUserDao createOkUserDaoLogin() {
-        GenericUserDao okUserDaoLogin = EasyMock.createMock(GenericUserDao.class);
-        EasyMock.expect(okUserDaoLogin.tryLogin(LOGIN, PASSWORD)).andReturn(getActualUser());
+    private static AbstractUserDao createOkUserDaoLogin() {
+        AbstractUserDao okUserDaoLogin = EasyMock.createMock(AbstractUserDao.class);
+        try {
+            EasyMock.expect(okUserDaoLogin.tryLogin(LOGIN, PASSWORD)).andReturn(getActualUser());
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return okUserDaoLogin;
     }
 
-    private static GenericUserDao createRequestExceptionUserDaoLogin() {
-        GenericUserDao requestExceptionUserDaoLogin = EasyMock.createMock(GenericUserDao.class);
-        EasyMock.expect(requestExceptionUserDaoLogin.tryLogin(LOGIN, PASSWORD)).andReturn(noSuchUserStub);
+    private static AbstractUserDao createRequestExceptionUserDaoLogin() {
+        AbstractUserDao requestExceptionUserDaoLogin = EasyMock.createMock(AbstractUserDao.class);
+        try {
+            EasyMock.expect(requestExceptionUserDaoLogin.tryLogin(LOGIN, PASSWORD)).andReturn(noSuchUserStub);
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return requestExceptionUserDaoLogin;
     }
 
-    private static GenericUserDao createSystemExceptionUserDaoLogin() {
-        GenericUserDao systemExceptionUserDaoLogin = EasyMock.createMock(GenericUserDao.class);
-        EasyMock.expect(systemExceptionUserDaoLogin.tryLogin(LOGIN, PASSWORD)).andReturn(null);
+    private static AbstractUserDao createSystemExceptionUserDaoLogin() {
+        AbstractUserDao systemExceptionUserDaoLogin = EasyMock.createMock(AbstractUserDao.class);
+        try {
+            EasyMock.expect(systemExceptionUserDaoLogin.tryLogin(LOGIN, PASSWORD)).andThrow(new SystemException(null, null));
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return systemExceptionUserDaoLogin;
     }
 
-    private static GenericUserDao createOkUserDaoRead() {
-        GenericUserDao okUserDaoRead = EasyMock.createMock(GenericUserDao.class);
-        EasyMock.expect(okUserDaoRead.read(ID)).andReturn(getActualUser());
+    private static AbstractUserDao createOkUserDaoRead() {
+        AbstractUserDao okUserDaoRead = EasyMock.createMock(AbstractUserDao.class);
+        try {
+            EasyMock.expect(okUserDaoRead.read(ID)).andReturn(getActualUser());
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return okUserDaoRead;
     }
 
-    private static GenericUserDao createRequestExceptionUserDaoRead() {
-        GenericUserDao requestExceptionUserDaoRead = EasyMock.createMock(GenericUserDao.class);
-        EasyMock.expect(requestExceptionUserDaoRead.read(ID)).andReturn(noSuchUserStub);
+    private static AbstractUserDao createRequestExceptionUserDaoRead() {
+        AbstractUserDao requestExceptionUserDaoRead = EasyMock.createMock(AbstractUserDao.class);
+        try {
+            EasyMock.expect(requestExceptionUserDaoRead.read(ID)).andReturn(noSuchUserStub);
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return requestExceptionUserDaoRead;
     }
 
-    private static GenericUserDao createSystemExceptionUserDaoRead() {
-        GenericUserDao systemExceptionUserDaoRead = EasyMock.createMock(GenericUserDao.class);
-        EasyMock.expect(systemExceptionUserDaoRead.read(ID)).andReturn(null);
+    private static AbstractUserDao createSystemExceptionUserDaoRead() {
+        AbstractUserDao systemExceptionUserDaoRead = EasyMock.createMock(AbstractUserDao.class);
+        try {
+            EasyMock.expect(systemExceptionUserDaoRead.read(ID)).andThrow(new SystemException(null, null));
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return systemExceptionUserDaoRead;
     }
 
-    private static GenericMobilePhoneDao createOkMobilePhoneDaoAll() {
-        GenericMobilePhoneDao okMobilePhoneDao = EasyMock.createMock(GenericMobilePhoneDao.class);
-        EasyMock.expect(okMobilePhoneDao.getAll(ID)).andReturn(getActualMobilePhones());
+    private static AbstractMobilePhoneDao createOkMobilePhoneDaoAll() {
+        AbstractMobilePhoneDao okMobilePhoneDao = EasyMock.createMock(AbstractMobilePhoneDao.class);
+        try {
+            EasyMock.expect(okMobilePhoneDao.getAll(ID)).andReturn(getActualMobilePhones());
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return okMobilePhoneDao;
     }
 
-    private static GenericMobilePhoneDao createSystemExceptionMobilePhoneDaoAll() {
-        GenericMobilePhoneDao systemExceptionMobilePhoneDao = EasyMock.createMock(GenericMobilePhoneDao.class);
-        EasyMock.expect(systemExceptionMobilePhoneDao.getAll(ID)).andReturn(null);
+    private static AbstractMobilePhoneDao createSystemExceptionMobilePhoneDaoAll() {
+        AbstractMobilePhoneDao systemExceptionMobilePhoneDao = EasyMock.createMock(AbstractMobilePhoneDao.class);
+        try {
+            EasyMock.expect(systemExceptionMobilePhoneDao.getAll(ID)).andThrow(new SystemException(null, null));
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         return systemExceptionMobilePhoneDao;
     }
 }

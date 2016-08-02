@@ -2,11 +2,11 @@ package main.java.com.epam.project4.model.service;
 
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
-import main.java.com.epam.project4.model.dao.GenericParameterValueDao;
+import main.java.com.epam.project4.exception.SystemException;
+import main.java.com.epam.project4.model.dao.AbstractParameterValueDao;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
 import main.java.com.epam.project4.model.entity.roomParameter.Value;
-import main.java.com.epam.project4.model.exception.SystemException;
 import main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl;
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -76,7 +76,7 @@ public class AbstractParameterValueServiceTest {
 
     @Test
     public void getAllParamsAllId() throws Exception {
-        GenericParameterValueDao parameterValueDao = getParameterValueDao();
+        AbstractParameterValueDao parameterValueDao = getParameterValueDao();
 
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
         Assert.assertEquals(parameterValueList, parameterValueService.getParamValueList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)));
@@ -87,7 +87,7 @@ public class AbstractParameterValueServiceTest {
 
     @Test
     public void getAllParamsSeveralId() {
-        GenericParameterValueDao parameterValueDao = getParameterValueDao();
+        AbstractParameterValueDao parameterValueDao = getParameterValueDao();
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
 
         ParameterValue pv1 = parameterValueList.get(3);
@@ -99,7 +99,7 @@ public class AbstractParameterValueServiceTest {
 
     @Test
     public void getAllParamsNoIdInList() {
-        GenericParameterValueDao parameterValueDao = getParameterValueDao();
+        AbstractParameterValueDao parameterValueDao = getParameterValueDao();
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
 
         ParameterValue pv1 = parameterValueList.get(3);
@@ -113,7 +113,7 @@ public class AbstractParameterValueServiceTest {
     @Test
     public void getAllParamsFromCache() throws Exception {
         GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValueList);
-        GenericParameterValueDao parameterValueDao = EasyMock.createMock(GenericParameterValueDao.class);
+        AbstractParameterValueDao parameterValueDao = EasyMock.createMock(AbstractParameterValueDao.class);
 
         EasyMock.expect(parameterValueDao.getAllFullInfo()).andThrow(new AssertionError()).anyTimes();
         EasyMock.replay(parameterValueDao);
@@ -124,8 +124,8 @@ public class AbstractParameterValueServiceTest {
 
     @Test(expected = SystemException.class)
     public void getAllParamsReturnNull() throws Exception {
-        GenericParameterValueDao dao = EasyMock.createMock(GenericParameterValueDao.class);
-        EasyMock.expect(dao.getAllFullInfo()).andReturn(null);
+        AbstractParameterValueDao dao = EasyMock.createMock(AbstractParameterValueDao.class);
+        EasyMock.expect(dao.getAllFullInfo()).andThrow(new SystemException(null, null));
         EasyMock.replay(dao);
 
         parameterValueService = new ParameterValueServiceImpl(dao);
@@ -136,7 +136,7 @@ public class AbstractParameterValueServiceTest {
     @Test
     public void getParameterValueMapFromCache() throws Exception {
         GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_MAP, pvMap);
-        GenericParameterValueDao dao = EasyMock.createMock(GenericParameterValueDao.class);
+        AbstractParameterValueDao dao = EasyMock.createMock(AbstractParameterValueDao.class);
         EasyMock.expect(dao.getAllFullInfo()).andThrow(new AssertionError()).anyTimes();
 //        EasyMock.expect(dao.getAllFullInfo()).andReturn(parameterValueList);
         EasyMock.replay(dao);
@@ -149,7 +149,7 @@ public class AbstractParameterValueServiceTest {
 
     @Test
     public void getParameterValueMapLoad() throws Exception {
-        GenericParameterValueDao dao = EasyMock.createMock(GenericParameterValueDao.class);
+        AbstractParameterValueDao dao = EasyMock.createMock(AbstractParameterValueDao.class);
         EasyMock.expect(dao.getAllFullInfo()).andReturn(parameterValueList);
         EasyMock.replay(dao);
 
@@ -161,17 +161,21 @@ public class AbstractParameterValueServiceTest {
 
     @Test(expected = SystemException.class)
     public void getParameterValueMapDaoReturnsNull() throws Exception {
-        GenericParameterValueDao dao = EasyMock.createMock(GenericParameterValueDao.class);
-        EasyMock.expect(dao.getAllFullInfo()).andReturn(null).andThrow(new AssertionError()).times(2, 100000);
+        AbstractParameterValueDao dao = EasyMock.createMock(AbstractParameterValueDao.class);
+        EasyMock.expect(dao.getAllFullInfo()).andThrow(new SystemException(null, null)).andThrow(new AssertionError()).times(2, 100000);
         EasyMock.replay(dao);
 
         parameterValueService = new ParameterValueServiceImpl(dao);
-        Assert.assertEquals(pvMap, parameterValueService.getParameterValueMap());
+        dao.getAllFullInfo();
     }
 
-    private GenericParameterValueDao getParameterValueDao() {
-        GenericParameterValueDao parameterValueDao = EasyMock.createMock(GenericParameterValueDao.class);
-        EasyMock.expect(parameterValueDao.getAllFullInfo()).andReturn(parameterValueList);
+    private AbstractParameterValueDao getParameterValueDao() {
+        AbstractParameterValueDao parameterValueDao = EasyMock.createMock(AbstractParameterValueDao.class);
+        try {
+            EasyMock.expect(parameterValueDao.getAllFullInfo()).andReturn(parameterValueList);
+        } catch (main.java.com.epam.project4.exception.DaoException e) {
+            e.printStackTrace();
+        }
         EasyMock.replay(parameterValueDao);
 
         return parameterValueDao;
