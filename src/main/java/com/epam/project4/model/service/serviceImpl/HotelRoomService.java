@@ -66,7 +66,7 @@ public class HotelRoomService implements AbstractHotelRoomService {
         try {
             HotelRoom result = hotelRoomDao.read(id);
             if (result == null) {
-                throw new RequestException(MessageCode.WRONG_ROOM_ID_SYSTEM_EXCEPTION, id);
+                throw new RequestException(MessageCode.WRONG_ROOM_ID, id);
             }
             appendReformattedRoomParams(result);
             result.setPrice(calculateRoomBasicPrice(result));

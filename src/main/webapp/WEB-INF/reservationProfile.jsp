@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id="newReservation" scope="request" type="java.lang.Boolean"/>
 <jsp:useBean id="user" scope="session" type="main.java.com.epam.project4.model.entity.User"/>
@@ -16,6 +16,7 @@
 <html>
 <head>
     <title><fmt:message key="brand" bundle="${main}"/></title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
           href="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> "
@@ -56,7 +57,8 @@
     <div class="col-md-8">
         <c:choose>
             <c:when test="${newReservation == true}">
-                <form class="form-horizontal" action="./controller" method="post" id="reservationForm">
+                <form class="form-horizontal" action="./controller" method="post" id="reservationForm"
+                      accept-charset="UTF-8">
                     <input type="hidden" name="commandName" value="fillNewReservationCommand">
                     <h4><fmt:message key="generalInfo" bundle="${reservBundle}"/></h4>
                     <div class="form-group">

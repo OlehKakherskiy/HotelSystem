@@ -3,14 +3,15 @@ package main.java.com.epam.project4.controller.command.commandImpl;
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
+import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
-import main.java.com.epam.project4.model.exception.RequestException;
 import main.java.com.epam.project4.model.service.AbstractParameterValueService;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
 
@@ -43,30 +44,31 @@ public class FillNewReservationCommand extends AbstractCommand {
 
         String startDateStr = request.getParameter("dateFrom");
         if (startDateStr == null || startDateStr.isEmpty()) {
-            throw new RequestException();
+            throw new RequestException(MessageCode.NO_DATE_FROM_PARAMETER);
         }
 
         String endDateStr = request.getParameter("dateTo");
         if (endDateStr == null || endDateStr.isEmpty()) {
-            throw new RequestException();
+            throw new RequestException(MessageCode.NO_DATE_TO_PARAMETER);
         }
         LocalDate dateFrom = LocalDate.parse(startDateStr);
         LocalDate dateTo = LocalDate.parse(endDateStr);
         LocalDate reqDate = LocalDate.now();
 
         if (dateFrom.isBefore(reqDate)) {
-            throw new RequestException();
+            throw new RequestException(MessageCode.DATE_FROM_IS_BEFORE_REQ_DATE_EXCEPTION);
         }
         if (dateTo.isBefore(reqDate)) {
-            throw new RequestException();
+            throw new RequestException(MessageCode.DATE_TO_IS_BEFORE_REQ_DATE_EXCEPTION);
         }
         if (dateTo.isBefore(dateFrom)) {
-            throw new RequestException();
+            throw new RequestException(MessageCode.DATE_TO_IS_BEFORE_DATE_FROM_EXCEPTION);
         }
         reservation.setRequestDate(LocalDate.now());
         reservation.setDateFrom(LocalDate.parse(startDateStr));
         reservation.setDateTo(LocalDate.parse(endDateStr));
         reservation.setComment(request.getParameter("comment"));
+        System.out.println("COMMENT = " + request.getParameter("comment"));
         reservation.setRequestParameters(getParameterValueList(request));
         reservation.setStatus(ReservationStatus.PROCESSING);
 

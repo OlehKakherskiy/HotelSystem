@@ -3,10 +3,7 @@ package main.java.com.epam.project4.app;
 import main.java.com.epam.project4.app.constants.MessageCode;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
@@ -18,6 +15,7 @@ public class LocalizedMessageFormatter {
     private static ResourceBundle defaultBundle;
 
     public static void init(String base, Locale... locales) {
+        resourceBundleMap = new HashMap<>();
         defaultBundle = ResourceBundle.getBundle(base);
         Arrays.stream(locales).forEach(locale -> resourceBundleMap.put(locale, ResourceBundle.getBundle(base, locale)));
     }
@@ -31,7 +29,7 @@ public class LocalizedMessageFormatter {
         if (currentBundle != null && (message = currentBundle.getString(code.getCode())) != null) {
             return MessageFormat.format(message, params);
         } else {
-            return null; //TODO: занести в лог, что нет такого через варнинг
+            return "No message for this type of error"; //TODO: занести в лог, что нет такого через варнинг
         }
     }
 
@@ -40,7 +38,7 @@ public class LocalizedMessageFormatter {
         if (message != null) {
             return MessageFormat.format(message, params);
         } else {
-            return null; //TODO: в лог
+            return "No message for this type of error"; //TODO: в лог
         }
     }
 }

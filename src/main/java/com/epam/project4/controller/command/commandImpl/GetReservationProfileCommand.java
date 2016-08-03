@@ -4,7 +4,6 @@ import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.model.entity.Reservation;
-import main.java.com.epam.project4.model.exception.RequestException;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +27,7 @@ public class GetReservationProfileCommand extends AbstractCommand {
             session.setAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName(), currentReservation);
         }else{
             if(session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName()) == null){
-                throw new RequestException();
+                throw new RuntimeException(); //TODO: поменять на RequestException
             }
         }
         request.setAttribute("newReservation", false);

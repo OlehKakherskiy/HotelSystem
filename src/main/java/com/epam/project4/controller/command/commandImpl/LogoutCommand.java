@@ -1,7 +1,9 @@
 package main.java.com.epam.project4.controller.command.commandImpl;
 
+import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.exception.SystemException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +24,7 @@ public class LogoutCommand extends AbstractCommand {
         try {
             response.sendRedirect(String.format("%s%s?lang=%s", request.getContextPath(), WebPageConstant.LOGIN.getPath(), lang));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION);
         }
         return "";
     }

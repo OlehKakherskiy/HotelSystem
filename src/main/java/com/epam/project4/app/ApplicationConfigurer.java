@@ -47,6 +47,9 @@ public class ApplicationConfigurer {
             configureManager(getPropsUsingKeyEnding(mainProperties, "Service"), serviceManager, GlobalContextConstant.SERVICE_MANAGER, (AbstractDaoManager) GlobalContext.getValue(GlobalContextConstant.DAO_MANAGER));
 
             configureSecurityMap(mainProperties);
+            Locale ruRu = new Locale("ru");
+            Locale enEn = new Locale("en");
+            LocalizedMessageFormatter.init("messageBundle", ruRu, enEn);
 
         } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();

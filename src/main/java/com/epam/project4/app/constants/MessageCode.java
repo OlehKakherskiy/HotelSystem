@@ -27,8 +27,6 @@ public enum MessageCode {
 
     DELETE_RESERVATION_SYSTEM_EXCEPTION("deleteReservationSystemException"),
 
-    DELETE_RESERVATION_REQUEST_EXCEPTION("deleteReservationRequestException"),
-
     SAVE_RESERVATION_SYSTEM_EXCEPTION("saveReservationSystemException"),
 
     REFUSE_RESERVATION_PROCESSING_SYSTEM_EXCEPTION("refuseReservationProcessingSystemException"),
@@ -45,11 +43,24 @@ public enum MessageCode {
 
     GET_ROOM_MONTH_RESERVATION_LIST_SYSTEM_EXCEPTION("getRoomMonthReservationListSystemException"),
 
-    WRONG_ROOM_ID_SYSTEM_EXCEPTION("wrongRoomIdSystemException"),
+    WRONG_ROOM_ID("wrongRoomId"),
 
     READ_ROOM_SYSTEM_EXCEPTION("readRoomSystemException"),
 
-    GENERAL_SYSTEM_EXCEPTION("generalSystemException");
+    GENERAL_SYSTEM_EXCEPTION("generalSystemException"),
+
+    NO_RESERVATION_ID_FOR_DELETE("noReservationIdForDelete"),
+
+    NO_DATE_FROM_PARAMETER("noDateFromParameter"),
+
+    NO_DATE_TO_PARAMETER("noDateToParameter"),
+
+    DATE_FROM_IS_BEFORE_REQ_DATE_EXCEPTION("dateFromIsBeforeReqDateException"),
+
+    DATE_TO_IS_BEFORE_REQ_DATE_EXCEPTION("dateToIsBeforeReqDateException"),
+
+    DATE_TO_IS_BEFORE_DATE_FROM_EXCEPTION("dateToIsBeforeDateFromException");
+
 
     private String code;
 

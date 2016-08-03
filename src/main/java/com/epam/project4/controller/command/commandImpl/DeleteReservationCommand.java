@@ -3,9 +3,10 @@ package main.java.com.epam.project4.controller.command.commandImpl;
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
+import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
-import main.java.com.epam.project4.model.exception.RequestException;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class DeleteReservationCommand extends AbstractCommand {
     public String process(HttpServletRequest request, HttpServletResponse response) {
         String reservationId = request.getParameter("reservationId");
         if (reservationId == null) {
-            throw new RequestException();
+            throw new RequestException(MessageCode.NO_RESERVATION_ID_FOR_DELETE);
         }
 
         AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);

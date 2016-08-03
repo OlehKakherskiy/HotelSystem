@@ -30,26 +30,32 @@
     <entry key="ADMIN_8">refuseReservationProcessingCommand</entry>
 
     <entry key="REGISTERED_USER_1">fillNewReservationCommand</entry>
-    <entry key="REGISTERED_USER_3">getReservationListCommand</entry>
-    <entry key="REGISTERED_USER_4">getReservationProfileCommand</entry>
-    <entry key="REGISTERED_USER_5">loginCommand</entry>
-    <entry key="REGISTERED_USER_6">logoutCommand</entry>
-    <entry key="REGISTERED_USER_7">refuseHotelRoomOfferCommand</entry>
-    <entry key="REGISTERED_USER_8">submitHotelRoomOfferCommand</entry>
+    <entry key="REGISTERED_USER_2">getReservationListCommand</entry>
+    <entry key="REGISTERED_USER_3">getReservationProfileCommand</entry>
+    <entry key="REGISTERED_USER_4">loginCommand</entry>
+    <entry key="REGISTERED_USER_5">logoutCommand</entry>
+    <entry key="REGISTERED_USER_6">refuseHotelRoomOfferCommand</entry>
+    <entry key="REGISTERED_USER_7">submitHotelRoomOfferCommand</entry>
     <entry key="REGISTERED_USER_8">prepareReservationPageCommand</entry>
-    <entry key="REGISTERED_USER_8">getHotelRoomProfileCommand</entry>
-    <entry key="REGISTERED_USER_8">deleteReservationCommand</entry>
+    <entry key="REGISTERED_USER_9">getHotelRoomProfileCommand</entry>
+    <entry key="REGISTERED_USER_10">deleteReservationCommand</entry>
 
     <entry key="main.java.com.epam.project4.model.service.AbstractReservationService">main.java.com.epam.project4.model.service.serviceImpl.ReservationService</entry>
     <entry key="main.java.com.epam.project4.model.service.AbstractHotelRoomService">main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService</entry>
     <entry key="main.java.com.epam.project4.model.service.AbstractUserService">main.java.com.epam.project4.model.service.serviceImpl.UserService</entry>
     <entry key="main.java.com.epam.project4.model.service.AbstractParameterValueService">main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl</entry>
 
-    <entry key="main.java.com.epam.project4.model.dao.GenericUserDao">main.java.com.epam.project4.model.dao.daoImpl.GenericUserDaoImpl</entry>
+    <entry key="main.java.com.epam.project4.model.dao.GenericUserDao">
+        main.java.com.epam.project4.model.dao.daoImpl.UserDaoImpl
+    </entry>
     <entry key="main.java.com.epam.project4.model.dao.GenericHotelRoomDao">main.java.com.epam.project4.model.dao.daoImpl.GenericHotelRoomDaoImpl</entry>
-    <entry key="main.java.com.epam.project4.model.dao.GenericMobilePhoneDao">main.java.com.epam.project4.model.dao.daoImpl.GenericMobilePhoneDaoImpl</entry>
+    <entry key="main.java.com.epam.project4.model.dao.GenericMobilePhoneDao">
+        main.java.com.epam.project4.model.dao.daoImpl.MobilePhoneDaoImpl
+    </entry>
     <entry key="main.java.com.epam.project4.model.dao.GenericReservationDao">main.java.com.epam.project4.model.dao.daoImpl.GenericReservationDaoImpl</entry>
-    <entry key="main.java.com.epam.project4.model.dao.GenericParameterValueDao">main.java.com.epam.project4.model.dao.daoImpl.GenericParameterValueDaoImpl</entry>
+    <entry key="main.java.com.epam.project4.model.dao.GenericParameterValueDao">
+        main.java.com.epam.project4.model.dao.daoImpl.ParameterValueDaoImpl
+    </entry>
 
     <entry key="exceptionsFile">resources/exceptions.properties</entry>
 

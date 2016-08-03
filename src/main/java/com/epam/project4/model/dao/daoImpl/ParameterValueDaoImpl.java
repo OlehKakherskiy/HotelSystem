@@ -42,16 +42,12 @@ public class ParameterValueDaoImpl extends AbstractParameterValueDao {
 
     @Override
     public List<ParameterValue> getAllFullInfo() throws DaoException {
-        List<ParameterValue> parameterValues = null;
         try (Connection connection = dataSource.getConnection()) {
 
             List<Value> valuePool = getValuePool(connection);
-
             List<Parameter> parameters = getAllParameters(connection, valuePool);
 
-            parameterValues = getParameterValueMapAndBuild(connection, parameters, valuePool);
-
-            return parameterValues;
+            return getParameterValueMapAndBuild(connection, parameters, valuePool);
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format(openConnectionException, this.getClass()));
         }

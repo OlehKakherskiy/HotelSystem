@@ -40,14 +40,14 @@
         <location>/WEB-INF/404.jsp</location>
     </error-page>
 
-    <!--<error-page>-->
-        <!--<exception-type>main.java.com.epam.project4.model.exception.RequestException</exception-type>-->
-        <!--<location>/WEB-INF/requestException.jsp</location>-->
-    <!--</error-page>-->
+    <error-page>
+        <exception-type>main.java.com.epam.project4.exception.RequestException</exception-type>
+        <location>/WEB-INF/requestException.jsp</location>
+    </error-page>
 
-    <!--<error-page>-->
-        <!--<exception-type>main.java.com.epam.project4.model.exception.SystemException</exception-type>-->
-        <!--<location>/WEB-INF/systemException.jsp</location>-->
-    <!--</error-page>-->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/systemException.jsp</location>
+    </error-page>
 
 </web-app>

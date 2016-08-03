@@ -35,11 +35,11 @@ public class SecurityFilter implements Filter {
         } else {
             User user = (User) session.getAttribute(GlobalContextConstant.USER.getName());
             String commandName = request.getParameter(GlobalContextConstant.COMMAND_NAME.getName());
-            if (commandName != null && !commandName.isEmpty() && CommandConstant.fromValue(commandName) != CommandConstant.LOGIN_COMMAND
-                    && !hasRights(user, CommandConstant.fromValue(commandName))) {
-                redirectToIndex(request, response);
-            } else {
+            if (commandName != null && !commandName.isEmpty() && (CommandConstant.fromValue(commandName) == CommandConstant.LOGIN_COMMAND || hasRights(user, CommandConstant.fromValue(commandName)))) {
                 chain.doFilter(request, response);
+            } else {
+                System.out.println("access denied for " + user.getUserType() + " for command " + commandName);
+                redirectToIndex(request, response);
             }
         }
     }
@@ -51,6 +51,7 @@ public class SecurityFilter implements Filter {
 
     private boolean hasRights(User user, CommandConstant commandName) {
         Map<UserType, List<CommandConstant>> secureRights = (Map<UserType, List<CommandConstant>>) GlobalContext.getValue(GlobalContextConstant.SECURE_CONFIGURATION);
+        System.out.println(secureRights);
         if (!secureRights.containsKey(user.getUserType()))
             return false;
         CommandConstant command = secureRights.get(user.getUserType()).stream().filter(commandConstant -> commandConstant == commandName).findFirst().orElse(null);

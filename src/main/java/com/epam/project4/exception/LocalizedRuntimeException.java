@@ -14,6 +14,8 @@ public class LocalizedRuntimeException extends RuntimeException {
 
     private Object[] messageParams;
 
+    private String preparedLocalizedMessage;
+
     private Locale locale;
 
     public LocalizedRuntimeException(MessageCode messageCode, Object... messageParams) {
@@ -27,6 +29,10 @@ public class LocalizedRuntimeException extends RuntimeException {
         this.messageParams = messageParams;
     }
 
+    public LocalizedRuntimeException(String localizedMessage) {
+        this.preparedLocalizedMessage = localizedMessage;
+    }
+
     @Override
     public String getMessage() {
         return LocalizedMessageFormatter.getLocalizedMessage(messageCode, messageParams);
@@ -35,6 +41,10 @@ public class LocalizedRuntimeException extends RuntimeException {
     @Override
     public String getLocalizedMessage() {
         return LocalizedMessageFormatter.getLocalizedMessage(locale, messageCode, messageParams);
+    }
+
+    public String getPreparedLocalizedMessage() {
+        return preparedLocalizedMessage;
     }
 
     public void setLocale(Locale locale) {

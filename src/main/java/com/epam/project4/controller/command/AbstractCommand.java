@@ -1,6 +1,6 @@
 package main.java.com.epam.project4.controller.command;
 
-import main.java.com.epam.project4.manager.GenericServiceManager;
+import main.java.com.epam.project4.manager.AbstractServiceManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class AbstractCommand {
 
-    protected GenericServiceManager serviceManager;
+    protected AbstractServiceManager serviceManager;
 
     public abstract String process(HttpServletRequest request, HttpServletResponse response);
 
-    public void setServiceManager(GenericServiceManager serviceManager) {
+    public void setServiceManager(AbstractServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
 }

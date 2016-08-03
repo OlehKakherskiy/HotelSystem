@@ -123,7 +123,7 @@ public class ReservationService implements AbstractReservationService {
         try {
             boolean wasDeleted = dao.delete(reservationId);
             if (!wasDeleted) {
-                throw new RequestException(MessageCode.DELETE_RESERVATION_REQUEST_EXCEPTION, reservationId);
+                throw new RequestException(MessageCode.WRONG_RESERVATION_ID_EXCEPTION, reservationId);
             }
         } catch (DaoException e) {
             throw new SystemException(MessageCode.DELETE_RESERVATION_SYSTEM_EXCEPTION, reservationId);
