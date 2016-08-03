@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charser=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ page isErrorPage="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setBundle basename="exceptionPageBundle" var="exceptionPage"/>
 
 <!DOCTYPE HTML>
 <html>
@@ -13,20 +15,20 @@
 <div class="container">
     <div class="jumbotron">
 
-        <h1 class="display-3">System exception</h1>
-        <p class="lead"><c:out value="${pageContext.exception.message}"/></p>
+        <h1 class="display-3"><fmt:message key="systemExceptionHeader" bundle="${exceptionPage}"/></h1>
+        <p class="lead">${pageContext.exception.localizedMessage}</p>
         <hr class="m-y-2">
-        <p>Possibly you want to back to the main page...</p>
+        <p><fmt:message key="backToMainPage" bundle="${exceptionPage}"/></p>
         <p class="lead">
             <c:choose>
                 <c:when test="${sessionScope['user'] == null}">
                     <a class="btn btn-primary btn-lg" href="${pageContext.servletContext.contextPath}"
-                       role="button">Back</a>
+                       role="button"><fmt:message key="backBtn" bundle="${exceptionPage}"/></a>
                 </c:when>
                 <c:otherwise>
                     <a class="btn btn-primary btn-lg"
                        href="${pageContext.servletContext.contextPath.concat('/controller?commandName=getReservationListCommand')}"
-                       role="button">Main</a>
+                       role="button"><fmt:message key="mainBtn" bundle="${exceptionPage}"/></a>
                 </c:otherwise>
             </c:choose>
         </p>

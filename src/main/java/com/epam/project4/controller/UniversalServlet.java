@@ -51,8 +51,10 @@ public class UniversalServlet extends HttpServlet {
                 req.getRequestDispatcher(newUrl).forward(req, resp);
             }
         } catch (SystemException e) {
+            e.printStackTrace();
             processSystemException(req, resp, e);
         } catch (RequestException e1) {
+            e1.printStackTrace();
             processRequestException(req, e1);
         }
     }
@@ -68,8 +70,10 @@ public class UniversalServlet extends HttpServlet {
             String newUrl = processCommand(req, resp);
             req.getRequestDispatcher(newUrl).forward(req, resp);
         } catch (SystemException e) {
+            e.printStackTrace();
             processSystemException(req, resp, e);
         } catch (RequestException e1) {
+            e1.printStackTrace();
             processRequestException(req, e1);
         }
     }
@@ -91,7 +95,8 @@ public class UniversalServlet extends HttpServlet {
         Locale currentLocale = getLocale(request);
         e.setLocale(currentLocale);
         System.out.println(e.getLocalizedMessage());
-        response.sendError(500, e.getLocalizedMessage());
+        throw e;
+//        response.sendError(500, e.getLocalizedMessage());
     }
 
     private void processRequestException(HttpServletRequest request, RequestException e) {
@@ -100,7 +105,7 @@ public class UniversalServlet extends HttpServlet {
         String message = e.getLocalizedMessage();
         System.out.println(message);
 
-        throw new RequestException(message);
+        throw e;
     }
 
     private Locale getLocale(HttpServletRequest request) {

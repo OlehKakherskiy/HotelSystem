@@ -18,11 +18,10 @@ public class LogoutCommand extends AbstractCommand {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
-        String lang = (String) session.getAttribute("lang");
         request.getSession(false).invalidate();
 
         try {
-            response.sendRedirect(String.format("%s%s?lang=%s", request.getContextPath(), WebPageConstant.LOGIN.getPath(), lang));
+            response.sendRedirect(String.format("%s%s", request.getContextPath(), WebPageConstant.LOGIN.getPath()));
         } catch (IOException e) {
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION);
         }

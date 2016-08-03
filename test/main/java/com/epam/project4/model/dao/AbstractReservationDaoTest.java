@@ -5,7 +5,7 @@ import org.junit.Test;
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class GenericReservationDaoTest {
+public class AbstractReservationDaoTest {
 
     @Test
     public void getAllRoomReservationsInPeriod() throws Exception {

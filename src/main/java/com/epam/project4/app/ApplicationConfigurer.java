@@ -47,8 +47,8 @@ public class ApplicationConfigurer {
             configureManager(getPropsUsingKeyEnding(mainProperties, "Service"), serviceManager, GlobalContextConstant.SERVICE_MANAGER, (AbstractDaoManager) GlobalContext.getValue(GlobalContextConstant.DAO_MANAGER));
 
             configureSecurityMap(mainProperties);
-            Locale ruRu = new Locale("ru");
-            Locale enEn = new Locale("en");
+            Locale ruRu = new Locale("ru", "RU");
+            Locale enEn = new Locale("en", "EN");
             LocalizedMessageFormatter.init("messageBundle", ruRu, enEn);
 
         } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException e) {
@@ -76,7 +76,7 @@ public class ApplicationConfigurer {
         properties.entrySet()
                 .stream()
                 .filter(entry -> ((String) entry.getKey()).startsWith(start))
-                .forEach(entry -> result.put((String) entry.getKey(), CommandConstant.fromValue((String) entry.getValue())));
+                .forEach(entry -> result.put((String) entry.getKey(), CommandConstant.fromValue(((String) entry.getValue()).trim())));
         return result;
     }
 
@@ -85,7 +85,7 @@ public class ApplicationConfigurer {
 
         properties.entrySet()
                 .stream()
-                .filter(entry -> ((String) entry.getKey()).endsWith(ending))
+                .filter(entry -> ((String) entry.getKey()).trim().endsWith(ending))
                 .forEach(entry -> result.put(entry.getKey(), entry.getValue()));
         return result;
     }
@@ -95,7 +95,7 @@ public class ApplicationConfigurer {
         map.entrySet().stream().forEach(entry -> {
                     try {
                         commandMap.put(CommandConstant.fromValue((String) entry.getKey()),
-                                (Class<? extends AbstractCommand>) Class.forName((String) entry.getValue()));
+                                (Class<? extends AbstractCommand>) Class.forName(((String) entry.getValue()).trim()));
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -110,7 +110,7 @@ public class ApplicationConfigurer {
         Map<Class<? extends V>, Class<? extends V>> result = new HashMap<>();
         map.entrySet().forEach(entry -> {
             try {
-                result.put((Class<? extends V>) Class.forName((String) entry.getKey()), (Class<? extends V>) Class.forName((String) entry.getValue()));
+                result.put((Class<? extends V>) Class.forName((String) entry.getKey()), (Class<? extends V>) Class.forName(((String) entry.getValue()).trim()));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

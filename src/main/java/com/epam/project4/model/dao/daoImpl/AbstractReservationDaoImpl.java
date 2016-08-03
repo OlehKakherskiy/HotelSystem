@@ -1,7 +1,7 @@
 package main.java.com.epam.project4.model.dao.daoImpl;
 
 import main.java.com.epam.project4.exception.DaoException;
-import main.java.com.epam.project4.model.dao.GenericReservationDao;
+import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
@@ -17,7 +17,7 @@ import java.util.StringJoiner;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class GenericReservationDaoImpl extends GenericReservationDao {
+public class AbstractReservationDaoImpl extends AbstractReservationDao {
 
     //--------------------------------- SQL REQUESTS ----------------------------------------//
     private static final String getShortInfoBase = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +

@@ -1,7 +1,7 @@
 package main.java.com.epam.project4.model.service.serviceImpl;
 
-import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
-import main.java.com.epam.project4.model.dao.GenericReservationDao;
+import main.java.com.epam.project4.model.dao.AbstractHotelRoomDao;
+import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.MobilePhone;
 import main.java.com.epam.project4.model.entity.Reservation;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
  */
 public class ReservationServiceTest {
 
-    private static GenericReservationDao reservationDao;
+    private static AbstractReservationDao reservationDao;
 
-    private static GenericHotelRoomDao hotelRoomDao;
+    private static AbstractHotelRoomDao hotelRoomDao;
 
     private static AbstractParameterValueService parameterValueService;
 
@@ -61,7 +61,7 @@ public class ReservationServiceTest {
 
         parameterValueService = EasyMock.createMock(AbstractParameterValueService.class);
         EasyMock.expect(parameterValueService.getParamValueList(new ArrayList<>())).andReturn(new ArrayList<>());
-        reservationDao = EasyMock.createMock(GenericReservationDao.class);
+        reservationDao = EasyMock.createMock(AbstractReservationDao.class);
         EasyMock.expect(reservationDao.read(expected.getId())).andReturn(expected);
 
         EasyMock.replay(parameterValueService, reservationDao);
@@ -71,7 +71,7 @@ public class ReservationServiceTest {
 
         EasyMock.verify(parameterValueService, reservationDao);
 
-        hotelRoomDao = EasyMock.createMock(GenericHotelRoomDao.class);
+        hotelRoomDao = EasyMock.createMock(AbstractHotelRoomDao.class);
         EasyMock.expect(hotelRoomDao.read(roomStub.getRoomID())).andReturn(roomStub);
 
         userService = EasyMock.createMock(UserService.class);

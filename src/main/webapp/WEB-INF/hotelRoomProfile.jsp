@@ -96,8 +96,9 @@
                                                                     bundle="${valueList}"/> </span></li>
                         </c:forEach>
                     </ul>
-                    <label class="pull-left"><fmt:message key="isActive"
-                                                          bundle="${hRoom}"/> ${hotelRoom.activationStatus}</label>
+                    <label class="pull-left"><fmt:message key="isActive" bundle="${hRoom}"/>
+                        <fmt:message key="${hotelRoom.activationStatus}" bundle="${hRoom}"/>
+                    </label>
                     <label class="pull-right"><fmt:message key="price" bundle="${hRoom}"/>${hotelRoom.price}</label>
                 </div>
             </div>
@@ -107,8 +108,8 @@
 </div>
 
 <c:if test="${isAdmin == true}">
-    <div class="text-center"><fmt:message key="monthReservationDetails"
-                                          bundle="${hRoom}"/> ${reservationMonth} ${reservationYear}</div>
+    <div class="text-center"><fmt:message key="monthReservationDetails" bundle="${hRoom}"/>
+        <fmt:message key="${reservationMonth}" bundle="${hRoom}"/> ${reservationYear}</div>
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
@@ -164,8 +165,9 @@
                 <c:set var="backLink" scope="page" value="./controller?commandName=getReservationProfileCommand"/>
             </c:otherwise>
         </c:choose>
-        <a type="button" class="btn btn-default pull-right" href="${backLink}"><fmt:message key="backBtn"
-                                                                                            bundle="${hRoom}"/></a>
+        <a type="button" class="btn btn-default pull-right" href="${backLink}">
+            <fmt:message key="backBtn" bundle="${hRoom}"/>
+        </a>
     </div>
     <div class="col-md-1"></div>
 </div>

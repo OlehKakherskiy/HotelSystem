@@ -4,8 +4,8 @@ import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.exception.SystemException;
-import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
-import main.java.com.epam.project4.model.dao.GenericReservationDao;
+import main.java.com.epam.project4.model.dao.AbstractHotelRoomDao;
+import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
@@ -21,15 +21,15 @@ import java.util.List;
  */
 public class ReservationService implements AbstractReservationService {
 
-    private GenericReservationDao dao;
+    private AbstractReservationDao dao;
 
-    private GenericHotelRoomDao hotelRoomDao;
+    private AbstractHotelRoomDao hotelRoomDao;
 
     private AbstractUserService userService;
 
     private AbstractParameterValueService parameterValueService;
 
-    public ReservationService(GenericReservationDao dao, GenericHotelRoomDao hotelRoomDao,
+    public ReservationService(AbstractReservationDao dao, AbstractHotelRoomDao hotelRoomDao,
                               AbstractUserService userService, AbstractParameterValueService parameterValueService) {
         this.dao = dao;
         this.hotelRoomDao = hotelRoomDao;

@@ -14,4 +14,8 @@ public class SystemException extends LocalizedRuntimeException {
     public SystemException(MessageCode messageCode, Throwable cause, Object... messageParams) {
         super(messageCode, cause, messageParams);
     }
+
+    public SystemException(String localizedMessage) {
+        super(localizedMessage);
+    }
 }

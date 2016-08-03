@@ -65,11 +65,11 @@ public class GenericCachingManagerTest {
 
     private static void initDaoManager() {
         Map<Class<? extends GenericDao>, Class<? extends GenericDao>> daoManagerConfigs = new HashMap<>();
-        daoManagerConfigs.put(GenericHotelRoomDao.class, GenericHotelRoomDaoImpl.class);
-        daoManagerConfigs.put(AbstractMobilePhoneDao.class, MobilePhoneDaoImpl.class);
-        daoManagerConfigs.put(AbstractParameterValueDao.class, ParameterValueDaoImpl.class);
-        daoManagerConfigs.put(GenericReservationDao.class, GenericReservationDaoImpl.class);
-        daoManagerConfigs.put(AbstractUserDao.class, UserDaoImpl.class);
+        daoManagerConfigs.put(AbstractHotelRoomDao.class, AbstractHotelRoomDaoImpl.class);
+        daoManagerConfigs.put(AbstractMobilePhoneDao.class, AbstractMobilePhoneDaoImpl.class);
+        daoManagerConfigs.put(AbstractParameterValueDao.class, AbstractParameterValueDaoImpl.class);
+        daoManagerConfigs.put(AbstractReservationDao.class, AbstractReservationDaoImpl.class);
+        daoManagerConfigs.put(AbstractUserDao.class, AbstractUserDaoImpl.class);
 
         daoManager = new DataSourceDaoManagerImpl(daoManagerConfigs, new FabricMySQLDataSource());
         cachingManagers.add(daoManager);//stub datasource

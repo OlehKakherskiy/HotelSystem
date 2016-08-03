@@ -59,11 +59,12 @@
                             </c:forEach>
                         </ul>
                         <label class="pull-left"><fmt:message key="isActive" bundle="${rList}"/>
-                            ${hotelRoom.activationStatus}</label>
+                            <fmt:message key="${hotelRoom.activationStatus}" bundle="${rList}"/>
+                        </label>
 
                         <a type="button" class="btn btn-default pull-right"
-                           href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${hotelRoom.roomID}"><fmt:message
-                                key="details" bundle="${rList}"/></a>
+                           href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${hotelRoom.roomID}">
+                            <fmt:message key="details" bundle="${rList}"/></a>
                     </div>
                 </div>
             </div>

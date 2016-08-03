@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class MobilePhoneDaoImpl extends AbstractMobilePhoneDao {
+public class AbstractMobilePhoneDaoImpl extends AbstractMobilePhoneDao {
 
     private static final String sqlRequestException = "Exception was occurred while was executing sql request " +
             "for getting mobilePhoneList";
@@ -37,8 +37,8 @@ public class MobilePhoneDaoImpl extends AbstractMobilePhoneDao {
         ResultSet resultSet = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(getMobilePhoneList)) {
-            resultSet = statement.executeQuery();
             statement.setInt(1, userID);
+            resultSet = statement.executeQuery();
             return buildList(resultSet);
         } catch (SQLException e) {
             throw new DaoException(sqlRequestException, e);

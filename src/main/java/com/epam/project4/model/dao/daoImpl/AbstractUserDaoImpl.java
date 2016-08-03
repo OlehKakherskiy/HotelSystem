@@ -15,7 +15,7 @@ import java.text.MessageFormat;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class UserDaoImpl extends AbstractUserDao {
+public class AbstractUserDaoImpl extends AbstractUserDao {
 
     private static final String getUserFromID =
             "SELECT idUser, name, last_name, idUserType, " +
@@ -50,11 +50,10 @@ public class UserDaoImpl extends AbstractUserDao {
 
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
+            return buildUserObject(resultSet);
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("{0} using user id", requestExecException), e);
         }
-
-        return buildUserObject(resultSet);
     }
 
     @Override
@@ -66,11 +65,10 @@ public class UserDaoImpl extends AbstractUserDao {
             statement.setString(1, login);
             statement.setString(2, password);
             resultSet = statement.executeQuery();
+            return buildUserObject(resultSet);
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("{0} using login and password", requestExecException), e);
         }
-
-        return buildUserObject(resultSet);
     }
 
     private User buildUserObject(ResultSet resultSet) throws DaoException {

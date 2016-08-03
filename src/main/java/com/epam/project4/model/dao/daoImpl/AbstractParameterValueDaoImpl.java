@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class ParameterValueDaoImpl extends AbstractParameterValueDao {
+public class AbstractParameterValueDaoImpl extends AbstractParameterValueDao {
 
     private static final String allValues = "SELECT * FROM Value_Pool";
 

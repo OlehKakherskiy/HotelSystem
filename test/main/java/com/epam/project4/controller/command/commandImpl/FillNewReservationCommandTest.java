@@ -2,7 +2,7 @@ package main.java.com.epam.project4.controller.command.commandImpl;
 
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
-import main.java.com.epam.project4.manager.GenericServiceManager;
+import main.java.com.epam.project4.manager.AbstractServiceManager;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
@@ -32,7 +32,7 @@ public class FillNewReservationCommandTest {
 
     private static HttpSession session;
 
-    private static GenericServiceManager serviceManager;
+    private static AbstractServiceManager serviceManager;
 
     private static AbstractReservationService reservationService;
 
@@ -65,7 +65,7 @@ public class FillNewReservationCommandTest {
         EasyMock.expect(session.getAttribute(GlobalContextConstant.USER.getName())).andReturn(new User(1, "na", "d", UserType.ADMIN, Collections.emptyList()));
         EasyMock.expect(request.getSession()).andReturn(session);
 
-        serviceManager = EasyMock.createMock(GenericServiceManager.class);
+        serviceManager = EasyMock.createMock(AbstractServiceManager.class);
         reservationService = EasyMock.createMock(AbstractReservationService.class);
         parameterValueService = EasyMock.createMock(AbstractParameterValueService.class);
 
@@ -84,7 +84,7 @@ public class FillNewReservationCommandTest {
         Capture<Reservation> capture = new Capture<>();
 //        Capture<User> userCapture = new Capture<>();
 //        EasyMock.expect(reservationService.addReservation(null, null)).and
-        reservationService.addReservation((Reservation) EasyMock.and(EasyMock.isA(Reservation.class), expectedReservation), new User(1, "na", "d", UserType.ADMIN, Collections.emptyList())); //(User) EasyMock.and(EasyMock.isA(User.class), userCapture)
+        reservationService.addReservation(EasyMock.and(EasyMock.isA(Reservation.class), expectedReservation), new User(1, "na", "d", UserType.ADMIN, Collections.emptyList())); //(User) EasyMock.and(EasyMock.isA(User.class), userCapture)
 
         EasyMock.replay(request, session, serviceManager, reservationService, parameterValueService);
 

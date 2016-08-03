@@ -45,19 +45,21 @@
     <entry key="main.java.com.epam.project4.model.service.AbstractUserService">main.java.com.epam.project4.model.service.serviceImpl.UserService</entry>
     <entry key="main.java.com.epam.project4.model.service.AbstractParameterValueService">main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl</entry>
 
-    <entry key="main.java.com.epam.project4.model.dao.GenericUserDao">
-        main.java.com.epam.project4.model.dao.daoImpl.UserDaoImpl
+    <entry key="main.java.com.epam.project4.model.dao.AbstractUserDao">
+        main.java.com.epam.project4.model.dao.daoImpl.AbstractUserDaoImpl
     </entry>
-    <entry key="main.java.com.epam.project4.model.dao.GenericHotelRoomDao">main.java.com.epam.project4.model.dao.daoImpl.GenericHotelRoomDaoImpl</entry>
-    <entry key="main.java.com.epam.project4.model.dao.GenericMobilePhoneDao">
-        main.java.com.epam.project4.model.dao.daoImpl.MobilePhoneDaoImpl
+    <entry key="main.java.com.epam.project4.model.dao.AbstractHotelRoomDao">
+        main.java.com.epam.project4.model.dao.daoImpl.AbstractHotelRoomDaoImpl
     </entry>
-    <entry key="main.java.com.epam.project4.model.dao.GenericReservationDao">main.java.com.epam.project4.model.dao.daoImpl.GenericReservationDaoImpl</entry>
-    <entry key="main.java.com.epam.project4.model.dao.GenericParameterValueDao">
-        main.java.com.epam.project4.model.dao.daoImpl.ParameterValueDaoImpl
+    <entry key="main.java.com.epam.project4.model.dao.AbstractMobilePhoneDao">
+        main.java.com.epam.project4.model.dao.daoImpl.AbstractMobilePhoneDaoImpl
     </entry>
-
-    <entry key="exceptionsFile">resources/exceptions.properties</entry>
+    <entry key="main.java.com.epam.project4.model.dao.AbstractReservationDao">
+        main.java.com.epam.project4.model.dao.daoImpl.AbstractReservationDaoImpl
+    </entry>
+    <entry key="main.java.com.epam.project4.model.dao.AbstractParameterValueDao">
+        main.java.com.epam.project4.model.dao.daoImpl.AbstractParameterValueDaoImpl
+    </entry>
 
 </properties>
     

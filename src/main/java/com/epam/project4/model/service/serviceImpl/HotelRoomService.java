@@ -4,8 +4,8 @@ import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.exception.SystemException;
-import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
-import main.java.com.epam.project4.model.dao.GenericReservationDao;
+import main.java.com.epam.project4.model.dao.AbstractHotelRoomDao;
+import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
@@ -24,13 +24,13 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
  */
 public class HotelRoomService implements AbstractHotelRoomService {
 
-    private GenericHotelRoomDao hotelRoomDao;
+    private AbstractHotelRoomDao hotelRoomDao;
 
-    private GenericReservationDao reservationDao;
+    private AbstractReservationDao reservationDao;
 
     private AbstractParameterValueService parameterValueService;
 
-    public HotelRoomService(GenericHotelRoomDao hotelRoomDao, GenericReservationDao reservationDao, AbstractParameterValueService parameterValueService) {
+    public HotelRoomService(AbstractHotelRoomDao hotelRoomDao, AbstractReservationDao reservationDao, AbstractParameterValueService parameterValueService) {
         this.hotelRoomDao = hotelRoomDao;
         this.reservationDao = reservationDao;
         this.parameterValueService = parameterValueService;

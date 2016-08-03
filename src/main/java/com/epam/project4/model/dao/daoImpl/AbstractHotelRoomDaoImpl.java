@@ -1,7 +1,7 @@
 package main.java.com.epam.project4.model.dao.daoImpl;
 
 import main.java.com.epam.project4.exception.DaoException;
-import main.java.com.epam.project4.model.dao.GenericHotelRoomDao;
+import main.java.com.epam.project4.model.dao.AbstractHotelRoomDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 
 import javax.sql.DataSource;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class GenericHotelRoomDaoImpl extends GenericHotelRoomDao {
+public class AbstractHotelRoomDaoImpl extends AbstractHotelRoomDao {
 
     private static final String SELECT_ROOM_REQUEST = "SELECT * FROM Hotel_Room WHERE id_room = ? AND is_active = 1";
 
