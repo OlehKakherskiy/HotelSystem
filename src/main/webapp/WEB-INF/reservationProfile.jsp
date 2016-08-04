@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="pvList" uri="/WEB-INF/paramValueList.tld" %>
 <jsp:useBean id="newReservation" scope="request" type="java.lang.Boolean"/>
 <jsp:useBean id="user" scope="session" type="main.java.com.epam.project4.model.entity.User"/>
 <c:if test="${newReservation}">
@@ -135,14 +136,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><h4><fmt:message key="requirements" bundle="${reservBundle}"/></h4></div>
                 <div class="panel-body">
-                    <ul class="list-group">
-                        <c:forEach items="${currentReservation.requestParameters}" var="parameterValue">
-                            <li class="list-group-item"><fmt:message key="${parameterValue.parameter.paramName}"
-                                                                     bundle="${paramList}"/> <span
-                                    class="pull-right"><fmt:message key="${parameterValue.value.value}"
-                                                                    bundle="${valueList}"/> </span></li>
-                        </c:forEach>
-                    </ul>
+                    <pvList:paramValueList list="${currentReservation.requestParameters}" parameterBundle="${paramList}"
+                                           valueBundle="${valueList}"/>
                 </div>
             </div>
         </c:if>

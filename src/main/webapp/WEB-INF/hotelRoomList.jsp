@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id="hotelRoomList" type="java.util.List" scope="session"/>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="pvList" uri="/WEB-INF/paramValueList.tld" %>
 <fmt:setBundle basename="roomList" var="rList"/>
 <fmt:setBundle basename="main" var="main"/>
 <fmt:setBundle basename="valueListBundle" var="valueList"/>
@@ -50,14 +51,8 @@
                         <label class="pull-right">${hotelRoom.price}</label>
                     </div>
                     <div class="panel-body">
-                        <ul class="list-group">
-                            <c:forEach items="${hotelRoom.parameters}" var="parameterValue">
-                                <li class="list-group-item"><fmt:message key="${parameterValue.parameter.paramName}"
-                                                                         bundle="${paramList}"/> <span
-                                        class="pull-right"><fmt:message key="${parameterValue.value.value}"
-                                                                        bundle="${valueList}"/> </span></li>
-                            </c:forEach>
-                        </ul>
+                        <pvList:paramValueList list="${hotelRoom.parameters}" parameterBundle="${paramList}"
+                                               valueBundle="${valueList}"/>
                         <label class="pull-left"><fmt:message key="isActive" bundle="${rList}"/>
                             <fmt:message key="${hotelRoom.activationStatus}" bundle="${rList}"/>
                         </label>

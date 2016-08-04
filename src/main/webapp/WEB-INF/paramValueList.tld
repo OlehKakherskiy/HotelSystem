@@ -1,0 +1,28 @@
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.1</jsp-version>
+    <short-name>Custom tag for printing parameter-value list</short-name>
+    <tag>
+        <name>paramValueList</name>
+        <tag-class>main.java.com.epam.project4.app.ParameterValueTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>list</name>
+            <required>true</required>
+            <type>java.util.List</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>parameterBundle</name>
+            <required>true</required>
+            <type>javax.servlet.jsp.jstl.fmt.LocalizationContext</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>valueBundle</name>
+            <required>true</required>
+            <type>javax.servlet.jsp.jstl.fmt.LocalizationContext</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

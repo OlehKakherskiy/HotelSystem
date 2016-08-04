@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id="hotelRoom" type="main.java.com.epam.project4.model.entity.HotelRoom" scope="request"/>
 <jsp:useBean id="user" type="main.java.com.epam.project4.model.entity.User" scope="session"/>
+<%@ taglib prefix="pvList" uri="/WEB-INF/paramValueList.tld" %>
 <c:set var="isAdmin" value="${user.userType.id == 1}" scope="page"/>
 <c:if test="${isAdmin == true}">
     <jsp:useBean id="reservationMonth" type="java.time.Month" scope="request"/>
@@ -52,6 +53,7 @@
 <html>
 <head>
     <title><fmt:message key="brand" bundle="${main}"/></title>
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
           href="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> "
@@ -88,14 +90,8 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <ul class="list-group">
-                        <c:forEach items="${hotelRoom.parameters}" var="parameterValue">
-                            <li class="list-group-item"><fmt:message key="${parameterValue.parameter.paramName}"
-                                                                     bundle="${rList}"/> <span
-                                    class="pull-right"><fmt:message key="${parameterValue.value.value}"
-                                                                    bundle="${valueList}"/> </span></li>
-                        </c:forEach>
-                    </ul>
+                    <pvList:paramValueList list="${hotelRoom.parameters}" parameterBundle="${rList}"
+                                           valueBundle="${valueList}"/>
                     <label class="pull-left"><fmt:message key="isActive" bundle="${hRoom}"/>
                         <fmt:message key="${hotelRoom.activationStatus}" bundle="${hRoom}"/>
                     </label>
