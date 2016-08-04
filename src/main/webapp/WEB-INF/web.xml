@@ -37,17 +37,28 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/404.jsp</location>
+        <location>/WEB-INF/jspf/error/404.jsp</location>
     </error-page>
 
     <error-page>
         <exception-type>main.java.com.epam.project4.exception.RequestException</exception-type>
-        <location>/WEB-INF/requestException.jsp</location>
+        <location>/WEB-INF/jspf/error/requestException.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>500</error-code>
-        <location>/WEB-INF/systemException.jsp</location>
+        <location>/WEB-INF/jspf/error/systemException.jsp</location>
     </error-page>
 
+    <jsp-config>
+        <jsp-property-group>
+            <description>Web-pages (with header)</description>
+            <url-pattern>/WEB-INF/*</url-pattern>
+            <include-prelude>/WEB-INF/jspf/template/header.jsp</include-prelude>
+        </jsp-property-group>
+        <jsp-property-group>
+            <description>Login page (without header)</description>
+            <url-pattern>/login.jsp</url-pattern>
+        </jsp-property-group>
+    </jsp-config>
 </web-app>

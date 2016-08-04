@@ -25,6 +25,6 @@ public enum WebPageConstant {
     }
 
     public String getPath() {
-        return (this == LOGIN) ? String.format("/%s.jsp", path) : String.format("/WEB-INF/%s.jsp", path);
+        return (this == LOGIN) ? String.format("/%s.jsp", path) : String.format("/WEB-INF/jspf/%s.jsp", path);
     }
 }
