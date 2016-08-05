@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public abstract class AbstractParameterValueDao extends TransparentGenericDao<ParameterValue, Integer> {
+public abstract class AbstractParameterValueDao extends TransparentGenericDao<ParameterValue> {
 
     public abstract List<ParameterValue> getAllFullInfo() throws DaoException;
 

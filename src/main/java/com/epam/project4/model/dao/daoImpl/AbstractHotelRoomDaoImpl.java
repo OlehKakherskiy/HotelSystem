@@ -57,7 +57,7 @@ public class AbstractHotelRoomDaoImpl extends AbstractHotelRoomDao {
     }
 
     @Override
-    public HotelRoom read(Integer id) throws DaoException {
+    public HotelRoom read(int id) throws DaoException {
         HotelRoom room = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROOM_REQUEST)) {

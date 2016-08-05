@@ -54,7 +54,7 @@ public class AbstractReservationDaoImpl extends AbstractReservationDao {
 
 
     @Override
-    public Reservation read(Integer id) throws DaoException {
+    public Reservation read(int id) throws DaoException {
         Reservation reservation = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(fullInfoRequest)) {
@@ -113,7 +113,7 @@ public class AbstractReservationDaoImpl extends AbstractReservationDao {
     }
 
     @Override
-    public Integer save(Reservation object) throws DaoException {
+    public int save(Reservation object) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
 
@@ -260,7 +260,7 @@ public class AbstractReservationDaoImpl extends AbstractReservationDao {
     }
 
     @Override
-    public boolean delete(Integer id) throws DaoException {
+    public boolean delete(int id) throws DaoException {
         boolean isSuccessfully = false;
         String query = "DELETE FROM Reservation WHERE ID = ?";
         try (Connection c = dataSource.getConnection();

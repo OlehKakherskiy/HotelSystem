@@ -43,7 +43,7 @@ public class AbstractUserDaoImpl extends AbstractUserDao {
     private DataSource dataSource;
 
     @Override
-    public User read(Integer id) throws DaoException {
+    public User read(int id) throws DaoException {
         ResultSet resultSet = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(getUserFromID)) {
