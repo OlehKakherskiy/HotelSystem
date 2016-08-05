@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class AbstractMobilePhoneDaoImpl extends AbstractMobilePhoneDao {
+public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
 
     private static final String sqlRequestException = "Exception was occurred while was executing sql request " +
             "for getting mobilePhoneList";

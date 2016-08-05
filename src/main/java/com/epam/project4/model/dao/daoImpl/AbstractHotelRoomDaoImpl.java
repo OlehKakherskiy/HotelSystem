@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class AbstractHotelRoomDaoImpl extends AbstractHotelRoomDao {
+public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
 
     private static final String SELECT_ROOM_REQUEST = "SELECT * FROM Hotel_Room WHERE id_room = ? AND is_active = 1";
 

@@ -15,7 +15,7 @@ import java.text.MessageFormat;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class AbstractUserDaoImpl extends AbstractUserDao {
+public class AbstractUserDaoImpl implements AbstractUserDao {
 
     private static final String getUserFromID =
             "SELECT idUser, name, last_name, idUserType, " +

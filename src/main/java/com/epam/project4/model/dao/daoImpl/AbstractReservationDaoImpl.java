@@ -17,7 +17,7 @@ import java.util.StringJoiner;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class AbstractReservationDaoImpl extends AbstractReservationDao {
+public class AbstractReservationDaoImpl implements AbstractReservationDao {
 
     //--------------------------------- SQL REQUESTS ----------------------------------------//
     private static final String getShortInfoBase = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +
@@ -49,9 +49,7 @@ public class AbstractReservationDaoImpl extends AbstractReservationDao {
     private static final String insertRequestParameters = "INSERT INTO Request_Parameters " +
             "(id_Parameter_Values , id_reservation_request) VALUES ";
 
-
     private DataSource dataSource;
-
 
     @Override
     public Reservation read(int id) throws DaoException {

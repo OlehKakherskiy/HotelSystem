@@ -10,11 +10,11 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public abstract class AbstractReservationDao extends TransparentGenericDao<Reservation> {
+public interface AbstractReservationDao extends GenericDao<Reservation> {
 
-    public abstract List<Reservation> getAllRoomReservationsInPeriod(int roomID, ReservationStatus status, LocalDate startDate, LocalDate endDate) throws DaoException;
+    List<Reservation> getAllRoomReservationsInPeriod(int roomID, ReservationStatus status, LocalDate startDate, LocalDate endDate) throws DaoException;
 
-    public abstract List<Reservation> getAllUserReservationsShortInfo(int userID, ReservationStatus status) throws DaoException;
+    List<Reservation> getAllUserReservationsShortInfo(int userID, ReservationStatus status) throws DaoException;
 
-    public abstract List<Reservation> getAllReservationsShortInfo(ReservationStatus status) throws DaoException;
+    List<Reservation> getAllReservationsShortInfo(ReservationStatus status) throws DaoException;
 }
