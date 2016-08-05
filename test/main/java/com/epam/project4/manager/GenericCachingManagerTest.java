@@ -2,7 +2,7 @@ package main.java.com.epam.project4.manager;
 
 import com.mysql.fabric.jdbc.FabricMySQLDataSource;
 import main.java.com.epam.project4.app.constants.CommandConstant;
-import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.controller.command.ICommand;
 import main.java.com.epam.project4.controller.command.commandImpl.FillNewReservationCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.GetReservationListCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.LogoutCommand;
@@ -13,6 +13,7 @@ import main.java.com.epam.project4.manager.managerImpl.DataSourceDaoManagerImpl;
 import main.java.com.epam.project4.manager.managerImpl.ServiceManagerImpl;
 import main.java.com.epam.project4.model.dao.*;
 import main.java.com.epam.project4.model.dao.daoImpl.*;
+import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.service.*;
 import main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService;
 import main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl;
@@ -22,10 +23,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Proxy;
+import java.util.*;
 
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
@@ -50,7 +49,7 @@ public class GenericCachingManagerTest {
     }
 
     private static void initCommandManager() {
-        Map<CommandConstant, Class<? extends AbstractCommand>> map = new HashMap<>();
+        Map<CommandConstant, Class<? extends ICommand>> map = new HashMap<>();
         map.put(CommandConstant.LOGOUT_COMMAND, LogoutCommand.class);
         map.put(CommandConstant.REFUSE_HOTEL_ROOM_OFFER_COMMAND, RefuseHotelRoomOfferCommand.class);
         map.put(CommandConstant.GET_RESERVATION_LIST_COMMAND, GetReservationListCommand.class);
@@ -93,7 +92,16 @@ public class GenericCachingManagerTest {
         for (int i = 0; i < cachingManagers.size(); i++) {
             for (Object entry : initMapsForManagers.get(i).entrySet()) {
                 System.out.println(((Map.Entry) entry).getKey());
-                Assert.assertEquals(((Map.Entry) entry).getValue(), cachingManagers.get(i).getInstance(((Map.Entry) entry).getKey()).getClass());
+                if (Proxy.isProxyClass(cachingManagers.get(i).getInstance(((Map.Entry) entry).getKey()).getClass())) {
+                    System.out.println(cachingManagers.get(i)
+                            .getInstance(((Map.Entry) entry).getKey()).getClass().getName());
+                    System.out.println(Arrays.toString(cachingManagers.get(i)
+                            .getInstance(((Map.Entry) entry).getKey()).getClass().getInterfaces()));
+                    Assert.assertEquals(((Map.Entry) entry).getValue(), cachingManagers.get(i)
+                            .getInstance(((Map.Entry) entry).getKey()).getClass());
+                } else {
+                    Assert.assertEquals(((Map.Entry) entry).getValue(), cachingManagers.get(i).getInstance(((Map.Entry) entry).getKey()).getClass());
+                }
             }
         }
     }
@@ -120,15 +128,15 @@ public class GenericCachingManagerTest {
 
     @Test(expected = SystemException.class)
     public void testDaoManagerNoValue() throws Exception {
-        class DaoStub extends TransparentGenericDao{
+        class DaoStub implements GenericDao<Reservation> {
         }
         daoManager.getInstance(DaoStub.class);
 
     }
 
     @Test(expected = SystemException.class)
-    public void testServiceManager() throws Exception{
-        class ServiceStub implements AbstractService{
+    public void testServiceManager() throws Exception {
+        class ServiceStub implements AbstractService {
         }
         serviceManager.getInstance(ServiceStub.class);
     }

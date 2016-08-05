@@ -5,10 +5,12 @@ import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
+import main.java.com.epam.project4.controller.command.ICommand;
 import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +27,10 @@ import java.util.stream.Collectors;
  */
 public class UniversalServlet extends HttpServlet {
 
+    private static Logger logger = Logger.getLogger(UniversalServlet.class);
+
     static {
+        System.out.println("configuring app");
         new ApplicationConfigurer();
     }
 
@@ -85,8 +90,9 @@ public class UniversalServlet extends HttpServlet {
             System.out.println(WebPageConstant.LOGIN.getPath());
             return WebPageConstant.LOGIN.getPath();
         } else {
-            System.out.println(commandFactory.getInstance(CommandConstant.fromValue(commandName)));
-            return commandFactory.getInstance(CommandConstant.fromValue(commandName)).process(req, resp);
+            System.out.println(commandFactory.getInstance(CommandConstant.fromValue(commandName)).toString());
+            ICommand command = commandFactory.getInstance(CommandConstant.fromValue(commandName));
+            return command.process(req, resp);
         }
     }
 
@@ -96,7 +102,6 @@ public class UniversalServlet extends HttpServlet {
         e.setLocale(currentLocale);
         System.out.println(e.getLocalizedMessage());
         throw e;
-//        response.sendError(500, e.getLocalizedMessage());
     }
 
     private void processRequestException(HttpServletRequest request, RequestException e) {

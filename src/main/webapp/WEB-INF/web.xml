@@ -28,6 +28,7 @@
     <servlet>
         <servlet-name>universalServlet</servlet-name>
         <servlet-class>main.java.com.epam.project4.controller.UniversalServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>

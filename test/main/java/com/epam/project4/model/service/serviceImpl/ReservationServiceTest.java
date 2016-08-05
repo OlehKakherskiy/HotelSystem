@@ -61,6 +61,7 @@ public class ReservationServiceTest {
 
         parameterValueService = EasyMock.createMock(AbstractParameterValueService.class);
         EasyMock.expect(parameterValueService.getParamValueList(new ArrayList<>())).andReturn(new ArrayList<>());
+
         reservationDao = EasyMock.createMock(AbstractReservationDao.class);
         EasyMock.expect(reservationDao.read(expected.getId())).andReturn(expected);
 
@@ -70,20 +71,6 @@ public class ReservationServiceTest {
         Assert.assertEquals(expected, reservationService.getReservationDetailInfo(expected.getId()));
 
         EasyMock.verify(parameterValueService, reservationDao);
-
-        hotelRoomDao = EasyMock.createMock(AbstractHotelRoomDao.class);
-        EasyMock.expect(hotelRoomDao.read(roomStub.getRoomID())).andReturn(roomStub);
-
-        userService = EasyMock.createMock(UserService.class);
-        EasyMock.expect(userService.getUserInfo(userStub.getIdUser())).andReturn(userStub);
-        EasyMock.replay(hotelRoomDao, userService);
-        EasyMock.reset(reservationDao, parameterValueService);
-
-
-        reservationService = new ReservationService(reservationDao, hotelRoomDao, userService, parameterValueService);
-        Assert.assertEquals(expected, reservationService.getReservationDetailInfo(expected.getId()));
-
-        EasyMock.verify(hotelRoomDao, userService, reservationDao, parameterValueService);
     }
 
     @Test

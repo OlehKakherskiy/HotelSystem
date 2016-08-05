@@ -4,7 +4,10 @@ import com.mysql.fabric.jdbc.FabricMySQLDataSource;
 import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.manager.managerImpl.DataSourceDaoManagerImpl;
 import main.java.com.epam.project4.model.dao.GenericDao;
-import main.java.com.epam.project4.model.dao.TransparentGenericDao;
+import main.java.com.epam.project4.model.entity.HotelRoom;
+import main.java.com.epam.project4.model.entity.Reservation;
+import main.java.com.epam.project4.model.entity.User;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,16 +23,16 @@ public class AbstractDaoManagerTest {
 
     private static AbstractDaoManager daoManager;
 
-    private class DaoStubWithoutConstructor extends TransparentGenericDao {
+    private class DaoStubWithoutConstructor implements GenericDao<User> {
         public DaoStubWithoutConstructor(String stub) {
         }
     }
 
-    private class DaoStubWithoutDataSource extends TransparentGenericDao {
+    private class DaoStubWithoutDataSource implements GenericDao<ParameterValue> {
 
     }
 
-    private class DaoStubWithoutSetDataSourceMethod extends TransparentGenericDao {
+    private class DaoStubWithoutSetDataSourceMethod implements GenericDao<HotelRoom> {
         private DataSource dataSource;
 
         public DataSource getDataSource() {
@@ -37,7 +40,7 @@ public class AbstractDaoManagerTest {
         }
     }
 
-    private class DaoStubWithoutGetDataSourceMethod extends TransparentGenericDao {
+    private class DaoStubWithoutGetDataSourceMethod implements GenericDao<Reservation> {
         private DataSource dataSource;
 
         public void setDataSource(DataSource dataSource) {
@@ -45,7 +48,7 @@ public class AbstractDaoManagerTest {
         }
     }
 
-    private class DaoStubWithOpenDataSource extends TransparentGenericDao {
+    private class DaoStubWithOpenDataSource implements GenericDao<Reservation> {
         public DataSource dataSource;
     }
 
@@ -73,17 +76,17 @@ public class AbstractDaoManagerTest {
     }
 
     @Test(expected = SystemException.class)
-    public void testDaoStubWithoutSetDataSourceMethod() throws Exception{
+    public void testDaoStubWithoutSetDataSourceMethod() throws Exception {
         daoManager.getInstance(DaoStubWithoutSetDataSourceMethod.class);
     }
 
     @Test(expected = SystemException.class)
-    public void testDaoStubWithoutGetDataSourceMethod() throws Exception{
+    public void testDaoStubWithoutGetDataSourceMethod() throws Exception {
         daoManager.getInstance(DaoStubWithoutGetDataSourceMethod.class);
     }
 
     @Test(expected = SystemException.class)
-    public void testDaoStubWithOpenDataSource() throws Exception{
+    public void testDaoStubWithOpenDataSource() throws Exception {
         daoManager.getInstance(DaoStubWithOpenDataSource.class);
     }
 }

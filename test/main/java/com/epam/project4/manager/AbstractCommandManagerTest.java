@@ -2,6 +2,7 @@ package main.java.com.epam.project4.manager;
 
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.controller.command.ICommand;
 import main.java.com.epam.project4.controller.command.commandImpl.FillNewReservationCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.GetReservationListCommand;
 import main.java.com.epam.project4.controller.command.commandImpl.LogoutCommand;
@@ -23,7 +24,7 @@ public class AbstractCommandManagerTest {
 
     private static AbstractCommandManager commandManager;
 
-    private static Map<CommandConstant, Class<? extends AbstractCommand>> map;
+    private static Map<CommandConstant, Class<? extends ICommand>> map;
 
     @BeforeClass
     public static void init() {
@@ -43,7 +44,7 @@ public class AbstractCommandManagerTest {
 
     @Test(expected = SystemException.class)
     public void testGetInstanceWithoutDefaultConstructor() throws Exception {
-        Map<CommandConstant, Class<? extends AbstractCommand>> dirtiedMap = new HashMap<>();
+        Map<CommandConstant, Class<? extends ICommand>> dirtiedMap = new HashMap<>();
         map.entrySet().stream().forEach(entry -> dirtiedMap.put(entry.getKey(), entry.getValue()));
 
         class StubCommand extends AbstractCommand{

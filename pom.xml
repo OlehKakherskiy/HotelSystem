@@ -59,14 +59,6 @@
             <version>1.2</version>
         </dependency>
 
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/taglibs/standard &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.apache.taglibs</groupId>-->
-        <!--<artifactId>standard</artifactId>-->
-        <!--<version>1.1.2</version>-->
-        <!--</dependency>-->
-
-
     </dependencies>
     <build>
         <finalName>hotel-system</finalName>

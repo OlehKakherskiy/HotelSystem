@@ -3,7 +3,7 @@ package main.java.com.epam.project4.manager.managerImpl;
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
-import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.controller.command.ICommand;
 import main.java.com.epam.project4.exception.ManagerConfigException;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.manager.AbstractServiceManager;
@@ -22,12 +22,12 @@ public class CommandManagerImpl extends AbstractCommandManager {
     private static final String ILLEGAL_ACCESS_EXCEPTION_MESSAGE = "Exception caused because was attempt " +
             "to instantiate object from inaccessible no-params constructor of class {0}";
 
-    public CommandManagerImpl(Map<CommandConstant, Class<? extends AbstractCommand>> keyObjectTemplateMap) {
+    public CommandManagerImpl(Map<CommandConstant, Class<? extends ICommand>> keyObjectTemplateMap) {
         super(keyObjectTemplateMap);
     }
 
     @Override
-    protected <V extends AbstractCommand> V instantiate(Class<V> objectClass) throws ManagerConfigException {
+    protected <V extends ICommand> V instantiate(Class<V> objectClass) throws ManagerConfigException {
         V res;
         try {
             res = objectClass.newInstance();

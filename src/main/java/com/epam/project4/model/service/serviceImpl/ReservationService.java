@@ -64,7 +64,6 @@ public class ReservationService implements AbstractReservationService {
             }
             reservation.setRequestParameters(parameterValueService.getParamValueList(reservation.getRequestParametersIds()));
             reservation.getRequestParametersIds().clear();
-            reservation.setRequestParametersIds(null);
 
             return reservation;
         } catch (DaoException e) {
