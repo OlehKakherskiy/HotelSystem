@@ -29,10 +29,6 @@ public class LocalizedRuntimeException extends RuntimeException {
         this.messageParams = messageParams;
     }
 
-    public LocalizedRuntimeException(String localizedMessage) {
-        this.preparedLocalizedMessage = localizedMessage;
-    }
-
     @Override
     public String getMessage() {
         return LocalizedMessageFormatter.getLocalizedMessage(messageCode, messageParams);

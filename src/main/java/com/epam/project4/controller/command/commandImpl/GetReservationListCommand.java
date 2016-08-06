@@ -8,18 +8,23 @@ import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.enums.UserType;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public class GetReservationListCommand extends AbstractCommand {
+
+    private static final Logger logger = Logger.getLogger(GetReservationListCommand.class);
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
@@ -44,6 +49,7 @@ public class GetReservationListCommand extends AbstractCommand {
             reservationList = reservationService.getShortInfoAboutAllReservations(currentUser, reservationStatus);
         }
         System.out.println(Arrays.toString(reservationList.toArray()));
+        addRequestInfoToLog(currentUser, reservationStatus, reservationList);
         request.setAttribute("reservationList", reservationList);
         return WebPageConstant.INDEX.getPath();
     }
@@ -56,5 +62,11 @@ public class GetReservationListCommand extends AbstractCommand {
                 session.removeAttribute(att);
             }
         }
+    }
+
+    private void addRequestInfoToLog(User user, ReservationStatus status, List<Reservation> reservations) {
+        logger.info(MessageFormat.format("User (id = {0}) requested " +
+                        "reservation list info with status = {1}. Reservations ids = {2}", user.getIdUser(), status,
+                Arrays.toString(reservations.stream().map(Reservation::getId).collect(Collectors.toList()).toArray())));
     }
 }

@@ -15,7 +15,4 @@ public class RequestException extends LocalizedRuntimeException {
         super(messageCode, cause, messageParams);
     }
 
-    public RequestException(String localizedMessage) {
-        super(localizedMessage);
-    }
 }

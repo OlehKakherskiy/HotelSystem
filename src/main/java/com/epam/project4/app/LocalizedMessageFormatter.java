@@ -35,6 +35,7 @@ public class LocalizedMessageFormatter {
 
     public static String getLocalizedMessage(MessageCode code, Object... params) {
         String message = (defaultBundle.getString(code.getCode()));
+        System.out.println(MessageFormat.format("Localized message with default locale:" + message, params));
         if (message != null) {
             return MessageFormat.format(message, params);
         } else {

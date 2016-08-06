@@ -56,10 +56,10 @@ public class UniversalServlet extends HttpServlet {
                 req.getRequestDispatcher(newUrl).forward(req, resp);
             }
         } catch (SystemException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             processSystemException(req, resp, e);
         } catch (RequestException e1) {
-            e1.printStackTrace();
+            logger.warn(e1.getMessage(), e1);
             processRequestException(req, e1);
         }
     }
@@ -70,15 +70,15 @@ public class UniversalServlet extends HttpServlet {
             req.setCharacterEncoding("UTF-8");
             resp.setContentType("text/html; charset=UTF-8");
             resp.setCharacterEncoding("UTF-8");
-            System.out.println("doPost");
-            System.out.println("commandFactory = " + commandFactory);
+//            System.out.println("doPost");
+//            System.out.println("commandFactory = " + commandFactory);
             String newUrl = processCommand(req, resp);
             req.getRequestDispatcher(newUrl).forward(req, resp);
         } catch (SystemException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             processSystemException(req, resp, e);
         } catch (RequestException e1) {
-            e1.printStackTrace();
+            logger.warn(e1.getMessage(), e1);
             processRequestException(req, e1);
         }
     }

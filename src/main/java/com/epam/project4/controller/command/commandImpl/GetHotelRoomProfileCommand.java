@@ -8,9 +8,11 @@ import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.enums.UserType;
 import main.java.com.epam.project4.model.service.AbstractHotelRoomService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -20,16 +22,22 @@ import java.time.Year;
  */
 public class GetHotelRoomProfileCommand extends AbstractCommand {
 
+    private static final Logger logger = Logger.getLogger(GetHotelRoomProfileCommand.class);
+
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
         AbstractHotelRoomService hotelRoomService = serviceManager.getInstance(AbstractHotelRoomService.class);
         Integer roomId = Integer.valueOf(request.getParameter("hotelRoomId"));
-        User user = (User) request.getSession(false).getAttribute("user");
+        User user = (User) request.getSession(false).getAttribute(GlobalContextConstant.USER.getName());
         HotelRoom hotelRoom = hotelRoomService.getFullDetails(roomId);
         if (user.getUserType() == UserType.ADMIN) {
             appendReservationInfo(request, hotelRoom, hotelRoomService);
         }
         request.setAttribute("hotelRoom", hotelRoom);
+
+        logger.info(MessageFormat.format("User (id = {0}) requested hotel room info (room id = {1})",
+                user.getIdUser(), hotelRoom.getRoomID()));
+
         request.getSession(false).setAttribute(GlobalContextConstant.CURRENT_HOTEL_ROOM.getName(), hotelRoom);
         return WebPageConstant.HOTEL_ROOM_PROFILE.getPath();
     }

@@ -14,9 +14,11 @@ import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
 import main.java.com.epam.project4.model.service.AbstractParameterValueService;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +29,19 @@ import java.util.Map;
  */
 public class FillNewReservationCommand extends AbstractCommand {
 
+    private static final Logger logger = Logger.getLogger(FillNewReservationCommand.class);
+
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
         System.out.println(request.getParameterMap().size());
-//        request.getParameterMap().forEach((o, o2) -> System.out.println(o + "=" + o2));
         AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
         User user = (User) request.getSession(false).getAttribute(GlobalContextConstant.USER.getName());
-        reservationService.addReservation(buildReservation(request), user);
+        Reservation reservation = buildReservation(request);
+        reservationService.addReservation(reservation, user);
+
+        logger.info(MessageFormat.format("User (id = {0}) added new reservation request with params: dateFrom = {1}, " +
+                        "dateTo = {2}, comment = {3}. New reservation id = {4}", reservation.getDateFrom(), reservation.getDateTo(),
+                reservation.getComment(), reservation.getId()));
 
         return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
                 .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);

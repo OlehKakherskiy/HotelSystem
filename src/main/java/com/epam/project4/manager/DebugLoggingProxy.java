@@ -1,6 +1,7 @@
 package main.java.com.epam.project4.manager;
 
 import main.java.com.epam.project4.app.constants.MessageCode;
+import main.java.com.epam.project4.exception.LocalizedRuntimeException;
 import main.java.com.epam.project4.exception.SystemException;
 import org.apache.log4j.Logger;
 
@@ -43,13 +44,18 @@ public class DebugLoggingProxy implements InvocationHandler {
         Object result = null;
         try {
             result = method.invoke(proxiedObject, args);
-            debugLogger.debug(MessageFormat.format("Method {0} result {1}", method.getName(), result));
+            if (result != null) {
+                debugLogger.debug(MessageFormat.format("Method {0} result {1}", method.getName(), result));
+            }
             return result;
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            debugLogger.error(MessageFormat.format("Error caused during invoking method {0} of class {1}",
-                    method.getName(), proxiedObject.getClass().getName()), e);
-            throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION);
+        } catch (IllegalAccessException e) {
+//            debugLogger.error(MessageFormat.format("Error caused during invoking method {0} of class {1}",
+//                    method.getName(), proxiedObject.getClass().getName()), e);
+            throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e);
+        } catch (InvocationTargetException e1) {
+//            debugLogger.error(MessageFormat.format("Error caused during invoking method {0} of class {1}",
+//                    method.getName(), proxiedObject.getClass().getName()), e1);
+            throw (LocalizedRuntimeException) e1.getTargetException();
         }
     }
 

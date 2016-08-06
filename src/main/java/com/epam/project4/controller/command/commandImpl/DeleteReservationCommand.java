@@ -8,6 +8,7 @@ import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.service.AbstractReservationService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
 public class DeleteReservationCommand extends AbstractCommand {
+
+    private static Logger logger = Logger.getLogger(SubmitHotelRoomOfferCommand.class);
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
