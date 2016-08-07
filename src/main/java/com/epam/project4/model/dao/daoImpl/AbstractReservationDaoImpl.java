@@ -15,47 +15,101 @@ import java.util.List;
 import java.util.StringJoiner;
 
 /**
+ * Class represents implementation of {@link AbstractReservationDao} for relational databases, represented
+ * via {@link DataSource}.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @see DataSource
  */
 public class AbstractReservationDaoImpl implements AbstractReservationDao {
 
     //--------------------------------- SQL REQUESTS ----------------------------------------//
-    private static final String getShortInfoBase = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +
+
+    /**
+     * db request for selecting basic information about reservation
+     */
+    private static final String GET_SHORT_INFO_BASE = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +
             "FROM Reservation ";
 
-    private static final String shortInfoAboutAllForUser = getShortInfoBase + " WHERE id_User = ?";
+    /**
+     * db request for selecting basic information about reservations of specific user
+     */
+    private static final String SHORT_INFO_ABOUT_ALL_FOR_USER = GET_SHORT_INFO_BASE + " WHERE id_User = ?";
 
-    private static final String getShortInfoAboutAllFilteringByStatus = getShortInfoBase + " WHERE id_Reservation_Status=?";
+    /**
+     * db request for selecting basic information about reservations with specific status
+     */
+    private static final String GET_SHORT_INFO_ABOUT_ALL_FILTERING_BY_STATUS =
+            GET_SHORT_INFO_BASE + " WHERE id_Reservation_Status=?";
 
-    private static final String shortInfoAboutAllForUserFilteringByUserAndStatus = shortInfoAboutAllForUser + " AND id_Reservation_Status=?";
+    /**
+     * db request for selecting basic information about reservations filtering by user's id and reservation's status
+     */
+    private static final String SHORT_INFO_ABOUT_ALL_FOR_USER_FILTERING_BY_USER_AND_STATUS =
+            SHORT_INFO_ABOUT_ALL_FOR_USER + " AND id_Reservation_Status=?";
 
-    private static final String shortInfoAboutRoomFilteringByDate = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +
+    /**
+     * db request for selecting basic information about reservations filtering by date range
+     */
+    private static final String SHORT_INFO_ABOUT_RESERVATIONS_FILTERING_BY_DATE = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status " +
             "FROM Reservation WHERE ((date_from >= STR_TO_DATE(?,'%Y-%m-%d') AND date_from <= STR_TO_DATE(?,'%Y-%m-%d')) " +
             "OR (date_to >= STR_TO_DATE(?,'%Y-%m-%d') AND date_to <= STR_TO_DATE(?,'%Y-%m-%d')))";
 
-    private static final String shortInfoAboutRoomFilteringByDateAndStatus = shortInfoAboutRoomFilteringByDate + " AND id_Reservation_Status=?";
+    /**
+     * db request for selecting basic information about reservations filtering by date range and reservation's status
+     */
+    private static final String SHORT_INFO_ABOUT_ROOM_FILTERING_BY_DATE_AND_STATUS =
+            SHORT_INFO_ABOUT_RESERVATIONS_FILTERING_BY_DATE + " AND id_Reservation_Status=?";
 
-    private static final String fullInfoRequest = "SELECT ID, date_request, date_from, date_to, id_Reservation_Status, id_User, comment, id_Hotel_Room " +
-            "FROM Reservation WHERE ID = ?";
+    /**
+     * db request for selecting full information about reservation
+     */
+    private static final String FULL_INFO_REQUEST =
+            "SELECT ID, date_request, date_from, date_to, id_Reservation_Status, id_User, comment, id_Hotel_Room " +
+                    "FROM Reservation WHERE ID = ?";
 
-    private static final String reservationRequestsIds = "SELECT id_parameter_values " +
+    /**
+     * db request for selecting all reservation's parameters
+     */
+    private static final String RESERVATION_REQUESTS_IDS = "SELECT id_parameter_values " +
             "FROM Request_Parameters WHERE id_reservation_request = ?";
 
+    /**
+     * db request for inserting new reservation
+     */
     private static final String insertNewReservation = "INSERT INTO Reservation" +
             "(date_from, date_to, id_User, date_request, comment, id_Hotel_Room, id_reservation_status)" +
             "VALUES" +
             "(?,?,?,?,?,?,?)";
 
+    /**
+     * db request for inserting all reservation's parameters
+     */
     private static final String insertRequestParameters = "INSERT INTO Request_Parameters " +
             "(id_Parameter_Values , id_reservation_request) VALUES ";
 
+    /**
+     * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
+     */
     private DataSource dataSource;
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Reads and maps all information about reservation to {@link Reservation}, also inits
+     * {@link Reservation#requestParametersIds} via {@link #appendReservationParamIds(Reservation, ResultSet)} }
+     * </p>
+     *
+     * @param id target object's id, which persistenced data will be mapped to object representation
+     * @return {@link Reservation} object with all simple parameters inititalized and also with reservations' id
+     * in {@link Reservation#id}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public Reservation read(int id) throws DaoException {
         Reservation reservation = null;
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(fullInfoRequest)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FULL_INFO_REQUEST)) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -65,7 +119,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
                 return null;
             }
 
-            PreparedStatement statement = connection.prepareStatement(reservationRequestsIds);
+            PreparedStatement statement = connection.prepareStatement(RESERVATION_REQUESTS_IDS);
             statement.setInt(1, reservation.getId());
             ResultSet resultSet1 = statement.executeQuery();
             appendReservationParamIds(reservation, resultSet1);
@@ -76,40 +130,18 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         return reservation;
     }
 
-    private Reservation buildReservation(ResultSet resultSet) throws DaoException {
-        Reservation reservation = null;
-        try {
-            if (resultSet.next()) {
-                reservation = new Reservation();
-                appendMainInfoToReservation(reservation, resultSet);
-                reservation.setUserID(resultSet.getInt(6));
-                reservation.setComment(resultSet.getString(7));
-                reservation.setHotelRoomID(resultSet.getInt(8));
-            }
-        } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format("Exception was caused during the process of building {0} object" +
-                    " from ResultSet in read operation", Reservation.class.getName()), e);
-        }
-        return reservation;
-    }
-
-    private void appendReservationParamIds(Reservation reservation, ResultSet resultSet) throws DaoException {
-        try {
-            List<Integer> requestIds = new ArrayList<>();
-            while (resultSet.next()) {
-                requestIds.add(resultSet.getInt(1));
-            }
-            if (requestIds.isEmpty()) {
-                throw new DaoException(MessageFormat.format("Exception was caused because there is no reservation " +
-                                "parameters were read during {0} object build process. Reservation Id = {1}",
-                        Reservation.class.getName(), reservation.getId()));
-            }
-            reservation.setRequestParametersIds(requestIds);
-        } catch (SQLException e) {
-            throw new DaoException("Exception was caused during the process of reading reservation request parameters", e);
-        }
-    }
-
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Saves object main information (represented in {@link Reservation} non-agrigated params) via
+     * {@link #saveReservationObject(Reservation, Connection)} and then saves all object reservation
+     * parameters ({@link Reservation#getRequestParameters()} will be executed.
+     * </p>
+     *
+     * @param object object that will be mapped to persistent storage data format
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public int save(Reservation object) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
@@ -129,6 +161,16 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
+    /**
+     * maps {@link Reservation} object to relational representation via configuring
+     * and executing jdbc statement. After execution initializes {@link Reservation#id}.
+     *
+     * @param reservation entity, that will be saved to db
+     * @param connection  connection, through which select {@link #insertNewReservation} will be executed
+     * @throws DaoException if exception was thrown during executing insert statement or if entity wasn't
+     *                      inserted (there wasn't generated key)
+     * @throws SQLException if exception was thrown during the rollback operation
+     */
     private void saveReservationObject(Reservation reservation, Connection connection) throws DaoException, SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS)) {
             appendReservationParamsToStatement(preparedStatement, reservation);
@@ -140,15 +182,23 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
                         "inserted to BD as a result of executing Sql query", Reservation.class.getName()));
             }
             reservation.setId(newId);
+            generatedKeys.close();
+        } catch (DaoException e1) {
+            connection.rollback();
+            throw e1;
         } catch (SQLException e) {
             connection.rollback();
             throw new DaoException("Exception was caused during the process of inserting " + Reservation.class.getName() + " object to BD");
-        } catch (DaoException e1) {
-            connection.rollback();
-            throw new DaoException(e1.getMessage(), e1);
         }
     }
 
+    /**
+     * Appends reservation's parameters to insert statement.
+     *
+     * @param preparedStatement statement, to which params will be inserted
+     * @param object            object, from which params will be gotten
+     * @throws DaoException if exception was thrown during the insertion parameters process
+     */
     private void appendReservationParamsToStatement(PreparedStatement preparedStatement, Reservation object) throws DaoException {
         try {
             preparedStatement.setString(1, object.getDateFrom().toString());
@@ -165,6 +215,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
+    //TODO: зделать через batch!!!!!!!!
     private void saveRequestParams(Connection connection, Reservation reservation) throws SQLException, DaoException {
         String template = "(?," + reservation.getId() + ")";
         StringJoiner joiner = new StringJoiner(",", insertRequestParameters, "");
@@ -195,6 +246,13 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param object, which data will be mapped to persistent storage format
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public boolean update(Reservation object) throws DaoException {
         String query = "Update Reservation SET id_Hotel_Room = ?, id_Reservation_Status = ? WHERE ID = " + object.getId();
@@ -214,14 +272,29 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * If {@link ReservationStatus} is equal to {@link ReservationStatus#ALL} -
+     * {@link #SHORT_INFO_ABOUT_RESERVATIONS_FILTERING_BY_DATE} will be executed,
+     * otherwise - {@link #SHORT_INFO_ABOUT_ROOM_FILTERING_BY_DATE_AND_STATUS} will be executed
+     * </p>
+     *
+     * @param roomID    target room's id
+     * @param status    status of reservations
+     * @param startDate date, from which reservations were requested
+     * @param endDate   date, to which reservations were requested
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public List<Reservation> getAllRoomReservationsInPeriod(int roomID, ReservationStatus status, LocalDate startDate, LocalDate endDate) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement;
             if (status == ReservationStatus.ALL) {
-                preparedStatement = connection.prepareStatement(shortInfoAboutRoomFilteringByDate);
+                preparedStatement = connection.prepareStatement(SHORT_INFO_ABOUT_RESERVATIONS_FILTERING_BY_DATE);
             } else {
-                preparedStatement = connection.prepareStatement(shortInfoAboutRoomFilteringByDateAndStatus);
+                preparedStatement = connection.prepareStatement(SHORT_INFO_ABOUT_ROOM_FILTERING_BY_DATE_AND_STATUS);
                 preparedStatement.setInt(5, status.getId());
             }
             String startDateStr = startDate.toString();
@@ -238,9 +311,20 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * If {@link ReservationStatus} is equal to {@link ReservationStatus#ALL} - {@link #GET_SHORT_INFO_BASE}
+     * will be executed, otherwise - {@link #GET_SHORT_INFO_ABOUT_ALL_FILTERING_BY_STATUS} will be executed
+     * </p>
+     *
+     * @param status status of reservations
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public List<Reservation> getAllReservationsShortInfo(ReservationStatus status) throws DaoException {
-        String req = (status == ReservationStatus.ALL) ? getShortInfoBase : getShortInfoAboutAllFilteringByStatus;
+        String req = (status == ReservationStatus.ALL) ? GET_SHORT_INFO_BASE : GET_SHORT_INFO_ABOUT_ALL_FILTERING_BY_STATUS;
         ResultSet resultSet = null;
         try (Connection c = dataSource.getConnection();
              PreparedStatement preparedStatement = c.prepareStatement(req)) {
@@ -257,9 +341,15 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param id target id, whose connected data will be removed from storage
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public boolean delete(int id) throws DaoException {
-        boolean isSuccessfully = false;
         String query = "DELETE FROM Reservation WHERE ID = ?";
         try (Connection c = dataSource.getConnection();
              PreparedStatement preparedStatement = c.prepareStatement(query)) {
@@ -271,20 +361,45 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     }
 
     //---------------------------------QUERIES FOR USER_ID----------------------------------------//
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <p>
+     * if {@link ReservationStatus} is {@link ReservationStatus#ALL},
+     * then {@link #getAllReservationsForUser(int, Connection)} will be processed.
+     * Otherwise {@link #getAllReservationsForUser(int, ReservationStatus, Connection)} will be
+     * executed.
+     * </p>
+     *
+     * @param userId {@inheritDoc}
+     * @param status status of reservations
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public List<Reservation> getAllUserReservationsShortInfo(int userId, ReservationStatus status) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             return (status == ReservationStatus.ALL)
-                    ? getAllReservationsForSpecUser(userId, connection)
-                    : getAllReservationsForSpecUser(userId, status, connection);
+                    ? getAllReservationsForUser(userId, connection)
+                    : getAllReservationsForUser(userId, status, connection);
         } catch (SQLException e) {
             throw new DaoException("Exception was occurred while there was an attempt to get a connection from datasource");
         }
     }
 
-    private List<Reservation> getAllReservationsForSpecUser(int userId, Connection connection) throws DaoException {
+    /**
+     * Returns all reservations for specific user.
+     *
+     * @param userId     user's id, whose reservations will be returned
+     * @param connection connection, through which select
+     *                   {@link #SHORT_INFO_ABOUT_ALL_FOR_USER} will be executed
+     * @return list of {@link Reservation}, (filtering by user's id and reservation status) or empty list
+     * @throws DaoException if exception was thrown during the execution
+     */
+    private List<Reservation> getAllReservationsForUser(int userId, Connection connection) throws DaoException {
         ResultSet resultSet = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(shortInfoAboutAllForUser)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SHORT_INFO_ABOUT_ALL_FOR_USER)) {
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
@@ -296,9 +411,19 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
-    private List<Reservation> getAllReservationsForSpecUser(int userId, ReservationStatus status, Connection connection) throws DaoException {
+    /**
+     * Returns all reservations for specific user and with specific {@link ReservationStatus}
+     *
+     * @param userId     user's id, whose reservations will be returned
+     * @param status     reservation's status, that all reservations will contain
+     * @param connection connection, through which select
+     *                   {@link #SHORT_INFO_ABOUT_ALL_FOR_USER_FILTERING_BY_USER_AND_STATUS} will be executed
+     * @return list of {@link Reservation}, (filtering by user's id and reservation status) or empty list
+     * @throws DaoException if exception was thrown during the execution
+     */
+    private List<Reservation> getAllReservationsForUser(int userId, ReservationStatus status, Connection connection) throws DaoException {
         ResultSet resultSet = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(shortInfoAboutAllForUserFilteringByUserAndStatus)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SHORT_INFO_ABOUT_ALL_FOR_USER_FILTERING_BY_USER_AND_STATUS)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, status.getId());
             resultSet = preparedStatement.executeQuery();
@@ -310,13 +435,21 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
             throw new DaoException("Exception was occurred while SQL statement was being executed in getAll operation", e); //TODO: вынести
         }
     }
-    //---------------------------------QUERIES FOR USER_ID----------------------------------------//
 
+    /**
+     * Builds list of {@link Reservation} via object-relational mapping process, getting data
+     * from resultSet parameter (each row will be mapped to {@link Reservation} object). Will
+     * return empty list, if there's no rows in resultSet.
+     *
+     * @param resultSet set, containing data for mapping to {@link Reservation}
+     * @return list of {@link Reservation} or empty list
+     * @throws DaoException if there was an exception during the object-relational mapping process
+     */
     private List<Reservation> buildReservationList(ResultSet resultSet) throws DaoException {
         List<Reservation> reservationList = new ArrayList<>();
         try {
             while (resultSet.next()) {
-                reservationList.add(appendMainInfoToReservation(new Reservation(), resultSet));
+                reservationList.add(appendMainInfoToReservation(resultSet));
             }
             return reservationList;
         } catch (SQLException e) {
@@ -325,8 +458,41 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
-    private Reservation appendMainInfoToReservation(Reservation reservation, ResultSet resultSet) throws DaoException {
+    /**
+     * Maps all information, connected to target reservation, from relational representation to object.}
+     * </p>
+     *
+     * @param resultSet set, containing data for mapping to {@link Reservation}
+     * @return reservation object with all non-aggregated fields initialized
+     * @throws DaoException if there was an exception during the object-relational mapping process
+     */
+    private Reservation buildReservation(ResultSet resultSet) throws DaoException {
+        Reservation reservation = null;
         try {
+            if (resultSet.next()) {
+                reservation = appendMainInfoToReservation(resultSet);
+                reservation.setUserID(resultSet.getInt(6));
+                reservation.setComment(resultSet.getString(7));
+                reservation.setHotelRoomID(resultSet.getInt(8));
+            }
+        } catch (SQLException e) {
+            throw new DaoException(MessageFormat.format("Exception was caused during the process of building {0} object" +
+                    " from ResultSet in read operation", Reservation.class.getName()), e);
+        }
+        return reservation;
+    }
+
+    /**
+     * Maps main information about reservation (id, request's date, start/end date, status)
+     * from relational representation to object.
+     *
+     * @param resultSet set, containing data for mapping to {@link Reservation}
+     * @return reservation object with main fields initialized
+     * @throws DaoException if there was an exception during the object-relational mapping process
+     */
+    private Reservation appendMainInfoToReservation(ResultSet resultSet) throws DaoException {
+        try {
+            Reservation reservation = new Reservation();
             reservation.setId(resultSet.getInt(1));
             reservation.setRequestDate(LocalDate.parse(resultSet.getString(2)));
             reservation.setDateFrom(LocalDate.parse(resultSet.getString(3)));
@@ -336,6 +502,31 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("Exception caused while main information was inserting to new " +
                     "{0} object from ResultSet object", Reservation.class.getName()));
+        }
+    }
+
+    /**
+     * Appends to target {@link Reservation} object all {@link ParameterValue}'s id connected to it.
+     *
+     * @param reservation current {@link Reservation}, list of {@link ParameterValue} will be inserted to
+     * @param resultSet   set, containing list of {@link ParameterValue}'s id.
+     * @throws DaoException if there's no ids were read or exception was thrown during the process of
+     *                      reading parameters from db
+     */
+    private void appendReservationParamIds(Reservation reservation, ResultSet resultSet) throws DaoException {
+        try {
+            List<Integer> requestIds = new ArrayList<>();
+            while (resultSet.next()) {
+                requestIds.add(resultSet.getInt(1));
+            }
+            if (requestIds.isEmpty()) {
+                throw new DaoException(MessageFormat.format("Exception was caused because there is no reservation " +
+                                "parameters were read during {0} object build process. Reservation Id = {1}",
+                        Reservation.class.getName(), reservation.getId()));
+            }
+            reservation.setRequestParametersIds(requestIds);
+        } catch (SQLException e) {
+            throw new DaoException("Exception was caused during the process of reading reservation request parameters", e);
         }
     }
 

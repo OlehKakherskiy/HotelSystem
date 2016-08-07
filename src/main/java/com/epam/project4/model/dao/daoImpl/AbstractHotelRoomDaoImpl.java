@@ -13,20 +13,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class represents implementation of {@link AbstractHotelRoomDao} for relational databases, represented
+ * via {@link DataSource}.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @see DataSource
  */
 public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
 
+    /**
+     * db request for selecting room with specific id_room and with active status
+     */
     private static final String SELECT_ROOM_REQUEST = "SELECT * FROM Hotel_Room WHERE id_room = ? AND is_active = 1";
 
+    /**
+     * db request for selecting room parameters
+     */
     private static final String READ_ROOM_PARAMS_REQUEST = "Select id_Parameter_Values from Hotel_Room_Characteristics " +
             "WHERE id_hotel_room = ?";
 
+    /**
+     * db request for selecting all rooms
+     */
     private static final String GET_ALL_ROOMS_REQUEST = "SELECT * FROM Hotel_Room";
 
-    private static final String GET_ALL_ACTIVE_ROOMS_REQUEST = "SELECT * FROM Hotel_Room WHERE is_active = 1";
+    /**
+     * db reques for selecting all active rooms
+     */
+    private static final String GET_ALL_ACTIVE_ROOMS_REQUEST = GET_ALL_ROOMS_REQUEST + "is_active = 1";
 
-    private static final String getAllHotelRoomsDetailsException = "Exception caused during executing SQL request for getting details about hotel rooms";
+
+    private static final String GET_ALL_HOTEL_ROOMS_DETAILS_EXCEPTION = "Exception caused during executing SQL request for getting details about hotel rooms";
 
     private static final String GET_HOTEL_ROOM_DATA_EXCEPTION = "Exception caused during the executing SQL request for getting HotelRoom data process";
 
@@ -34,6 +51,9 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
 
     private static final String BUILD_HOTEL_ROOM_FROM_RESULT_SET_EXCEPTION = "Exception caused while was attempt to map ResultSet object to %s";
 
+    /**
+     * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
+     */
     private DataSource dataSource;
 
     @Override
@@ -51,11 +71,18 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
             }
 
         } catch (SQLException e) {
-            throw new DaoException(getAllHotelRoomsDetailsException);
+            throw new DaoException(GET_ALL_HOTEL_ROOMS_DETAILS_EXCEPTION);
         }
         return hotelRooms;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param id target object's id, which persistenced data will be mapped to object representation
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public HotelRoom read(int id) throws DaoException {
         HotelRoom room = null;
@@ -77,6 +104,17 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
         return room;
     }
 
+    /**
+     * Executes request for selecting {@link HotelRoom} parameters ids, using room's id.
+     * If there are no parameters, returns empty list.
+     *
+     * @param roomId     target room's id
+     * @param connection connection, through which select {@link #READ_ROOM_PARAMS_REQUEST} will be executed
+     * @return list of current room parameters or empty list
+     * @throws DaoException if exception was thrown during the process of executing request or
+     *                      mapping {@link main.java.com.epam.project4.model.entity.roomParameter.ParameterValue}
+     *                      ids to list of integers.
+     */
     private List<Integer> getRoomParamsIDs(int roomId, Connection connection) throws DaoException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(READ_ROOM_PARAMS_REQUEST)) {
             preparedStatement.setInt(1, roomId);
@@ -91,6 +129,13 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
         }
     }
 
+    /**
+     * maps relational representation of {@link HotelRoom} to object
+     *
+     * @param resultSet set, containing data for mapping to {@link HotelRoom}
+     * @return {@link HotelRoom}'s object with initialized id, name and activation status
+     * @throws DaoException if exception was thrown during the process of object-relational mapping
+     */
     private HotelRoom buildRoom(ResultSet resultSet) throws DaoException {
         try {
             HotelRoom hotelRoom = new HotelRoom();
