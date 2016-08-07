@@ -1,4 +1,4 @@
-package main.java.com.epam.project4.app;
+package main.java.com.epam.project4.app.util;
 
 import main.java.com.epam.project4.app.constants.MessageCode;
 

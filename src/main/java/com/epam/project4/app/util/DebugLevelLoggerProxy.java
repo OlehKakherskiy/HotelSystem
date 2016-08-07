@@ -1,4 +1,4 @@
-package main.java.com.epam.project4.manager;
+package main.java.com.epam.project4.app.util;
 
 import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.exception.LocalizedRuntimeException;
@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class DebugLoggingProxy implements InvocationHandler {
+public class DebugLevelLoggerProxy implements InvocationHandler {
 
-    private static final Logger debugLogger = Logger.getLogger(DebugLoggingProxy.class);
+    private static final Logger debugLogger = Logger.getLogger(DebugLevelLoggerProxy.class);
 
     private Object proxiedObject;
 
@@ -29,10 +29,10 @@ public class DebugLoggingProxy implements InvocationHandler {
         interfaceList.toArray(interfaces);
         System.out.println("interfaces = " + Arrays.toString(interfaces));
         return Proxy.newProxyInstance(objectUnderProxy.getClass().getClassLoader(),
-                interfaces, new DebugLoggingProxy(objectUnderProxy));
+                interfaces, new DebugLevelLoggerProxy(objectUnderProxy));
     }
 
-    private DebugLoggingProxy(Object proxiedObject) {
+    private DebugLevelLoggerProxy(Object proxiedObject) {
         this.proxiedObject = proxiedObject;
     }
 

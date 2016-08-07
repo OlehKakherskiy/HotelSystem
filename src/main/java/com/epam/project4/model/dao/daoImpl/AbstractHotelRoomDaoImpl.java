@@ -37,7 +37,7 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
     private DataSource dataSource;
 
     @Override
-    public List<HotelRoom> getAllFullDetails(boolean onlyActive) throws DaoException { //TODO:
+    public List<HotelRoom> getAllFullDetails(boolean onlyActive) throws DaoException {
         List<HotelRoom> hotelRooms = new ArrayList<>();
         String req = onlyActive ? GET_ALL_ACTIVE_ROOMS_REQUEST : GET_ALL_ROOMS_REQUEST;
         try (Connection connection = dataSource.getConnection();

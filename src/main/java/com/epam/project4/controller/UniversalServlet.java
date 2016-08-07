@@ -1,10 +1,10 @@
 package main.java.com.epam.project4.controller;
 
-import main.java.com.epam.project4.app.ApplicationConfigurer;
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
+import main.java.com.epam.project4.app.util.ApplicationConfigurer;
 import main.java.com.epam.project4.controller.command.ICommand;
 import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.exception.SystemException;

@@ -1,7 +1,7 @@
 package main.java.com.epam.project4.exception;
 
-import main.java.com.epam.project4.app.LocalizedMessageFormatter;
 import main.java.com.epam.project4.app.constants.MessageCode;
+import main.java.com.epam.project4.app.util.LocalizedMessageFormatter;
 
 import java.util.Locale;
 
