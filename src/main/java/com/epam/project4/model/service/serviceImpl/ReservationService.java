@@ -4,39 +4,57 @@ import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.exception.SystemException;
-import main.java.com.epam.project4.model.dao.AbstractHotelRoomDao;
 import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
-import main.java.com.epam.project4.model.service.AbstractParameterValueService;
-import main.java.com.epam.project4.model.service.AbstractReservationService;
-import main.java.com.epam.project4.model.service.AbstractUserService;
+import main.java.com.epam.project4.model.service.IParameterValueService;
+import main.java.com.epam.project4.model.service.IReservationService;
 
 import java.util.List;
 
 /**
+ * Class represents implementation of {@link IParameterValueService} and
+ * uses {@link IParameterValueService} and {@link AbstractReservationDao} for
+ * performing business-logic operations.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @see IParameterValueService
+ * @see AbstractReservationDao
  */
-public class ReservationService implements AbstractReservationService {
+public class ReservationService implements IReservationService {
 
+    /**
+     * for performing operations with {@link Reservation}
+     */
     private AbstractReservationDao dao;
 
-    private AbstractHotelRoomDao hotelRoomDao;
+    /**
+     * for performing operations with {@link main.java.com.epam.project4.model.entity.roomParameter.ParameterValue}
+     */
+    private IParameterValueService parameterValueService;
 
-    private AbstractUserService userService;
-
-    private AbstractParameterValueService parameterValueService;
-
-    public ReservationService(AbstractReservationDao dao, AbstractHotelRoomDao hotelRoomDao,
-                              AbstractUserService userService, AbstractParameterValueService parameterValueService) {
+    /**
+     * Inits all fields. Each parameter MUSTN'T be null.
+     *
+     * @param dao                   inits {@link #dao}
+     * @param parameterValueService inits {@link #parameterValueService}
+     */
+    public ReservationService(AbstractReservationDao dao, IParameterValueService parameterValueService) {
         this.dao = dao;
-        this.hotelRoomDao = hotelRoomDao;
-        this.userService = userService;
         this.parameterValueService = parameterValueService;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param user              target user
+     * @param reservationStatus target reservation status (if {@link ReservationStatus#ALL} - reservations with
+     *                          all statuses will be returned)
+     * @return {@inheritDoc}
+     * @throws SystemException {@inheritDoc}
+     */
     @Override
     public List<Reservation> getShortInfoAboutAllReservations(User user, ReservationStatus reservationStatus) {
         try {
@@ -46,6 +64,14 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservationStatus target reservation status (if {@link ReservationStatus#ALL} - reservations with
+     *                          all statuses will be returned)
+     * @return {@inheritDoc}
+     * @throws {@inheritDoc}
+     */
     @Override
     public List<Reservation> getShortInfoAboutAllReservations(ReservationStatus reservationStatus) {
         try {
@@ -55,6 +81,14 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservationId id, which assosiated reservation object will be returned
+     * @return {@inheritDoc}
+     * @throws RequestException {@inheritDoc}
+     * @throws SystemException  {@inheritDoc}
+     */
     @Override
     public Reservation getReservationDetailInfo(int reservationId) {
         try {
@@ -71,6 +105,13 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservation target reservation, to which hotel room will be offered
+     * @param hotelRoom   hotel room, that will be offered to target reservation
+     * @throws SystemException {@inheritDoc}
+     */
     @Override
     public void offerHotelRoom(Reservation reservation, HotelRoom hotelRoom) {
         try {
@@ -80,6 +121,12 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservation target reservation, for which offer will be refused.
+     * @throws SystemException {@inheritDoc}
+     */
     @Override
     public void refuseReservationOffer(Reservation reservation) {
         try {
@@ -89,6 +136,12 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservation target reservation, for which offer will be submitted.
+     * @throws SystemException {@inheritDoc}
+     */
     @Override
     public void submitReservationOffer(Reservation reservation) {
         try {
@@ -98,6 +151,12 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservation target reservation, for which processing was refused.
+     * @throws SystemException{@inheritDoc}
+     */
     @Override
     public void refuseReservationProcessing(Reservation reservation) {
         try {
@@ -107,6 +166,13 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservation reservation, that will be added to system
+     * @param user        user, which reservation is
+     * @throws {@inheritDoc}
+     */
     @Override
     public void addReservation(Reservation reservation, User user) {
         reservation.setUserID(user.getIdUser());
@@ -117,6 +183,13 @@ public class ReservationService implements AbstractReservationService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param reservationId id, assosiated reservation will be removed from the system
+     * @throws RequestException {@inheritDoc}
+     * @throws SystemException  {@inheritDoc}
+     */
     @Override
     public void deleteReservation(int reservationId) {
         try {

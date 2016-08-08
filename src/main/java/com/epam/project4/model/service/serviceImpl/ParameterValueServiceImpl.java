@@ -8,46 +8,65 @@ import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.model.dao.AbstractParameterValueDao;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
-import main.java.com.epam.project4.model.entity.roomParameter.Value;
-import main.java.com.epam.project4.model.service.AbstractParameterValueService;
+import main.java.com.epam.project4.model.service.IParameterValueService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 /**
+ * Class represents implementation of {@link IParameterValueService} and
+ * uses {@link AbstractParameterValueDao} for performing business-logic operations.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @see AbstractParameterValueDao
  */
-public class ParameterValueServiceImpl implements AbstractParameterValueService {
+public class ParameterValueServiceImpl implements IParameterValueService {
 
+    /**
+     * for performing operations with {@link ParameterValue}
+     */
     private AbstractParameterValueDao parameterValueDao;
 
+    /**
+     * Inits all fields. Each parameter MUSTN'T be null.
+     *
+     * @param parameterValueDao inits {@link #parameterValueDao}
+     */
     public ParameterValueServiceImpl(AbstractParameterValueDao parameterValueDao) {
         this.parameterValueDao = parameterValueDao;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param parameterValueIdList {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public List<ParameterValue> getParamValueList(List<Integer> parameterValueIdList) { //возвращаем paramValue со списка по id
-        return getParamValueListUsingIdList(parameterValueIdList,
-                (paramValueId, parameterValue) -> parameterValue.getId() == paramValueId);
-    }
-
-
-    private List<ParameterValue> getParamValueListUsingIdList(List<Integer> idList,
-                                                              BiPredicate<Integer, ParameterValue> filterCriteria) {
         List<ParameterValue> fullParamList = getAllParams();
         List<ParameterValue> result = new ArrayList<>();
-        idList.stream()
+        parameterValueIdList.stream()
                 .forEach(id -> fullParamList
                         .stream()
-                        .filter(parameterValue -> filterCriteria.test(id, parameterValue))
+                        .filter(parameterValue -> parameterValue.getId() == id)
                         .findFirst()
                         .ifPresent(result::add));
         return result;
     }
 
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Tries to get cached map from the {@link GlobalContext}, if null - returns map as
+     * a result of {@link #parameterValueMapFromList(List)}
+     * </p>
+     *
+     * @return {@inheritDoc}
+     */
     @Override
     public Map<Parameter, List<ParameterValue>> getParameterValueMap() {
         Map<Parameter, List<ParameterValue>> result = (Map<Parameter, List<ParameterValue>>)
@@ -63,27 +82,36 @@ public class ParameterValueServiceImpl implements AbstractParameterValueService 
         return result;
     }
 
+    /**
+     * Reformat {@link ParameterValue} list to Map, where key is {@link Parameter} object, and value is
+     * list of {@link ParameterValue} and key is equal to each {@link ParameterValue#parameter} object.
+     *
+     * @param list list, whose params will be regrouped to map
+     * @return reformatted list's data, where key is {@link Parameter} object, and value is
+     * list of {@link ParameterValue} and key is equal to each {@link ParameterValue#parameter} object.
+     */
     private Map<Parameter, List<ParameterValue>> parameterValueMapFromList(List<ParameterValue> list) {
         return list.stream().collect(Collectors.groupingBy(ParameterValue::getParameter));
     }
 
-    private List<Value> getTargetList(Map<Parameter, List<Value>> map, Parameter parameter) {
-        List<Value> currentList = map.get(parameter);
-
-        if (currentList == null) {
-            currentList = new ArrayList<>();
-            map.put(parameter, currentList);
-        }
-
-        return currentList;
-    }
-
+    /**
+     * Returns {@link ParameterValue} list, cached from {@link GlobalContext} or as a result of
+     * {@link #addToCacheAndReturn()}.
+     *
+     * @return list of {@link ParameterValue}
+     */
     private List<ParameterValue> getAllParams() {
         List<ParameterValue> parameterValues = (List<ParameterValue>)
                 GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST); //TODO: тут нужно аккуратно - многопоточность
         return (parameterValues != null) ? parameterValues : addToCacheAndReturn();
     }
 
+    /**
+     * adds to {@link GlobalContext} result of {@link AbstractParameterValueDao#getAllFullInfo()}
+     * and returns list of {@link ParameterValue}.
+     *
+     * @return list of {@link ParameterValue}
+     */
     private List<ParameterValue> addToCacheAndReturn() {
         try {
             List<ParameterValue> parameterValues = parameterValueDao.getAllFullInfo();
