@@ -3,31 +3,64 @@ package main.java.com.epam.project4.model.entity;
 import main.java.com.epam.project4.model.entity.enums.UserType;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
+ * Class represents User entity in Hotel System. Each user has name, surname, assosiated mobile phones,
+ * and user type.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @see UserType
+ * @see MobilePhone
  */
 public class User implements Serializable {
 
+    /**
+     * user's id
+     */
     private int idUser;
 
+    /**
+     * user's name
+     */
     private String name;
 
+    /**
+     * user's surname
+     */
     private String lastName;
 
+    /**
+     * user's type
+     */
     private UserType userType;
 
+    /**
+     * assosiated mobile phones
+     */
     private List<MobilePhone> mobilePhoneList;
 
+    /**
+     * consturctor, that inits all fields
+     *
+     * @param idUser          user's id
+     * @param name            user's name
+     * @param lastName        user's surname
+     * @param userType        user's type
+     * @param mobilePhoneList assosiated mobile phones
+     */
     public User(int idUser, String name, String lastName, UserType userType, List<MobilePhone> mobilePhoneList) {
         this.idUser = idUser;
         this.name = name;
         this.lastName = lastName;
         this.userType = userType;
-        this.mobilePhoneList = mobilePhoneList;
+        this.mobilePhoneList = (mobilePhoneList == null) ? Collections.emptyList() : mobilePhoneList;
     }
 
+    /**
+     * constructor without parameters
+     */
     public User() {
     }
 

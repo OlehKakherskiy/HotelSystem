@@ -6,24 +6,59 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Class represents hotel room entity. It has id, name, activation status (active - can take part in business processes,
+ * otherwise - cannot), can have reservations, assosiated with it and parameters
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @see Reservation
+ * @see ParameterValue
  */
 public class HotelRoom implements Serializable {
 
+    /**
+     * room's id
+     */
     private int roomID;
 
+    /**
+     * room's name
+     */
     private String roomName;
 
+    /**
+     * room's activation status (true - active, false - inactive)
+     */
     private boolean activationStatus;
 
+    /**
+     * assosiated {@link Reservation}
+     */
     private List<Reservation> reservationList;
 
+    /**
+     * assosiated {@link ParameterValue}
+     */
     private List<ParameterValue> parameters;
 
-    private List<Integer> parametersIds;
+    /**
+     * list of {@link ParameterValue#id}
+     */
+    private transient List<Integer> parametersIds;
 
+    /**
+     * room's price
+     */
     private int price;
 
+    /**
+     * Constructor, that inits some parameters
+     *
+     * @param roomID           room's id
+     * @param roomName         room's name
+     * @param activationStatus room's activation status (true - active, false - inactive)
+     * @param parameters       assosiated {@link ParameterValue} list
+     * @param price            room's price
+     */
     public HotelRoom(int roomID, String roomName, boolean activationStatus, List<ParameterValue> parameters, int price) {
         this.roomID = roomID;
         this.roomName = roomName;
@@ -32,6 +67,9 @@ public class HotelRoom implements Serializable {
         this.price = price;
     }
 
+    /**
+     * constructor without params
+     */
     public HotelRoom() {
     }
 

@@ -1,17 +1,36 @@
 package main.java.com.epam.project4.model.entity;
 
 /**
+ * Class represents mobile phone's entity, that can be assosiated with {@link User}.
+ * Each one contains id and string representation of mobile phone
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
+ * @see User
  */
 public class MobilePhone {
 
+    /**
+     * id
+     */
     private int idMobilePhone;
 
+    /**
+     * string representation of id
+     */
     private String mobilePhone;
 
+    /**
+     * constructor without parameters
+     */
     public MobilePhone() {
     }
 
+    /**
+     * constructor that inits all fields
+     *
+     * @param idMobilePhone id
+     * @param mobilePhone   string representation of mobile phone
+     */
     public MobilePhone(int idMobilePhone, String mobilePhone) {
         this.idMobilePhone = idMobilePhone;
         this.mobilePhone = mobilePhone;

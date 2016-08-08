@@ -8,36 +8,85 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
+ * Class represents reservation entity in Hotel System.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public class Reservation implements Serializable {
 
+    /**
+     * id
+     */
     private int id;
 
+    /**
+     * date, from which hotel room will be booked
+     */
     private LocalDate dateFrom;
 
+    /**
+     * date, to which hotel room will be booked
+     */
     private LocalDate dateTo;
 
+    /**
+     * request date
+     */
     private LocalDate requestDate;
 
+    /**
+     * current reservation status (can't be {@link ReservationStatus#ALL})
+     */
     private ReservationStatus status;
 
+    /**
+     * hotel room, that is booked by current reservation
+     */
     private HotelRoom hotelRoom;
 
+    /**
+     * user-owner of current reservation
+     */
     private User user;
 
+    /**
+     * reservation comment
+     */
     private String comment;
 
-    //TODO: промежуточное состояние
-    private int hotelRoomID;
+    /**
+     * hotel room's id
+     */
+    private transient int hotelRoomID;
 
-    //TODO: промежуточное состояние
-    private int userID;
+    /**
+     * user-owner's id
+     */
+    private transient int userID;
 
+    /**
+     * request parameters, assosiated with current reservation
+     */
     private List<ParameterValue> requestParameters;
 
+    /**
+     * request parameters' ids, assosiated with current reservation
+     */
     private List<Integer> requestParametersIds;
 
+    /**
+     * Constructor, that inits all object's parameters (except transient ones)
+     *
+     * @param id                id
+     * @param dateFrom          date, from which hotel room will be booked
+     * @param dateTo            date, to which hotel room will be booked
+     * @param requestDate       request date
+     * @param status            current reservation status (can't be {@link ReservationStatus#ALL})
+     * @param hotelRoom         hotel room's id
+     * @param user              user-owner of current reservation
+     * @param comment           reservation comment
+     * @param requestParameters request parameters, assosiated with current reservation
+     */
     public Reservation(int id, LocalDate dateFrom, LocalDate dateTo, LocalDate requestDate, ReservationStatus status, HotelRoom hotelRoom,
                        User user, String comment, List<ParameterValue> requestParameters) {
         this.id = id;
@@ -51,6 +100,9 @@ public class Reservation implements Serializable {
         this.requestParameters = requestParameters;
     }
 
+    /**
+     * constructor without parameters
+     */
     public Reservation() {
     }
 
