@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class AbstractParameterValueServiceTest {
 
-    static AbstractParameterValueService parameterValueService;
+    static IParameterValueService parameterValueService;
 
 
     static Map<Parameter, List<ParameterValue>> pvMap = new HashMap<>();

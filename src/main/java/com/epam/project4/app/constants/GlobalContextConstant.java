@@ -15,6 +15,8 @@ public enum GlobalContextConstant {
 
     DATA_SOURCE("dataSource"),
 
+    SECURE_CONFIGURATION("secureConfiguration"),
+
     COMMAND_NAME("commandName"),
 
     USER("user"),
@@ -33,7 +35,16 @@ public enum GlobalContextConstant {
 
     CURRENT_HOTEL_ROOM("currentHotelRoom"),
 
-    SECURE_CONFIGURATION("secureConfiguration");
+    HOTEL_ROOM_LIST("hotelRoomList"),
+
+    RESERVATION_MONTH("reservationMonth"),
+
+    RESERVATION_YEAR("reservationYear"),
+
+    RESERVATION_STATUS("reservationStatus"),
+
+    CURRENT_LOCALE("lang");
+
 
     private String name;
 
@@ -42,9 +53,6 @@ public enum GlobalContextConstant {
     }
 
     public GlobalContextConstant fromValue(String name) {
-        if (name == null || name.isEmpty()) {
-            return null; // TODO: throw exception
-        }
         return Arrays.asList(GlobalContextConstant.values())
                 .stream()
                 .filter(constant -> constant.name.equals(name))

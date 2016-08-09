@@ -8,7 +8,7 @@ import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import java.util.List;
 
 /**
- * Interface represents API for performing operations, assosiated with {@link Reservation} entity
+ * Interface represents API for executing operations, assosiated with {@link Reservation} entity
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see Reservation
@@ -90,7 +90,7 @@ public interface IReservationService extends IService {
 
     /**
      * refuses reservation processing for target reservation. Changes
-     * reservation status to {@link ReservationStatus#REFUSED}.
+     * reservation status to {@link ReservationStatus#REFUSED_FROM_PROCESSING}.
      *
      * @param reservation target reservation, for which processing was refused.
      * @throws main.java.com.epam.project4.exception.SystemException if exception was

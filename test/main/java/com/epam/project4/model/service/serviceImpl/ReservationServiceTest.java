@@ -8,9 +8,9 @@ import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.enums.UserType;
-import main.java.com.epam.project4.model.service.AbstractParameterValueService;
-import main.java.com.epam.project4.model.service.AbstractReservationService;
-import main.java.com.epam.project4.model.service.AbstractUserService;
+import main.java.com.epam.project4.model.service.IParameterValueService;
+import main.java.com.epam.project4.model.service.IReservationService;
+import main.java.com.epam.project4.model.service.IUserService;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,11 +27,11 @@ public class ReservationServiceTest {
 
     private static AbstractHotelRoomDao hotelRoomDao;
 
-    private static AbstractParameterValueService parameterValueService;
+    private static IParameterValueService parameterValueService;
 
-    private static AbstractUserService userService;
+    private static IUserService userService;
 
-    private static AbstractReservationService reservationService;
+    private static IReservationService reservationService;
 
     @Test
     public void getShortInfoAboutAllReservations() throws Exception {
@@ -59,7 +59,7 @@ public class ReservationServiceTest {
         expected.setRequestParametersIds(new ArrayList<>());
         expected.setUserID(userStub.getIdUser());
 
-        parameterValueService = EasyMock.createMock(AbstractParameterValueService.class);
+        parameterValueService = EasyMock.createMock(IParameterValueService.class);
         EasyMock.expect(parameterValueService.getParamValueList(new ArrayList<>())).andReturn(new ArrayList<>());
 
         reservationDao = EasyMock.createMock(AbstractReservationDao.class);
@@ -67,7 +67,7 @@ public class ReservationServiceTest {
 
         EasyMock.replay(parameterValueService, reservationDao);
 
-        reservationService = new ReservationService(reservationDao, hotelRoomDao, userService, parameterValueService);
+        reservationService = new ReservationService(reservationDao, parameterValueService);
         Assert.assertEquals(expected, reservationService.getReservationDetailInfo(expected.getId()));
 
         EasyMock.verify(parameterValueService, reservationDao);

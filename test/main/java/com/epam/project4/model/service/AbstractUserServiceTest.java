@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class AbstractUserServiceTest {
 
-    private static AbstractUserService abstractUserService;
+    private static IUserService abstractUserService;
 
     private static User expectation;
 

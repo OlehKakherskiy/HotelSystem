@@ -15,12 +15,24 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 /**
+ * Command perform logout operation for specific user.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public class LogoutCommand extends AbstractCommand {
 
     private static Logger logger = Logger.getLogger(LogoutCommand.class);
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Invalidates current user's session and redirects to {@link WebPageConstant#LOGIN}
+     * </p>
+     *
+     * @param request  http request
+     * @param response http response
+     * @return empty string
+     */
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
@@ -29,7 +41,7 @@ public class LogoutCommand extends AbstractCommand {
 
         logger.info(MessageFormat.format("User (id = {0}) is logged out", user.getIdUser()));
         try {
-            response.sendRedirect(String.format("%s%s", request.getContextPath(), WebPageConstant.LOGIN.getPath()));
+            response.sendRedirect(String.format("%s%s", request.getContextPath(), WebPageConstant.LOGIN.getPath())); //TODO: тут можно попробовать через ретурн
         } catch (IOException e) {
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION);
         }

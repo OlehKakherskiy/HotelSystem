@@ -5,7 +5,7 @@ import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
-import main.java.com.epam.project4.model.service.AbstractReservationService;
+import main.java.com.epam.project4.model.service.IReservationService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class GetReservationProfileCommand extends AbstractCommand {
         User user = (User) session.getAttribute(GlobalContextConstant.USER.getName());
         if (reservationId != null) {
             int id = Integer.parseInt(reservationId);
-            AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
+            IReservationService reservationService = serviceManager.getInstance(IReservationService.class);
             Reservation currentReservation = reservationService.getReservationDetailInfo(id);
             addNewRequestInfoToLog(user, id);
             session.setAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName(), currentReservation);

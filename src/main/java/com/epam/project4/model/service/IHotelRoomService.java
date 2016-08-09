@@ -8,7 +8,7 @@ import java.time.Year;
 import java.util.List;
 
 /**
- * Interface represents API for performing operations, assosiated with {@link HotelRoom} entity
+ * Interface represents API for executing operations, assosiated with {@link HotelRoom} entity
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see HotelRoom

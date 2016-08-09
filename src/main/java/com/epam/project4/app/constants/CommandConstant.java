@@ -40,8 +40,6 @@ public enum CommandConstant {
     }
 
     public static CommandConstant fromValue(String commandName) {
-        if (commandName == null)
-            return null; //TODO: exception
         return Arrays.asList(CommandConstant.values()).
                 stream().filter(name -> name.commandName.equals(commandName)).findFirst().orElse(null);
     }

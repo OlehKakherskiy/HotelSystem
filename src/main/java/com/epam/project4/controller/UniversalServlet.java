@@ -115,7 +115,7 @@ public class UniversalServlet extends HttpServlet {
 
     private Locale getLocale(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        String localeString = (String) session.getAttribute("lang");
+        String localeString = (String) session.getAttribute(GlobalContextConstant.CURRENT_LOCALE.getName());
         if (localeString != null) {
             String[] localeParts = localeString.split("_");
             return new Locale(localeParts[0], localeParts[1]);

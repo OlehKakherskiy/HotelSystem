@@ -3,7 +3,7 @@ package main.java.com.epam.project4.model.service;
 import main.java.com.epam.project4.model.entity.User;
 
 /**
- * Interface represents API for performing operations, assosiated with {@link User} entity
+ * Interface represents API for executing operations, assosiated with {@link User} entity
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see User

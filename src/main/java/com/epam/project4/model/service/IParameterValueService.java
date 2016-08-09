@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Interface represents API for performing operations, assosiated with {@link ParameterValue} entity
+ * Interface represents API for executing operations, assosiated with {@link ParameterValue} entity
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see ParameterValue

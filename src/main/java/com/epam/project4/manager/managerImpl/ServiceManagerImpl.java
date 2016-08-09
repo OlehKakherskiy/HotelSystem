@@ -4,7 +4,7 @@ import main.java.com.epam.project4.exception.ManagerConfigException;
 import main.java.com.epam.project4.manager.AbstractDaoManager;
 import main.java.com.epam.project4.manager.AbstractServiceManager;
 import main.java.com.epam.project4.model.dao.GenericDao;
-import main.java.com.epam.project4.model.service.AbstractService;
+import main.java.com.epam.project4.model.service.IService;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -16,14 +16,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Manager implementation for {@link AbstractService} subtypes. All type's
+ * Manager implementation for {@link IService} subtypes. All type's
  * dependencies are injected via constructor. Constructor should have
- * only {@link GenericDao} and {@link AbstractService} types for injecting.
+ * only {@link GenericDao} and {@link IService} types for injecting.
  * If there are several public constructors, manager will get constructor
  * from 0 position of {@link Class#getConstructors()}.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
- * @see AbstractService
+ * @see IService
  * @see Class#getConstructors()
  * @see Constructor
  */
@@ -40,7 +40,7 @@ public class ServiceManagerImpl extends AbstractServiceManager {
      */
     private AbstractDaoManager daoManager;
 
-    public ServiceManagerImpl(Map<Class<? extends AbstractService>, Class<? extends AbstractService>> keyObjectTemplateMap,
+    public ServiceManagerImpl(Map<Class<? extends IService>, Class<? extends IService>> keyObjectTemplateMap,
                               AbstractDaoManager daoManager) {
         super(keyObjectTemplateMap);
         this.daoManager = daoManager;
@@ -50,13 +50,13 @@ public class ServiceManagerImpl extends AbstractServiceManager {
      * {@inheritDoc}
      *
      * @param objectClass {@inheritDoc}
-     * @param <V>         {@inheritDoc} This type is a subtype of {@link AbstractService}
+     * @param <V>         {@inheritDoc} This type is a subtype of {@link IService}
      * @return {@inheritDoc} All object's dependencies are injected via constructor
      * @throws ManagerConfigException {@inheritDoc}.
      *                                Also see {@link #newInstance(Class, Constructor, List)} throws paragraph
      */
     @Override
-    protected <V extends AbstractService> V instantiate(Class<V> objectClass) throws ManagerConfigException {
+    protected <V extends IService> V instantiate(Class<V> objectClass) throws ManagerConfigException {
         Constructor<V> constructor = (Constructor<V>) objectClass.getConstructors()[0];
         List<Object> preparedParams = new ArrayList<>(constructor.getParameterCount());
         List<Class> types = Arrays.asList(constructor.getParameters()).stream().map(Parameter::getType).collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class ServiceManagerImpl extends AbstractServiceManager {
     }
 
     /**
-     * Creates new {@link AbstractService} instance of specific class, using
+     * Creates new {@link IService} instance of specific class, using
      * specific constructor, and injects parameters according to constructor's
      * params.
      *
@@ -75,10 +75,10 @@ public class ServiceManagerImpl extends AbstractServiceManager {
      * @param constructor       constructor object, that will be invoked for creating new target instance
      * @param paramInstanceList type's instances according to constructor's param types
      * @param <V>               target instance type (can be equal as <E> or a subclass of it)
-     * @return {@link AbstractService} object with injected objects through constructor
+     * @return {@link IService} object with injected objects through constructor
      * @throws ManagerConfigException if exception caused during the object instantiation process.
      */
-    private <V extends AbstractService> V newInstance(Class<V> clazz, Constructor<V> constructor, List<Object> paramInstanceList) throws ManagerConfigException {
+    private <V extends IService> V newInstance(Class<V> clazz, Constructor<V> constructor, List<Object> paramInstanceList) throws ManagerConfigException {
         try {
             return (paramInstanceList.isEmpty()) ? clazz.newInstance() : constructor.newInstance(paramInstanceList.toArray());
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
@@ -88,18 +88,18 @@ public class ServiceManagerImpl extends AbstractServiceManager {
     }
 
     /**
-     * Creates new instance of {@link GenericDao} or {@link AbstractService} with all injections.
+     * Creates new instance of {@link GenericDao} or {@link IService} with all injections.
      *
      * @param clazz class, which instance should be returned.
      * @return clazz prepared instance (with all injections)
      * @throws ManagerConfigException if constructor parameter (input parameter - clazz) is not a
-     *                                subclass of {@link GenericDao} or {@link AbstractService}
+     *                                subclass of {@link GenericDao} or {@link IService}
      */
     private Object createNewParameterInstance(Class clazz) throws ManagerConfigException {
         System.out.println(clazz);
         if (GenericDao.class.isAssignableFrom(clazz)) {
             return getDaoInstance(clazz);
-        } else if (AbstractService.class.isAssignableFrom(clazz)) {
+        } else if (IService.class.isAssignableFrom(clazz)) {
             return this.getInstance(clazz);
         } else {
             throw new ManagerConfigException(String.format(NO_INSTANTIATION_STRATEGY,

@@ -6,7 +6,7 @@ import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.entity.User;
-import main.java.com.epam.project4.model.service.AbstractUserService;
+import main.java.com.epam.project4.model.service.IUserService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +15,35 @@ import javax.servlet.http.HttpSession;
 import java.text.MessageFormat;
 
 /**
+ * Command providing user login operation in system.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public class LoginCommand extends AbstractCommand {
 
     private static Logger logger = Logger.getLogger(LoginCommand.class);
 
+    private static final String LANGUAGE_PARAM = "language";
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * For right servicing must be called with such input params,
+     * as {@link GlobalContextConstant#LOGIN} and {@link GlobalContextConstant#PASSWORD}.
+     * </p>
+     * <p>
+     * If login operation was successfull (there's user with input login/password combination
+     * in system), creates user's session, adds {@link User} as attribute with key {@link GlobalContextConstant#USER}
+     * and calls command with the key {@link CommandConstant#GET_RESERVATION_LIST_COMMAND}
+     * </p>
+     *
+     * @param request  http request
+     * @param response http response
+     * @return see {@link CommandConstant#GET_RESERVATION_LIST_COMMAND} process' operation return
+     */
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
-        AbstractUserService userService = serviceManager.getInstance(AbstractUserService.class);
+        IUserService userService = serviceManager.getInstance(IUserService.class);
 
         String login = request.getParameter(GlobalContextConstant.LOGIN.getName());
         String password = request.getParameter(GlobalContextConstant.PASSWORD.getName());
@@ -32,8 +52,8 @@ public class LoginCommand extends AbstractCommand {
 
         HttpSession httpSession = request.getSession(true);
         httpSession.setAttribute(GlobalContextConstant.USER.getName(), user);
-        String lang = request.getParameter("language");
-        httpSession.setAttribute("lang", lang);
+        String lang = request.getParameter(LANGUAGE_PARAM);
+        httpSession.setAttribute(GlobalContextConstant.CURRENT_LOCALE.getName(), lang);
         System.out.println("toSession locale = " + lang + " .Session" + httpSession);
 
         logger.info(MessageFormat.format("User id = {0} is signed in", user.getIdUser()));

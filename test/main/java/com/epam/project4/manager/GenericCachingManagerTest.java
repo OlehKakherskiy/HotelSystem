@@ -76,11 +76,11 @@ public class GenericCachingManagerTest {
     }
 
     private static void initServiceManager() {
-        Map<Class<? extends AbstractService>, Class<? extends AbstractService>> serviceMap = new HashMap<>();
-        serviceMap.put(AbstractHotelRoomService.class, HotelRoomService.class);
-        serviceMap.put(AbstractParameterValueService.class, ParameterValueServiceImpl.class);
-        serviceMap.put(AbstractReservationService.class, ReservationService.class);
-        serviceMap.put(AbstractUserService.class, UserService.class);
+        Map<Class<? extends IService>, Class<? extends IService>> serviceMap = new HashMap<>();
+        serviceMap.put(IHotelRoomService.class, HotelRoomService.class);
+        serviceMap.put(IParameterValueService.class, ParameterValueServiceImpl.class);
+        serviceMap.put(IReservationService.class, ReservationService.class);
+        serviceMap.put(IUserService.class, UserService.class);
 
         serviceManager = new ServiceManagerImpl(serviceMap, (AbstractDaoManager) cachingManagers.get(1));
         cachingManagers.add(serviceManager);
@@ -136,7 +136,7 @@ public class GenericCachingManagerTest {
 
     @Test(expected = SystemException.class)
     public void testServiceManager() throws Exception {
-        class ServiceStub implements AbstractService {
+        class ServiceStub implements IService {
         }
         serviceManager.getInstance(ServiceStub.class);
     }

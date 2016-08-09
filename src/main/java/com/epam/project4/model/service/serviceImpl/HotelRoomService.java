@@ -21,7 +21,7 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 /**
  * Class represents implementation of {@link IHotelRoomService} and uses {@link AbstractHotelRoomDao},
- * {@link IParameterValueService} and {@link AbstractReservationDao} for performing business-logic operations.
+ * {@link IParameterValueService} and {@link AbstractReservationDao} for executing business-logic operations.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see IHotelRoomService
@@ -31,17 +31,17 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 public class HotelRoomService implements IHotelRoomService {
 
     /**
-     * for performing operations with {@link HotelRoom}
+     * for executing operations with {@link HotelRoom}
      */
     private AbstractHotelRoomDao hotelRoomDao;
 
     /**
-     * for performing operations with {@link main.java.com.epam.project4.model.entity.Reservation}
+     * for executing operations with {@link main.java.com.epam.project4.model.entity.Reservation}
      */
     private AbstractReservationDao reservationDao;
 
     /**
-     * for performing operations with {@link ParameterValue}
+     * for executing operations with {@link ParameterValue}
      */
     private IParameterValueService parameterValueService;
 

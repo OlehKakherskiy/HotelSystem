@@ -12,8 +12,8 @@ import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
-import main.java.com.epam.project4.model.service.AbstractParameterValueService;
-import main.java.com.epam.project4.model.service.AbstractReservationService;
+import main.java.com.epam.project4.model.service.IParameterValueService;
+import main.java.com.epam.project4.model.service.IReservationService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public class FillNewReservationCommand extends AbstractCommand {
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
         System.out.println(request.getParameterMap().size());
-        AbstractReservationService reservationService = serviceManager.getInstance(AbstractReservationService.class);
+        IReservationService reservationService = serviceManager.getInstance(IReservationService.class);
         User user = (User) request.getSession(false).getAttribute(GlobalContextConstant.USER.getName());
         Reservation reservation = buildReservation(request);
         reservationService.addReservation(reservation, user);
@@ -85,11 +85,11 @@ public class FillNewReservationCommand extends AbstractCommand {
 
 
     private List<ParameterValue> getParameterValueList(HttpServletRequest request) {
-        AbstractParameterValueService parameterValueService = serviceManager.getInstance(AbstractParameterValueService.class);
+        IParameterValueService parameterValueService = serviceManager.getInstance(IParameterValueService.class);
         return parameterValueService.getParamValueList(parseParameterValueList(request, parameterValueService));
     }
 
-    private List<Integer> parseParameterValueList(HttpServletRequest request, AbstractParameterValueService parameterValueService) {
+    private List<Integer> parseParameterValueList(HttpServletRequest request, IParameterValueService parameterValueService) {
         Map<Parameter, List<ParameterValue>> parameterParameterValueMap = parameterValueService.getParameterValueMap();
         List<Integer> result = new ArrayList<>();
 

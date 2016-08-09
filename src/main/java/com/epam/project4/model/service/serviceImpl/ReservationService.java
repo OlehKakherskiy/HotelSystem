@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Class represents implementation of {@link IParameterValueService} and
  * uses {@link IParameterValueService} and {@link AbstractReservationDao} for
- * performing business-logic operations.
+ * executing business-logic operations.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see IParameterValueService
@@ -26,12 +26,12 @@ import java.util.List;
 public class ReservationService implements IReservationService {
 
     /**
-     * for performing operations with {@link Reservation}
+     * for executing operations with {@link Reservation}
      */
     private AbstractReservationDao dao;
 
     /**
-     * for performing operations with {@link main.java.com.epam.project4.model.entity.roomParameter.ParameterValue}
+     * for executing operations with {@link main.java.com.epam.project4.model.entity.roomParameter.ParameterValue}
      */
     private IParameterValueService parameterValueService;
 
@@ -160,7 +160,7 @@ public class ReservationService implements IReservationService {
     @Override
     public void refuseReservationProcessing(Reservation reservation) {
         try {
-            update(reservation, ReservationStatus.REFUSED, null, false);
+            update(reservation, ReservationStatus.REFUSED_FROM_PROCESSING, null, false);
         } catch (DaoException e) {
             throw new SystemException(MessageCode.REFUSE_RESERVATION_PROCESSING_SYSTEM_EXCEPTION, e, reservation.getId());
         }

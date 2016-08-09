@@ -10,8 +10,8 @@ import main.java.com.epam.project4.model.entity.enums.UserType;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
 import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
 import main.java.com.epam.project4.model.entity.roomParameter.Value;
-import main.java.com.epam.project4.model.service.AbstractParameterValueService;
-import main.java.com.epam.project4.model.service.AbstractReservationService;
+import main.java.com.epam.project4.model.service.IParameterValueService;
+import main.java.com.epam.project4.model.service.IReservationService;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -34,9 +34,9 @@ public class FillNewReservationCommandTest {
 
     private static AbstractServiceManager serviceManager;
 
-    private static AbstractReservationService reservationService;
+    private static IReservationService reservationService;
 
-    private static AbstractParameterValueService parameterValueService;
+    private static IParameterValueService parameterValueService;
 
     private static List<Parameter> parameters;
 
@@ -66,11 +66,11 @@ public class FillNewReservationCommandTest {
         EasyMock.expect(request.getSession()).andReturn(session);
 
         serviceManager = EasyMock.createMock(AbstractServiceManager.class);
-        reservationService = EasyMock.createMock(AbstractReservationService.class);
-        parameterValueService = EasyMock.createMock(AbstractParameterValueService.class);
+        reservationService = EasyMock.createMock(IReservationService.class);
+        parameterValueService = EasyMock.createMock(IParameterValueService.class);
 
-        EasyMock.expect(serviceManager.getInstance(AbstractReservationService.class)).andReturn(reservationService);
-        EasyMock.expect(serviceManager.getInstance(AbstractParameterValueService.class)).andReturn(parameterValueService);
+        EasyMock.expect(serviceManager.getInstance(IReservationService.class)).andReturn(reservationService);
+        EasyMock.expect(serviceManager.getInstance(IParameterValueService.class)).andReturn(parameterValueService);
 
         EasyMock.expect(request.getParameter("paramName1")).andReturn(String.valueOf(5));
         EasyMock.expect(request.getParameter("paramName2")).andReturn(String.valueOf(6));

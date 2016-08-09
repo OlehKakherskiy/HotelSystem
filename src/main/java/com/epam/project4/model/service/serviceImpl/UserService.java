@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Class represents implementation of {@link IUserService} and uses {@link AbstractUserDao}
- * and {@link AbstractMobilePhoneDao} for performing business-logic operations.
+ * and {@link AbstractMobilePhoneDao} for executing business-logic operations.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see AbstractUserDao
@@ -23,12 +23,12 @@ import java.util.List;
 public class UserService implements IUserService {
 
     /**
-     * for performing operations with {@link User}
+     * for executing operations with {@link User}
      */
     private AbstractUserDao userDao;
 
     /**
-     * for performing operations with {@link MobilePhone}
+     * for executing operations with {@link MobilePhone}
      */
     private AbstractMobilePhoneDao mobilePhoneDao;
 

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * Class represents implementation of {@link IParameterValueService} and
- * uses {@link AbstractParameterValueDao} for performing business-logic operations.
+ * uses {@link AbstractParameterValueDao} for executing business-logic operations.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see AbstractParameterValueDao
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ParameterValueServiceImpl implements IParameterValueService {
 
     /**
-     * for performing operations with {@link ParameterValue}
+     * for executing operations with {@link ParameterValue}
      */
     private AbstractParameterValueDao parameterValueDao;
 
