@@ -1,6 +1,10 @@
 package main.java.com.epam.project4.app.constants;
 
 /**
+ * Keys for all messages, that are used in system.
+ * {@link main.java.com.epam.project4.app.util.LocalizedMessageFormatter} used this codes
+ * for getting localisation messages by them.
+ *
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
 public enum MessageCode {

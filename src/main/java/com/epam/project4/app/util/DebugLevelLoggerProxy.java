@@ -15,14 +15,27 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Proxy object, that wrapps original one and logs all method calls and
+ * returned params
+ *
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
 public class DebugLevelLoggerProxy implements InvocationHandler {
 
     private static final Logger debugLogger = Logger.getLogger(DebugLevelLoggerProxy.class);
 
+    /**
+     * original object, that is wrapped by logger
+     */
     private Object proxiedObject;
 
+    /**
+     * instantiates new wrapper (proxy) for target object. Wrapper is implemented all
+     * interfaces, that implements target object.
+     *
+     * @param objectUnderProxy object, that will be wrapped
+     * @return target object's wrapper
+     */
     public static Object newInstance(Object objectUnderProxy) {
         List<Class> interfaceList = getAllInterfaces(objectUnderProxy.getClass());
         Class<?>[] interfaces = new Class[interfaceList.size()];
@@ -37,6 +50,15 @@ public class DebugLevelLoggerProxy implements InvocationHandler {
     }
 
 
+    /**
+     * Log with {@link org.apache.log4j.Level#DEBUG} level all method calls
+     * and returned parameters
+     *
+     * @param proxy  {@inheritDoc}
+     * @param method {@inheritDoc}
+     * @param args   {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         debugLogger.debug(MessageFormat.format("Called method {0} of class {1} with params {2}",
@@ -46,6 +68,8 @@ public class DebugLevelLoggerProxy implements InvocationHandler {
             result = method.invoke(proxiedObject, args);
             if (result != null) {
                 debugLogger.debug(MessageFormat.format("Method {0} result {1}", method.getName(), result));
+            } else {
+                debugLogger.debug(MessageFormat.format("Method {0} finished executing", method.getName()));
             }
             return result;
         } catch (IllegalAccessException e) {
@@ -55,10 +79,20 @@ public class DebugLevelLoggerProxy implements InvocationHandler {
         } catch (InvocationTargetException e1) {
 //            debugLogger.error(MessageFormat.format("Error caused during invoking method {0} of class {1}",
 //                    method.getName(), proxiedObject.getClass().getName()), e1);
-            throw (LocalizedRuntimeException) e1.getTargetException();
+            if (e1.getTargetException().getClass().isAssignableFrom(LocalizedRuntimeException.class)) {
+                throw (LocalizedRuntimeException) e1.getTargetException();
+            } else {
+                throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e1);
+            }
         }
     }
 
+    /**
+     * gets recursively all interfaces of target class.
+     *
+     * @param clazz class, which interfaces and parents interfaces will be returned
+     * @return list of interfaces of target class and all it's parent classes till parent isn't {@link Object}
+     */
     private static List<Class> getAllInterfaces(Class clazz) {
         if (clazz == Object.class) {
             return new ArrayList<>();

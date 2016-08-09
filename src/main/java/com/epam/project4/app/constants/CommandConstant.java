@@ -3,6 +3,8 @@ package main.java.com.epam.project4.app.constants;
 import java.util.Arrays;
 
 /**
+ * Keys for all commands of hotel system
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public enum CommandConstant {

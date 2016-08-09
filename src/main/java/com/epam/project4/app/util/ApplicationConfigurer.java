@@ -15,23 +15,43 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.*;
 
 /**
+ * Class configures application with initial parameters. For instance, it configures
+ * {@link main.java.com.epam.project4.manager.GenericManager} subclasses with
+ * configuration parameters. Also it configures {@link LocalizedMessageFormatter}
+ * with initial parameters, security map, that contains user's rights for invoking
+ * {@link main.java.com.epam.project4.controller.command.ICommand} object's processing
+ * method.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public class ApplicationConfigurer {
 
     private static final Logger logger = Logger.getLogger(ApplicationConfigurer.class);
 
+    /**
+     * properties path
+     */
     private static final String propertiesPath = "/properties.xml";
 
+    /**
+     * base name of bundle, containing message's and error's strings
+     */
     private static final String messageBundle = "messageBundle";
 
+    /**
+     * datasource JNDI path
+     */
     private static final String dataSourceJndiName = "java:/comp/env/jdbc/mysql";
 
+    /**
+     * calls {@link #configureApplication()}
+     */
     public ApplicationConfigurer() {
         logger.info("Application configuring is started");
         configureApplication();
@@ -39,6 +59,10 @@ public class ApplicationConfigurer {
     }
 
 
+    /**
+     * executes application configuring. Configures managers, security map,
+     * message formatter and data source. Loads properties via {@link Properties#loadFromXML(InputStream)}
+     */
     private void configureApplication() {
 
         Properties mainProperties = new Properties();
@@ -74,6 +98,15 @@ public class ApplicationConfigurer {
         }
     }
 
+    /**
+     * Configures security map, which maps user's type to operation allowed to this user type.
+     * As a key used name of user's type with ending "_i", where i - number. It calls
+     * {@link #getPropsUsingKeyStarts(Properties, String)} for each user type and merges results
+     * to one map. Result map is added to {@link GlobalContext} with the key
+     * {@link GlobalContextConstant#SECURITY_CONFIGURATION}
+     *
+     * @param properties loaded properties
+     */
     private void configureSecurityMap(Properties properties) {
         logger.info("Configuring security map");
         Map<UserType, List<CommandConstant>> userTypeListMap = new HashMap<>();
@@ -88,10 +121,17 @@ public class ApplicationConfigurer {
         logger.debug(MessageFormat.format("secure config is ready: {0}", userTypeListMap));
         System.out.println(userTypeListMap);
 
-        GlobalContext.addToGlobalContext(GlobalContextConstant.SECURE_CONFIGURATION, userTypeListMap);
+        GlobalContext.addToGlobalContext(GlobalContextConstant.SECURITY_CONFIGURATION, userTypeListMap);
         logger.info("Configuring security map is finished");
     }
 
+    /**
+     * Searches all key/value pairs, which keys start with target String
+     *
+     * @param properties application properties
+     * @param start      string, from which key must start
+     * @return key/value pairs, which keys start with target String
+     */
     private Map<String, CommandConstant> getPropsUsingKeyStarts(Properties properties, String start) {
         Map<String, CommandConstant> result = new HashMap<>();
         properties.entrySet()
@@ -101,6 +141,13 @@ public class ApplicationConfigurer {
         return result;
     }
 
+    /**
+     * Searches all key/value pairs, which keys end with target String
+     *
+     * @param properties application properties
+     * @param ending     string, from which key must end
+     * @return key/value pairs, which keys start with target String
+     */
     private Map<Object, Object> getPropsUsingKeyEnding(Properties properties, String ending) {
         Map<Object, Object> result = new HashMap<>();
 
@@ -111,14 +158,16 @@ public class ApplicationConfigurer {
         return result;
     }
 
-    private void configureCommandManager(Map<Object, Object> map, Class<? extends AbstractCommandManager> commandManagerClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    private void configureCommandManager(Map<Object, Object> map,
+                                         Class<? extends AbstractCommandManager> commandManagerClass)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Map<CommandConstant, Class<? extends AbstractCommand>> commandMap = new HashMap<>();
         map.entrySet().stream().forEach(entry -> {
                     try {
                         commandMap.put(CommandConstant.fromValue((String) entry.getKey()),
                                 (Class<? extends AbstractCommand>) Class.forName(((String) entry.getValue()).trim()));
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.warn("Class not found, while configuring command manager", e);
                     }
                 }
         );
@@ -127,6 +176,20 @@ public class ApplicationConfigurer {
         GlobalContext.addToGlobalContext(GlobalContextConstant.COMMAND_FACTORY, manager);
     }
 
+    /**
+     * Configures manager with appropriate params.
+     *
+     * @param map               manager's {@link main.java.com.epam.project4.manager.GenericManager#keyObjectTemplateMap} param
+     * @param managerClass      manager's class
+     * @param saveAs            will be mapped to this key in {@link GlobalContext}
+     * @param constructorParams manager's constructor parameters
+     * @param <T>               manager's type
+     * @param <V>               manager {@link main.java.com.epam.project4.manager.GenericManager#keyObjectTemplateMap}'s type of value
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     */
     private <T, V> void configureManager(Map<Object, Object> map, Class<? extends T> managerClass, GlobalContextConstant saveAs, Object... constructorParams) throws NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
         Map<Class<? extends V>, Class<? extends V>> result = new HashMap<>();
@@ -146,6 +209,10 @@ public class ApplicationConfigurer {
         GlobalContext.addToGlobalContext(saveAs, manager);
     }
 
+    /**
+     * Configures data source, lookups from JNDI and adds to {@link GlobalContext} with the
+     * key {@link GlobalContextConstant#DATA_SOURCE}
+     */
     private void configureDataSource() {
         try {
             InitialContext initialContext = new InitialContext();

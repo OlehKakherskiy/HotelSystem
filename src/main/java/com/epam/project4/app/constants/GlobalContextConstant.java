@@ -3,6 +3,8 @@ package main.java.com.epam.project4.app.constants;
 import java.util.Arrays;
 
 /**
+ * Global constants.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public enum GlobalContextConstant {
@@ -15,7 +17,7 @@ public enum GlobalContextConstant {
 
     DATA_SOURCE("dataSource"),
 
-    SECURE_CONFIGURATION("secureConfiguration"),
+    SECURITY_CONFIGURATION("secureConfiguration"),
 
     COMMAND_NAME("commandName"),
 

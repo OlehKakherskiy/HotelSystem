@@ -17,7 +17,7 @@
 
     <filter>
         <filter-name>securityFilter</filter-name>
-        <filter-class>main.java.com.epam.project4.controller.SecurityFilter</filter-class>
+        <filter-class>main.java.com.epam.project4.controller.AccessFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -27,7 +27,7 @@
 
     <servlet>
         <servlet-name>universalServlet</servlet-name>
-        <servlet-class>main.java.com.epam.project4.controller.UniversalServlet</servlet-class>
+        <servlet-class>main.java.com.epam.project4.controller.FrontController</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
