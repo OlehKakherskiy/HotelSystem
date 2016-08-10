@@ -27,7 +27,7 @@ public enum GlobalContextConstant {
 
     PASSWORD("password"),
 
-    RESERVATION_ID("reservationID"),
+    RESERVATION_ID("reservationId"),
 
     CURRENT_RESERVATION("currentReservation"),
 

@@ -19,12 +19,16 @@ import main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService;
 import main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl;
 import main.java.com.epam.project4.model.service.serviceImpl.ReservationService;
 import main.java.com.epam.project4.model.service.serviceImpl.UserService;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
@@ -46,6 +50,9 @@ public class GenericCachingManagerTest {
         initCommandManager();
         initDaoManager();
         initServiceManager();
+
+        LogManager.getRootLogger().setLevel(Level.OFF);
+
     }
 
     private static void initCommandManager() {
@@ -92,16 +99,8 @@ public class GenericCachingManagerTest {
         for (int i = 0; i < cachingManagers.size(); i++) {
             for (Object entry : initMapsForManagers.get(i).entrySet()) {
                 System.out.println(((Map.Entry) entry).getKey());
-                if (Proxy.isProxyClass(cachingManagers.get(i).getInstance(((Map.Entry) entry).getKey()).getClass())) {
-                    System.out.println(cachingManagers.get(i)
-                            .getInstance(((Map.Entry) entry).getKey()).getClass().getName());
-                    System.out.println(Arrays.toString(cachingManagers.get(i)
-                            .getInstance(((Map.Entry) entry).getKey()).getClass().getInterfaces()));
-                    Assert.assertEquals(((Map.Entry) entry).getValue(), cachingManagers.get(i)
-                            .getInstance(((Map.Entry) entry).getKey()).getClass());
-                } else {
-                    Assert.assertEquals(((Map.Entry) entry).getValue(), cachingManagers.get(i).getInstance(((Map.Entry) entry).getKey()).getClass());
-                }
+                Assert.assertEquals(((Map.Entry) entry).getValue(),
+                        cachingManagers.get(i).getInstance(((Map.Entry) entry).getKey()).getClass());
             }
         }
     }

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id="hotelRoom" type="main.java.com.epam.project4.model.entity.HotelRoom" scope="request"/>
 <jsp:useBean id="user" type="main.java.com.epam.project4.model.entity.User" scope="session"/>

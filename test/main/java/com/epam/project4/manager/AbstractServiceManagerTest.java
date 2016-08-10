@@ -41,7 +41,7 @@ public class AbstractServiceManagerTest {
 
     @Test
     public void getServiceWithDefaultConstructor() throws Exception {
-        DefaultConstructorServiceStub stub = serviceManager.getInstance(DefaultConstructorServiceStub.class);
+        IService stub = serviceManager.getInstance(DefaultConstructorServiceStub.class);
         Assert.assertNotNull(stub);
     }
 }

@@ -40,8 +40,7 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
     /**
      * db reques for selecting all active rooms
      */
-    private static final String GET_ALL_ACTIVE_ROOMS_REQUEST = GET_ALL_ROOMS_REQUEST + "is_active = 1";
-
+    private static final String GET_ALL_ACTIVE_ROOMS_REQUEST = GET_ALL_ROOMS_REQUEST + " WHERE is_active = 1";
 
     private static final String GET_ALL_HOTEL_ROOMS_DETAILS_EXCEPTION = "Exception caused during executing SQL request for getting details about hotel rooms";
 
@@ -71,7 +70,7 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
             }
 
         } catch (SQLException e) {
-            throw new DaoException(GET_ALL_HOTEL_ROOMS_DETAILS_EXCEPTION);
+            throw new DaoException(GET_ALL_HOTEL_ROOMS_DETAILS_EXCEPTION, e);
         }
         return hotelRooms;
     }

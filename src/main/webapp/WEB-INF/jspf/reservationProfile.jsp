@@ -42,8 +42,7 @@
     <div class="col-md-8">
         <c:choose>
             <c:when test="${newReservation == true}">
-                <form class="form-horizontal" action="./controller" method="post" id="reservationForm"
-                      accept-charset="UTF-8">
+                <form class="form-horizontal" action="./controller" method="post" id="reservationForm">
                     <input type="hidden" name="commandName" value="fillNewReservationCommand">
                     <h4><fmt:message key="generalInfo" bundle="${reservBundle}"/></h4>
                     <div class="form-group">

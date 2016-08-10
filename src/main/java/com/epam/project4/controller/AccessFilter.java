@@ -31,8 +31,6 @@ public class AccessFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        accessRights = (Map<UserType, List<CommandConstant>>)
-                GlobalContext.getValue(GlobalContextConstant.SECURITY_CONFIGURATION);
     }
 
     /**
@@ -81,7 +79,8 @@ public class AccessFilter implements Filter {
      * @return true, if user can invoke command, mapped to target commandName, otherwise - false
      */
     private boolean hasRights(User user, CommandConstant commandName) {
-
+        accessRights = (accessRights != null) ? accessRights : (Map<UserType, List<CommandConstant>>)
+                GlobalContext.getValue(GlobalContextConstant.SECURITY_CONFIGURATION);
         System.out.println(accessRights);
         if (!accessRights.containsKey(user.getUserType()))
             return false;

@@ -95,8 +95,9 @@ abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E, T> {
         if (intermediateTemplateElement == null) {
             throw new ManagerConfigException(MessageFormat.format(NO_SUCH_KEY_EXCEPTION, key, this.getClass().getName()));
         }
+        result = getObjectHook(intermediateTemplateElement);
         if (logger.isDebugEnabled()) {
-            result = (V) DebugLevelLoggerProxy.newInstance(getObjectHook(intermediateTemplateElement));
+            result = (V) DebugLevelLoggerProxy.newInstance(result);
         }
         cache.put(key, result);
 

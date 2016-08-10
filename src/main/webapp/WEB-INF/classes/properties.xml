@@ -62,16 +62,16 @@
     <entry key="REGISTERED_USER_9">getHotelRoomProfileCommand</entry>
     <entry key="REGISTERED_USER_10">deleteReservationCommand</entry>
 
-    <entry key="main.java.com.epam.project4.model.service.AbstractReservationService">
+    <entry key="main.java.com.epam.project4.model.service.IReservationService">
         main.java.com.epam.project4.model.service.serviceImpl.ReservationService
     </entry>
-    <entry key="main.java.com.epam.project4.model.service.AbstractHotelRoomService">
+    <entry key="main.java.com.epam.project4.model.service.IHotelRoomService">
         main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService
     </entry>
-    <entry key="main.java.com.epam.project4.model.service.AbstractUserService">
+    <entry key="main.java.com.epam.project4.model.service.IUserService">
         main.java.com.epam.project4.model.service.serviceImpl.UserService
     </entry>
-    <entry key="main.java.com.epam.project4.model.service.AbstractParameterValueService">
+    <entry key="main.java.com.epam.project4.model.service.IParameterValueService">
         main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl
     </entry>
 

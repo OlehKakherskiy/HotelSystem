@@ -1,6 +1,7 @@
 package main.java.com.epam.project4.app.util;
 
 import main.java.com.epam.project4.app.constants.MessageCode;
+import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -18,6 +19,7 @@ import java.util.*;
  */
 public class LocalizedMessageFormatter {
 
+    private static final Logger logger = Logger.getLogger(LocalizedMessageFormatter.class);
     /**
      * locale to bundle map, it is used for returning message in target locale
      */
@@ -61,7 +63,8 @@ public class LocalizedMessageFormatter {
         if (currentBundle != null && (message = currentBundle.getString(code.getCode())) != null) {
             return MessageFormat.format(message, params);
         } else {
-            return "No message for this type of error"; //TODO: занести в лог, что нет такого через варнинг
+            logger.warn(MessageFormat.format("No message for this type of operation's result: {0}", code));
+            return "No message for this type of operation's result";
         }
     }
 
@@ -80,7 +83,8 @@ public class LocalizedMessageFormatter {
         if (message != null) {
             return MessageFormat.format(message, params);
         } else {
-            return "No message for this type of error"; //TODO: в лог
+            logger.warn(MessageFormat.format("No message for this type of message: {0}", code));
+            return "No message for this type of operation's result";
         }
     }
 }
