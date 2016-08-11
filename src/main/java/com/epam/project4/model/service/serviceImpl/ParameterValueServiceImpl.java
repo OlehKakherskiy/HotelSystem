@@ -43,9 +43,10 @@ public class ParameterValueServiceImpl implements IParameterValueService {
      *
      * @param parameterValueIdList {@inheritDoc}
      * @return {@inheritDoc}
+     * @throws SystemException if exception was thrown during the process of selecting data from persistent storage
      */
     @Override
-    public List<ParameterValue> getParamValueList(List<Integer> parameterValueIdList) { //возвращаем paramValue со списка по id
+    public List<ParameterValue> getParamValueList(List<Integer> parameterValueIdList) {
         List<ParameterValue> fullParamList = getAllParams();
         List<ParameterValue> result = new ArrayList<>();
         parameterValueIdList.stream()
@@ -66,6 +67,7 @@ public class ParameterValueServiceImpl implements IParameterValueService {
      * </p>
      *
      * @return {@inheritDoc}
+     * @throws SystemException if exception was thrown during the process of selecting data from persistent storage
      */
     @Override
     public Map<Parameter, List<ParameterValue>> getParameterValueMap() {
@@ -111,6 +113,7 @@ public class ParameterValueServiceImpl implements IParameterValueService {
      * and returns list of {@link ParameterValue}.
      *
      * @return list of {@link ParameterValue}
+     * @throws SystemException if exception was thrown during the process of selecting data from persistent storage
      */
     private List<ParameterValue> addToCacheAndReturn() {
         try {

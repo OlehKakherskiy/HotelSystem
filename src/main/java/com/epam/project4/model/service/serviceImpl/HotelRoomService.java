@@ -67,15 +67,16 @@ public class HotelRoomService implements IHotelRoomService {
      */
     @Override
     public List<HotelRoom> getAllRoomFullDetails(boolean onlyActive) {
-        List<HotelRoom> hotelRoomList = null;
         try {
-            hotelRoomList = hotelRoomDao.getAllFullDetails(onlyActive);
-            hotelRoomList.stream().forEach(this::appendReformattedRoomParams);
-            hotelRoomList.forEach(hotelRoom -> hotelRoom.setPrice(calculateRoomBasicPrice(hotelRoom)));
+            List<HotelRoom> hotelRoomList = hotelRoomDao.getAllFullDetails(onlyActive);
+            hotelRoomList.stream().forEach(hotelRoom -> {
+                this.appendReformattedRoomParams(hotelRoom);
+                hotelRoom.setPrice(calculateRoomBasicPrice(hotelRoom));
+            });
+            return hotelRoomList;
         } catch (DaoException e) {
             throw new SystemException(MessageCode.GET_ALL_ROOMS_FULL_DETAILS_SYSTEM_EXCEPTION, e);
         }
-        return hotelRoomList;
     }
 
     /**
@@ -104,14 +105,14 @@ public class HotelRoomService implements IHotelRoomService {
      *
      * @param id Hotel room's id
      * @return {@inheritDoc}
-     * @throws RequestException {@inheritDoc}
+     * @throws RequestException {@inheritDoc}. Also if id < 0
      * @throws SystemException  {@inheritDoc}
      */
     @Override
     public HotelRoom getFullDetails(int id) {
+        HotelRoom result;
         try {
-            HotelRoom result = hotelRoomDao.read(id);
-            if (result == null) {
+            if (id < 0 || (result = hotelRoomDao.read(id)) == null) {
                 throw new RequestException(MessageCode.WRONG_ROOM_ID, id);
             }
             appendReformattedRoomParams(result);
@@ -128,7 +129,7 @@ public class HotelRoomService implements IHotelRoomService {
      * @param hotelRoom target room, for which parameters will be reformatted from ids to objects
      */
     private void appendReformattedRoomParams(HotelRoom hotelRoom) {
-        hotelRoom.setParameters(parameterValueService.getParamValueList(hotelRoom.getParametersIds()));
+        hotelRoom.setParameters(parameterValueService.getParamValueList(hotelRoom.getParameterListIds()));
     }
 
     /**

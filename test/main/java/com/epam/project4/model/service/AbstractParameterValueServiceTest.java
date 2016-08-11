@@ -24,12 +24,12 @@ import java.util.Map;
  */
 public class AbstractParameterValueServiceTest {
 
-    static IParameterValueService parameterValueService;
+    private static IParameterValueService parameterValueService;
 
 
-    static Map<Parameter, List<ParameterValue>> pvMap = new HashMap<>();
+    private static Map<Parameter, List<ParameterValue>> pvMap = new HashMap<>();
 
-    static List<ParameterValue> parameterValueList;
+    private static List<ParameterValue> parameterValueList;
 
     @BeforeClass
     public static void beforeClass() throws Exception {

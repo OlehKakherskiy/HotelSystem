@@ -18,7 +18,7 @@ public class HotelRoom implements Serializable {
     /**
      * room's id
      */
-    private int roomID;
+    private int roomId;
 
     /**
      * room's name
@@ -43,7 +43,7 @@ public class HotelRoom implements Serializable {
     /**
      * list of {@link ParameterValue#id}
      */
-    private transient List<Integer> parametersIds;
+    private transient List<Integer> parameterListIds;
 
     /**
      * room's price
@@ -53,17 +53,17 @@ public class HotelRoom implements Serializable {
     /**
      * Constructor, that inits some parameters
      *
-     * @param roomID           room's id
+     * @param roomId           room's id
      * @param roomName         room's name
      * @param activationStatus room's activation status (true - active, false - inactive)
-     * @param parameters       assosiated {@link ParameterValue} list
+     * @param parameters       assosiated ids of parameterValues
      * @param price            room's price
      */
-    public HotelRoom(int roomID, String roomName, boolean activationStatus, List<ParameterValue> parameters, int price) {
-        this.roomID = roomID;
+    public HotelRoom(int roomId, String roomName, boolean activationStatus, List<Integer> parameters, int price) {
+        this.roomId = roomId;
         this.roomName = roomName;
         this.activationStatus = activationStatus;
-        this.parameters = parameters;
+        this.parameterListIds = parameters;
         this.price = price;
     }
 
@@ -74,11 +74,11 @@ public class HotelRoom implements Serializable {
     }
 
     public int getRoomId() {
-        return roomID;
+        return roomId;
     }
 
-    public void setRoomID(int roomID) {
-        this.roomID = roomID;
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
     }
 
     public String getRoomName() {
@@ -113,12 +113,12 @@ public class HotelRoom implements Serializable {
         this.parameters = parameters;
     }
 
-    public List<Integer> getParametersIds() {
-        return parametersIds;
+    public List<Integer> getParameterListIds() {
+        return parameterListIds;
     }
 
-    public void setParametersIds(List<Integer> parametersIds) {
-        this.parametersIds = parametersIds;
+    public void setParameterListIds(List<Integer> parameterListIds) {
+        this.parameterListIds = parameterListIds;
     }
 
     @Override
@@ -128,20 +128,31 @@ public class HotelRoom implements Serializable {
 
         HotelRoom hotelRoom = (HotelRoom) o;
 
-        if (roomID != hotelRoom.roomID) return false;
         if (activationStatus != hotelRoom.activationStatus) return false;
         if (price != hotelRoom.price) return false;
-        return roomName.equals(hotelRoom.roomName);
+        if (!roomName.equals(hotelRoom.roomName)) return false;
+        return parameterListIds.equals(hotelRoom.parameterListIds);
 
     }
 
     @Override
     public int hashCode() {
-        int result = roomID;
-        result = 31 * result + roomName.hashCode();
+        int result = roomName.hashCode();
         result = 31 * result + (activationStatus ? 1 : 0);
+        result = 31 * result + parameterListIds.hashCode();
         result = 31 * result + price;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "HotelRoom{" +
+                "roomId=" + roomId +
+                ", roomName='" + roomName + '\'' +
+                ", activationStatus=" + activationStatus +
+                ", price=" + price +
+                ", parameterListIds=" + parameterListIds +
+                '}';
     }
 
     public int getPrice() {
