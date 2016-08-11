@@ -135,7 +135,7 @@
             <ul class="list-group">
                 <li class="list-group-item"><fmt:message key="roomOffer" bundle="${reservBundle}"/>
                     <a class="btn btn-default pull-right"
-                       href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${currentReservation.hotelRoomID}">
+                       href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${currentReservation.hotelRoomId}">
                         <fmt:message key="roomDetails" bundle="${reservBundle}"/></a>
                 </li>
             </ul>

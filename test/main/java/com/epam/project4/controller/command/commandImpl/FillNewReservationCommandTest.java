@@ -55,7 +55,7 @@ public class FillNewReservationCommandTest {
     @Test
     public void process() throws Exception {
         Reservation expectedReservation = new Reservation(1, LocalDate.now().minusDays(1), LocalDate.now().plusDays(1),
-                LocalDate.now(), ReservationStatus.PROCESSING, null, new User(1, "na", "d", UserType.ADMIN, Collections.emptyList()), null, parameterValues);
+                LocalDate.now(), ReservationStatus.PROCESSING, 0, 1, null, Collections.emptyList());
 
         request = EasyMock.createMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter("dateFrom")).andReturn(LocalDate.now().minusDays(1).toString());

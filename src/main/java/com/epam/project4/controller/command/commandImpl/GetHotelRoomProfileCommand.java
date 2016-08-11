@@ -62,7 +62,7 @@ public class GetHotelRoomProfileCommand extends AbstractCommand {
         request.setAttribute(HOTEL_ROOM, hotelRoom);
 
         logger.info(MessageFormat.format("User (id = {0}) requested hotel room info (room id = {1})",
-                user.getIdUser(), hotelRoom.getRoomID()));
+                user.getIdUser(), hotelRoom.getRoomId()));
 
         request.getSession(false).setAttribute(GlobalContextConstant.CURRENT_HOTEL_ROOM.getName(), hotelRoom);
         return WebPageConstant.HOTEL_ROOM_PROFILE.getPath();

@@ -9,6 +9,7 @@ import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
+import main.java.com.epam.project4.model.entity.enums.UserType;
 import main.java.com.epam.project4.model.service.IParameterValueService;
 import main.java.com.epam.project4.model.service.IReservationService;
 
@@ -48,16 +49,23 @@ public class ReservationService implements IReservationService {
 
     /**
      * {@inheritDoc}
+     * <p>
+     * If user type is admin, returns result of {@link #getShortInfoAboutAllReservations(ReservationStatus)}.
+     * </p>
      *
      * @param user              target user
      * @param reservationStatus target reservation status (if {@link ReservationStatus#ALL} - reservations with
      *                          all statuses will be returned)
      * @return {@inheritDoc}
-     * @throws SystemException {@inheritDoc}
+     * @throws SystemException
+     * @throws NullPointerException if params are null
      */
     @Override
     public List<Reservation> getShortInfoAboutAllReservations(User user, ReservationStatus reservationStatus) {
         try {
+            if (user.getUserType() == UserType.ADMIN) {
+                return getShortInfoAboutAllReservations(reservationStatus);
+            }
             return dao.getAllUserReservationsShortInfo(user.getIdUser(), reservationStatus);
         } catch (DaoException e) {
             throw new SystemException(MessageCode.GET_USER_RESERVATION_LIST_SYSTEM_EXCEPTION, e, user.getIdUser(), reservationStatus);
@@ -70,7 +78,8 @@ public class ReservationService implements IReservationService {
      * @param reservationStatus target reservation status (if {@link ReservationStatus#ALL} - reservations with
      *                          all statuses will be returned)
      * @return {@inheritDoc}
-     * @throws {@inheritDoc}
+     * @throws SystemException{@inheritDoc}
+     * @throws NullPointerException         if parameter is null
      */
     @Override
     public List<Reservation> getShortInfoAboutAllReservations(ReservationStatus reservationStatus) {
@@ -117,7 +126,7 @@ public class ReservationService implements IReservationService {
         try {
             update(reservation, ReservationStatus.WAITING_FOR_ANSWER, hotelRoom, true);
         } catch (DaoException e) {
-            throw new SystemException(MessageCode.OFFER_HOTEL_ROOM_SYSTEM_EXCEPTION, e, reservation.getId(), hotelRoom.getRoomID());
+            throw new SystemException(MessageCode.OFFER_HOTEL_ROOM_SYSTEM_EXCEPTION, e, reservation.getId(), hotelRoom.getRoomId());
         }
     }
 
@@ -171,14 +180,18 @@ public class ReservationService implements IReservationService {
      *
      * @param reservation reservation, that will be added to system
      * @param user        user, which reservation is
-     * @throws {@inheritDoc}
+     * @throws SystemException {@inheritDoc}
      */
     @Override
     public void addReservation(Reservation reservation, User user) {
-        reservation.setUserID(user.getIdUser());
+        reservation.setUserId(user.getIdUser());
+        reservation.setUser(user);
         try {
             dao.save(reservation);
         } catch (DaoException e) {
+            //rollback changes, done in this method with entity
+            reservation.setUserId(0);
+            reservation.setUser(null);
             throw new SystemException(MessageCode.SAVE_RESERVATION_SYSTEM_EXCEPTION, reservation);
         }
     }
@@ -193,8 +206,7 @@ public class ReservationService implements IReservationService {
     @Override
     public void deleteReservation(int reservationId) {
         try {
-            boolean wasDeleted = dao.delete(reservationId);
-            if (!wasDeleted) {
+            if (reservationId < 0 || !dao.delete(reservationId)) {
                 throw new RequestException(MessageCode.WRONG_RESERVATION_ID_EXCEPTION, reservationId);
             }
         } catch (DaoException e) {
@@ -210,16 +222,36 @@ public class ReservationService implements IReservationService {
      * @param room            if null - resets to null room parameter in reservation in DB.
      *                        Must be used with updateHotelRoom parameter together
      * @param updateHotelRoom if true - signal that room parameter must be added for updating
+     * @throws DaoException         if exception was thrown during the process of updating
+     * @throws NullPointerException
      */
     private void update(Reservation reservation, ReservationStatus status, HotelRoom room, boolean updateHotelRoom) throws DaoException {
+
+        if (reservation == null || status == null || (status == ReservationStatus.WAITING_FOR_ANSWER && room == null)) {
+            throw new NullPointerException(); //TODO: чекнуть!!!
+        }
         if (status == ReservationStatus.ALL) {
             throw new RequestException(MessageCode.WRONG_RESERVATION_STATUS_FOR_UPDATING_EXCEPTION, status.getName());
         }
+
+        //if reservation wasn't updated or exception was thrown - rollback operation
+        ReservationStatus oldStatus = reservation.getStatus();
+        HotelRoom oldRoom = reservation.getHotelRoom();
+        int oldHotelRoomId = reservation.getHotelRoomId();
+
         reservation.setStatus(status);
         if (updateHotelRoom) {
             reservation.setHotelRoom(room);
-            reservation.setHotelRoomID((room == null) ? -1 : room.getRoomID());
+            reservation.setHotelRoomId((room == null) ? -1 : room.getRoomId());
         }
-        dao.update(reservation);
+        if (!dao.update(reservation)) {
+            //rollback
+            reservation.setStatus(oldStatus);
+            reservation.setHotelRoom(oldRoom);
+            reservation.setHotelRoomId(oldHotelRoomId);
+
+            throw new SystemException(MessageCode.UPDATE_RESERVATION_FAILS, reservation.getId(), status, (room == null) ? "" : room.getRoomId());
+        }
+
     }
 }

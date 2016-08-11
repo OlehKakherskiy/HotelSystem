@@ -43,7 +43,7 @@ public class RefuseHotelRoomOfferCommand extends AbstractCommand {
         Reservation reservation = (Reservation) session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
         IReservationService abstractReservationService = serviceManager.getInstance(IReservationService.class);
 
-        int hotelRoomId = reservation.getHotelRoomID();
+        int hotelRoomId = reservation.getHotelRoomId();
         abstractReservationService.refuseReservationOffer(reservation);
         session.removeAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
 

@@ -73,7 +73,7 @@ public class HotelRoom implements Serializable {
     public HotelRoom() {
     }
 
-    public int getRoomID() {
+    public int getRoomId() {
         return roomID;
     }
 

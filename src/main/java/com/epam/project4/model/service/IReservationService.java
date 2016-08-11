@@ -17,7 +17,8 @@ public interface IReservationService extends IService {
 
     /**
      * Returns list of {@link Reservation} for target user and reservation status.
-     * If there's no reservations with these parameters - returns empty list.
+     * If there's no reservations with these parameters - returns empty list. There's no
+     * sense to call method for user with type {@link main.java.com.epam.project4.model.entity.enums.UserType#ADMIN}
      *
      * @param user              target user
      * @param reservationStatus target reservation status (if {@link ReservationStatus#ALL} - reservations with
@@ -32,6 +33,8 @@ public interface IReservationService extends IService {
     /**
      * Returns list of {@link Reservation} of all users and target reservation status.
      * If there's no reservations with this reservation status - returns empty list.
+     * It must be prohibited to call this method for user, which type is not
+     * {@link main.java.com.epam.project4.model.entity.enums.UserType#ADMIN}
      *
      * @param reservationStatus target reservation status (if {@link ReservationStatus#ALL} - reservations with
      *                          all statuses will be returned)

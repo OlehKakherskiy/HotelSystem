@@ -27,6 +27,8 @@ public enum MessageCode {
 
     READ_RESERVATION_SYSTEM_EXCEPTION("readReservationSystemException"),
 
+    UPDATE_RESERVATION_FAILS("updateReservationFails"),
+
     WRONG_RESERVATION_STATUS_FOR_UPDATING_EXCEPTION("wrongReservationStatusForUpdatingException"),
 
     DELETE_RESERVATION_SYSTEM_EXCEPTION("deleteReservationSystemException"),

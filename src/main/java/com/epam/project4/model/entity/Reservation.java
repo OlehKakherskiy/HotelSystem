@@ -57,12 +57,12 @@ public class Reservation implements Serializable {
     /**
      * hotel room's id
      */
-    private transient int hotelRoomID;
+    private transient int hotelRoomId = -1;
 
     /**
      * user-owner's id
      */
-    private transient int userID;
+    private transient int userId = -1;
 
     /**
      * request parameters, assosiated with current reservation
@@ -77,27 +77,27 @@ public class Reservation implements Serializable {
     /**
      * Constructor, that inits all object's parameters (except transient ones)
      *
-     * @param id                id
-     * @param dateFrom          date, from which hotel room will be booked
-     * @param dateTo            date, to which hotel room will be booked
-     * @param requestDate       request date
-     * @param status            current reservation status (can't be {@link ReservationStatus#ALL})
-     * @param hotelRoom         hotel room's id
-     * @param user              user-owner of current reservation
-     * @param comment           reservation comment
-     * @param requestParameters request parameters, assosiated with current reservation
+     * @param id                   id
+     * @param dateFrom             date, from which hotel room will be booked
+     * @param dateTo               date, to which hotel room will be booked
+     * @param requestDate          request date
+     * @param status               current reservation status (can't be {@link ReservationStatus#ALL})
+     * @param hotelRoomId          hotel room's id
+     * @param userId               user-owner's id of current reservation
+     * @param comment              reservation comment
+     * @param requestParametersIds request parameters, assosiated with current reservation
      */
-    public Reservation(int id, LocalDate dateFrom, LocalDate dateTo, LocalDate requestDate, ReservationStatus status, HotelRoom hotelRoom,
-                       User user, String comment, List<ParameterValue> requestParameters) {
+    public Reservation(int id, LocalDate dateFrom, LocalDate dateTo, LocalDate requestDate, ReservationStatus status, int hotelRoomId,
+                       int userId, String comment, List<Integer> requestParametersIds) {
         this.id = id;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
         this.requestDate = requestDate;
         this.status = status;
-        this.hotelRoom = hotelRoom;
-        this.user = user;
+        this.userId = userId;
+        this.hotelRoomId = hotelRoomId;
         this.comment = comment;
-        this.requestParameters = requestParameters;
+        this.requestParametersIds = requestParametersIds;
     }
 
     /**
@@ -162,20 +162,20 @@ public class Reservation implements Serializable {
         this.hotelRoom = hotelRoom;
     }
 
-    public int getHotelRoomID() {
-        return hotelRoomID;
+    public int getHotelRoomId() {
+        return hotelRoomId;
     }
 
-    public void setHotelRoomID(int hotelRoomID) {
-        this.hotelRoomID = hotelRoomID;
+    public void setHotelRoomId(int hotelRoomId) {
+        this.hotelRoomId = hotelRoomId;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getComment() {
@@ -200,5 +200,51 @@ public class Reservation implements Serializable {
 
     public void setRequestParametersIds(List<Integer> requestParametersIds) {
         this.requestParametersIds = requestParametersIds;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reservation)) return false;
+
+        Reservation that = (Reservation) o;
+
+        if (hotelRoomId != that.hotelRoomId) return false;
+        if (userId != that.userId) return false;
+        if (!dateFrom.equals(that.dateFrom)) return false;
+        if (!dateTo.equals(that.dateTo)) return false;
+        if (!requestDate.equals(that.requestDate)) return false;
+        if (status != that.status) return false;
+        return comment != null ? comment.equals(that.comment) : that.comment == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = dateFrom.hashCode();
+        result = 31 * result + dateTo.hashCode();
+        result = 31 * result + requestDate.hashCode();
+        result = 31 * result + status.hashCode();
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + hotelRoomId;
+        result = 31 * result + userId;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "requestParametersIds=" + requestParametersIds +
+                ", userId=" + userId +
+                ", hotelRoomId=" + hotelRoomId +
+                ", comment='" + comment + '\'' +
+                ", user=" + user +
+                ", hotelRoom=" + hotelRoom +
+                ", status=" + status +
+                ", requestDate=" + requestDate +
+                ", dateTo=" + dateTo +
+                ", dateFrom=" + dateFrom +
+                ", id=" + id +
+                '}';
     }
 }

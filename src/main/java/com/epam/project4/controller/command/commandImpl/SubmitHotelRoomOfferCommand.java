@@ -54,6 +54,6 @@ public class SubmitHotelRoomOfferCommand extends AbstractCommand {
     private void addInfoToLog(HttpSession session, Reservation reservation) {
         User user = (User) session.getAttribute(GlobalContextConstant.USER.getName());
         logger.info(MessageFormat.format("User id ={0} submitted hotelRoom with roomId = {1} in reservation id = {2}",
-                user.getIdUser(), reservation.getHotelRoomID(), reservation.getId()));
+                user.getIdUser(), reservation.getHotelRoomId(), reservation.getId()));
     }
 }

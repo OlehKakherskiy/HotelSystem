@@ -42,7 +42,7 @@
                         </label>
 
                         <a type="button" class="btn btn-default pull-right"
-                           href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${hotelRoom.roomID}">
+                           href="./controller?commandName=getHotelRoomProfileCommand&hotelRoomId=${hotelRoom.roomId}">
                             <fmt:message key="details" bundle="${rList}"/></a>
                     </div>
                 </div>

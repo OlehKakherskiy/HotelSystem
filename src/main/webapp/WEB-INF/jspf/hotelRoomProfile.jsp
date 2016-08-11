@@ -23,7 +23,7 @@
         <c:param name="commandName" value="getHotelRoomProfileCommand"/>
         <c:param name="reservationMonth" value="${prevMonth}"/>
         <c:param name="reservationYear" value="${prevYear}"/>
-        <c:param name="hotelRoomId" value="${hotelRoom.roomID}"/>
+        <c:param name="hotelRoomId" value="${hotelRoom.roomId}"/>
     </c:url>
 
     <%-- building next month reservations link --%>
@@ -41,7 +41,7 @@
         <c:param name="commandName" value="getHotelRoomProfileCommand"/>
         <c:param name="reservationMonth" value="${nextMonth}"/>
         <c:param name="reservationYear" value="${nextYear}"/>
-        <c:param name="hotelRoomId" value="${hotelRoom.roomID}"/>
+        <c:param name="hotelRoomId" value="${hotelRoom.roomId}"/>
     </c:url>
 </c:if>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>

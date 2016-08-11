@@ -65,7 +65,7 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
 
             while (resultSet.next()) {
                 HotelRoom current = buildRoom(resultSet);
-                current.setParametersIds(getRoomParamsIDs(current.getRoomID(), connection));
+                current.setParametersIds(getRoomParamsIDs(current.getRoomId(), connection));
                 hotelRooms.add(current);
             }
 
@@ -94,7 +94,7 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
             }
 
             if (room != null) {
-                room.setParametersIds(getRoomParamsIDs(room.getRoomID(), connection));
+                room.setParametersIds(getRoomParamsIDs(room.getRoomId(), connection));
             }
             resultSet.close();
         } catch (SQLException e) {

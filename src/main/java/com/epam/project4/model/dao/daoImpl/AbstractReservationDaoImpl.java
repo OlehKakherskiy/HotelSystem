@@ -143,7 +143,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      * @throws DaoException {@inheritDoc}
      */
     @Override
-    public int save(Reservation object) throws DaoException {
+    public void save(Reservation object) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
 
@@ -152,8 +152,6 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
             saveRequestParams(connection, object);
 
             connection.commit();
-            return object.getId();
-
 
         } catch (SQLException e) {
             throw new DaoException("Exception caused during the process of opening JDBC connection or " +
@@ -203,7 +201,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         try {
             preparedStatement.setString(1, object.getDateFrom().toString());
             preparedStatement.setString(2, object.getDateTo().toString());
-            preparedStatement.setInt(3, object.getUserID());
+            preparedStatement.setInt(3, object.getUserId());
             preparedStatement.setString(4, object.getRequestDate().toString());
             preparedStatement.setString(5, object.getComment());
             preparedStatement.setNull(6, java.sql.Types.INTEGER);
@@ -255,20 +253,20 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      */
     @Override
     public boolean update(Reservation object) throws DaoException {
-        String query = "Update Reservation SET id_Hotel_Room = ?, id_Reservation_Status = ? WHERE ID = " + object.getId();
+        String query = "Update Reservation SET id_Hotel_Room = ?, id_Reservation_Status = ? WHERE ID = " + object.getId();//TODO: вынести
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            if (object.getHotelRoomID() == -1) {
+            if (object.getHotelRoomId() == -1) {
                 preparedStatement.setNull(1, java.sql.Types.INTEGER);
             } else {
-                preparedStatement.setInt(1, object.getHotelRoomID());
+                preparedStatement.setInt(1, object.getHotelRoomId());
             }
             preparedStatement.setInt(2, object.getStatus().getId());
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("Exception was caused during the updating process of {0} " +
                             "object\\'s hotel room and reservation status. HotelRoom id = {1}, reservation status id = {2}",
-                    Reservation.class.getName(), object.getHotelRoomID(), object.getStatus().getId()));
+                    Reservation.class.getName(), object.getHotelRoomId(), object.getStatus().getId()));
         }
     }
 
@@ -459,7 +457,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     }
 
     /**
-     * Maps all information, connected to target reservation, from relational representation to object.}
+     * Maps all information, connected to target reservation, from relational representation to object.
      * </p>
      *
      * @param resultSet set, containing data for mapping to {@link Reservation}
@@ -471,9 +469,9 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         try {
             if (resultSet.next()) {
                 reservation = appendMainInfoToReservation(resultSet);
-                reservation.setUserID(resultSet.getInt(6));
+                reservation.setUserId(resultSet.getInt(6));
                 reservation.setComment(resultSet.getString(7));
-                reservation.setHotelRoomID(resultSet.getInt(8));
+                reservation.setHotelRoomId(resultSet.getInt(8));
             }
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("Exception was caused during the process of building {0} object" +

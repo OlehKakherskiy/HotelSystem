@@ -36,13 +36,12 @@ public interface GenericDao<T> {
     }
 
     /**
-     * Saves target object to persistence storage
+     * Saves target object to persistence storage. Inserts object's created id to it's id field
      *
      * @param object object that will be mapped to persistent storage data format
-     * @return object's id
      * @throws DaoException if any type of exception will be caused during this operation processing
      */
-    default int save(T object) throws DaoException {
+    default void save(T object) throws DaoException {
         throw new DaoException(MessageFormat.format("Save operation is not supported by {1} type of dao",
                 this.getClass().getName()));
     }

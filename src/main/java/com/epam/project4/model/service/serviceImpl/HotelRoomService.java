@@ -92,10 +92,10 @@ public class HotelRoomService implements IHotelRoomService {
         LocalDate startDate = LocalDate.of(year.getValue(), month.getValue(), 1);
         LocalDate endMonthDate = startDate.with(lastDayOfMonth());
         try {
-            hotelRoom.setReservationList(reservationDao.getAllRoomReservationsInPeriod(hotelRoom.getRoomID(),
+            hotelRoom.setReservationList(reservationDao.getAllRoomReservationsInPeriod(hotelRoom.getRoomId(),
                     status, startDate, endMonthDate));
         } catch (DaoException e) {
-            throw new SystemException(MessageCode.GET_ROOM_MONTH_RESERVATION_LIST_SYSTEM_EXCEPTION, e, hotelRoom.getRoomID(), month, year, status);
+            throw new SystemException(MessageCode.GET_ROOM_MONTH_RESERVATION_LIST_SYSTEM_EXCEPTION, e, hotelRoom.getRoomId(), month, year, status);
         }
     }
 
