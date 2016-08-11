@@ -1,4 +1,4 @@
-package main.java.com.epam.project4.controller;
+package main.java.com.epam.project4.controller.filter;
 
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;

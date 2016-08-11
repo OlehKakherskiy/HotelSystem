@@ -46,14 +46,14 @@ public class UserService implements IUserService {
     /**
      * {@inheritDoc}
      *
-     * @param login    user's login
+     * @param login    user's signIn
      * @param password user's password
      * @return {@inheritDoc}
      * @throws RequestException {@inheritDoc}
      * @throws SystemException  {@inheritDoc}
      */
     @Override
-    public User login(String login, String password) {
+    public User signIn(String login, String password) {
         try {
             User result = userDao.tryLogin(login, password);
             noSuchUserCheck(result, MessageCode.WRONG_LOGIN_OR_PASSWORD);

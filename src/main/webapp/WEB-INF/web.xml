@@ -17,7 +17,7 @@
 
     <filter>
         <filter-name>encodingFilter</filter-name>
-        <filter-class>main.java.com.epam.project4.controller.EncodingFilter</filter-class>
+        <filter-class>main.java.com.epam.project4.controller.filter.EncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
@@ -25,7 +25,7 @@
     </filter>
     <filter>
         <filter-name>securityFilter</filter-name>
-        <filter-class>main.java.com.epam.project4.controller.AccessFilter</filter-class>
+        <filter-class>main.java.com.epam.project4.controller.filter.AccessFilter</filter-class>
     </filter>
 
 

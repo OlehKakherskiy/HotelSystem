@@ -65,7 +65,7 @@ public class AbstractUserServiceTest {
         EasyMock.replay(abstractUserDao, abstractMobilePhoneDao);
 
         abstractUserService = new UserService(abstractUserDao, abstractMobilePhoneDao);
-        Assert.assertEquals(expectation, abstractUserService.login(LOGIN, PASSWORD));
+        Assert.assertEquals(expectation, abstractUserService.signIn(LOGIN, PASSWORD));
 
         EasyMock.verify(abstractUserDao, abstractMobilePhoneDao);
     }
@@ -76,7 +76,7 @@ public class AbstractUserServiceTest {
         EasyMock.replay(systemExceptionUserDaoLogin);
 
         abstractUserService = new UserService(systemExceptionUserDaoLogin, null);
-        abstractUserService.login(LOGIN, PASSWORD);
+        abstractUserService.signIn(LOGIN, PASSWORD);
 
         EasyMock.verify(systemExceptionUserDaoLogin);
     }
@@ -88,7 +88,7 @@ public class AbstractUserServiceTest {
         EasyMock.replay(okUserDao, systemExceptionMobilePhoneDao);
 
         abstractUserService = new UserService(okUserDao, systemExceptionMobilePhoneDao);
-        abstractUserService.login(LOGIN, PASSWORD);
+        abstractUserService.signIn(LOGIN, PASSWORD);
 
         EasyMock.verify(okUserDao, systemExceptionMobilePhoneDao);
     }
@@ -100,7 +100,7 @@ public class AbstractUserServiceTest {
         EasyMock.replay(requestExceptionUserDao, okMobilePhoneDao);
 
         abstractUserService = new UserService(requestExceptionUserDao, okMobilePhoneDao);
-        abstractUserService.login(LOGIN, PASSWORD);
+        abstractUserService.signIn(LOGIN, PASSWORD);
 
         EasyMock.verify(requestExceptionUserDao);
     }

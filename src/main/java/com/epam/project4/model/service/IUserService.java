@@ -11,20 +11,20 @@ import main.java.com.epam.project4.model.entity.User;
 public interface IUserService extends IService {
 
     /**
-     * returns {@link User} object, assosiated with target login and password.
+     * returns {@link User} object, assosiated with target signIn and password.
      * If there's no user with target combination -  throws
      * {@link main.java.com.epam.project4.exception.RequestException}.
      * Also adds mobile phones, assosiated with current user
      *
-     * @param login    user's login
+     * @param login    user's signIn
      * @param password user's password
-     * @return {@link User} object, assosiated with current login and password
+     * @return {@link User} object, assosiated with current signIn and password
      * @throws main.java.com.epam.project4.exception.RequestException if there's no
-     *                                                                combination of login and password
+     *                                                                combination of signIn and password
      * @throws main.java.com.epam.project4.exception.SystemException  if exception was
      *                                                                thrown during processing any underlying operation
      */
-    User login(String login, String password);
+    User signIn(String login, String password);
 
     /**
      * Returns {@link User} object, assosiated with target id parameter.

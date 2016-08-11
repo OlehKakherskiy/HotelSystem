@@ -1,4 +1,4 @@
-package main.java.com.epam.project4.controller;
+package main.java.com.epam.project4.controller.filter;
 
 import javax.servlet.*;
 import java.io.IOException;

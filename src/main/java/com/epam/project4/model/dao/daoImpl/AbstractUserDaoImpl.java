@@ -36,7 +36,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
                     "WHERE idUser=?";
 
     /**
-     * db request for getting user info using login and password
+     * db request for getting user info using signIn and password
      */
     private static final String getUserFromLoginAndPassword =
             "SELECT idUser, name, last_name, idUserType " +
@@ -91,7 +91,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
      * After ResultSet is get, calls {@link #buildUserObject(ResultSet)}
      * </p>
      *
-     * @param login    user's login
+     * @param login    user's signIn
      * @param password user's password
      * @return {@inheritDoc}
      * @throws DaoException {@inheritDoc}
@@ -107,7 +107,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
             resultSet = statement.executeQuery();
             return buildUserObject(resultSet);
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format("{0} using login and password", requestExecException), e);
+            throw new DaoException(MessageFormat.format("{0} using signIn and password", requestExecException), e);
         }
     }
 

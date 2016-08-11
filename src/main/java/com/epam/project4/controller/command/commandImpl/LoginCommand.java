@@ -3,7 +3,10 @@ package main.java.com.epam.project4.controller.command.commandImpl;
 import main.java.com.epam.project4.app.GlobalContext;
 import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
+import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.controller.command.ICommand;
+import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.service.IUserService;
@@ -15,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.text.MessageFormat;
 
 /**
- * Command providing user login operation in system.
+ * Command providing user signIn operation in system.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
@@ -32,7 +35,7 @@ public class LoginCommand extends AbstractCommand {
      * as {@link GlobalContextConstant#LOGIN} and {@link GlobalContextConstant#PASSWORD}.
      * </p>
      * <p>
-     * If login operation was successfull (there's user with input login/password combination
+     * If signIn operation was successfull (there's user with input signIn/password combination
      * in system), creates user's session, adds {@link User} as attribute with key {@link GlobalContextConstant#USER}
      * and calls command with the key {@link CommandConstant#GET_RESERVATION_LIST_COMMAND}
      * </p>
@@ -43,22 +46,28 @@ public class LoginCommand extends AbstractCommand {
      */
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) {
-        IUserService userService = serviceManager.getInstance(IUserService.class);
 
         String login = request.getParameter(GlobalContextConstant.LOGIN.getName());
         String password = request.getParameter(GlobalContextConstant.PASSWORD.getName());
 
-        User user = userService.login(login, password);
+        if (login == null || login.isEmpty() || password == null || password.isEmpty()) {
+            throw new RequestException(MessageCode.WRONG_LOGIN_OR_PASSWORD);
+        }
+
+        IUserService userService = serviceManager.getInstance(IUserService.class);
+        User user = userService.signIn(login, password);
 
         HttpSession httpSession = request.getSession(true);
         httpSession.setAttribute(GlobalContextConstant.USER.getName(), user);
         String lang = request.getParameter(LANGUAGE_PARAM);
-        httpSession.setAttribute(GlobalContextConstant.CURRENT_LOCALE.getName(), lang);
+        httpSession.setAttribute(GlobalContextConstant.CURRENT_LOCALE.getName(),
+                (lang != null) ? lang : request.getLocale().toString());
         System.out.println("toSession locale = " + lang + " .Session" + httpSession);
 
         logger.info(MessageFormat.format("User id = {0} is signed in", user.getIdUser()));
 
-        return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
-                .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
+        AbstractCommandManager commandManager = (AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY);
+        ICommand getReservationListCommand = commandManager.getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND);
+        return getReservationListCommand.process(request, response);
     }
 }
