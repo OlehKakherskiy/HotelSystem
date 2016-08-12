@@ -3,6 +3,7 @@ package main.java.com.epam.project4.model.dao.daoImpl;
 import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.model.dao.AbstractHotelRoomDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -111,7 +112,7 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
      * @param connection connection, through which select {@link #READ_ROOM_PARAMS_REQUEST} will be executed
      * @return list of current room parameters or empty list
      * @throws DaoException if exception was thrown during the process of executing request or
-     *                      mapping {@link main.java.com.epam.project4.model.entity.roomParameter.ParameterValue}
+     *                      mapping {@link ParameterValueTuple}
      *                      ids to list of integers.
      */
     private List<Integer> getRoomParamsIDs(int roomId, Connection connection) throws DaoException {

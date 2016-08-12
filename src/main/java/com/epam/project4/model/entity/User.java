@@ -8,7 +8,8 @@ import java.util.List;
 
 /**
  * Class represents User entity in Hotel System. Each user has name, surname, assosiated mobile phones,
- * and user type.
+ * and user type. As user has user type - it has some access rights in system. So that, for example,
+ * one user's type has access to creating new reservation, others are not.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see UserType

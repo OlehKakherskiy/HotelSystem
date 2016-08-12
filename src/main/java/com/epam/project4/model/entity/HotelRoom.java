@@ -1,17 +1,20 @@
 package main.java.com.epam.project4.model.entity;
 
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Class represents hotel room entity. It has id, name, activation status (active - can take part in business processes,
- * otherwise - cannot), can have reservations, assosiated with it and parameters
+ * otherwise - cannot), can have reservations, assosiated with it and parameters. As each room has a list
+ * o parameters with defined values {@link ParameterValueTuple}, and each tuple has it's own
+ * {@link ParameterValueTuple#price price}, basic room's price can be calculated as sum of all tuple from
+ * {@link #parameters}.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see Reservation
- * @see ParameterValue
+ * @see ParameterValueTuple
  */
 public class HotelRoom implements Serializable {
 
@@ -36,12 +39,12 @@ public class HotelRoom implements Serializable {
     private List<Reservation> reservationList;
 
     /**
-     * assosiated {@link ParameterValue}
+     * assosiated {@link ParameterValueTuple}
      */
-    private List<ParameterValue> parameters;
+    private List<ParameterValueTuple> parameters;
 
     /**
-     * list of {@link ParameterValue#id}
+     * list of {@link ParameterValueTuple#id}
      */
     private transient List<Integer> parameterListIds;
 
@@ -105,11 +108,11 @@ public class HotelRoom implements Serializable {
         this.reservationList = reservationList;
     }
 
-    public List<ParameterValue> getParameters() {
+    public List<ParameterValueTuple> getParameters() {
         return parameters;
     }
 
-    public void setParameters(List<ParameterValue> parameters) {
+    public void setParameters(List<ParameterValueTuple> parameters) {
         this.parameters = parameters;
     }
 

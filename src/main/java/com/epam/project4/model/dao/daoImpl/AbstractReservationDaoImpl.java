@@ -4,7 +4,7 @@ import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -224,7 +224,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement(joiner.toString())) {
 
             int rowCount = 0;
-            for (ParameterValue pv : reservation.getRequestParameters()) {
+            for (ParameterValueTuple pv : reservation.getRequestParameters()) {
                 preparedStatement.setInt(++rowCount, pv.getId());
             }
 
@@ -504,10 +504,10 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     }
 
     /**
-     * Appends to target {@link Reservation} object all {@link ParameterValue}'s id connected to it.
+     * Appends to target {@link Reservation} object all {@link ParameterValueTuple}'s id connected to it.
      *
-     * @param reservation current {@link Reservation}, list of {@link ParameterValue} will be inserted to
-     * @param resultSet   set, containing list of {@link ParameterValue}'s id.
+     * @param reservation current {@link Reservation}, list of {@link ParameterValueTuple} will be inserted to
+     * @param resultSet   set, containing list of {@link ParameterValueTuple}'s id.
      * @throws DaoException if there's no ids were read or exception was thrown during the process of
      *                      reading parameters from db
      */

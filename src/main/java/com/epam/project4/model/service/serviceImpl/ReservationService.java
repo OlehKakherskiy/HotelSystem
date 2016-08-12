@@ -10,6 +10,7 @@ import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.enums.UserType;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.service.IParameterValueService;
 import main.java.com.epam.project4.model.service.IReservationService;
 
@@ -32,7 +33,7 @@ public class ReservationService implements IReservationService {
     private AbstractReservationDao dao;
 
     /**
-     * for executing operations with {@link main.java.com.epam.project4.model.entity.roomParameter.ParameterValue}
+     * for executing operations with {@link ParameterValueTuple}
      */
     private IParameterValueService parameterValueService;
 

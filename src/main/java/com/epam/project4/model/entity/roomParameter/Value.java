@@ -1,19 +1,36 @@
 package main.java.com.epam.project4.model.entity.roomParameter;
 
 /**
+ * This class represents possible value of {@link Parameter}.
+ *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
 public class Value {
 
-    int id;
+    /**
+     * value's id
+     */
+    private int id;
 
-    String value;
+    /**
+     * value name
+     */
+    private String value;
 
+    /**
+     * constructor initializes all parameters
+     *
+     * @param id    entity's id
+     * @param value entity's name
+     */
     public Value(int id, String value) {
         this.id = id;
         this.value = value;
     }
 
+    /**
+     * constuctor without arguments
+     */
     public Value() {
     }
 

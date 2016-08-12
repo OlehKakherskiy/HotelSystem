@@ -7,7 +7,7 @@ import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.model.dao.AbstractParameterValueDao;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.service.IParameterValueService;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ParameterValueServiceImpl implements IParameterValueService {
 
     /**
-     * for executing operations with {@link ParameterValue}
+     * for executing operations with {@link ParameterValueTuple}
      */
     private AbstractParameterValueDao parameterValueDao;
 
@@ -46,9 +46,9 @@ public class ParameterValueServiceImpl implements IParameterValueService {
      * @throws SystemException if exception was thrown during the process of selecting data from persistent storage
      */
     @Override
-    public List<ParameterValue> getParamValueList(List<Integer> parameterValueIdList) {
-        List<ParameterValue> fullParamList = getAllParams();
-        List<ParameterValue> result = new ArrayList<>();
+    public List<ParameterValueTuple> getParamValueList(List<Integer> parameterValueIdList) {
+        List<ParameterValueTuple> fullParamList = getAllParams();
+        List<ParameterValueTuple> result = new ArrayList<>();
         parameterValueIdList.stream()
                 .forEach(id -> fullParamList
                         .stream()
@@ -70,8 +70,8 @@ public class ParameterValueServiceImpl implements IParameterValueService {
      * @throws SystemException if exception was thrown during the process of selecting data from persistent storage
      */
     @Override
-    public Map<Parameter, List<ParameterValue>> getParameterValueMap() {
-        Map<Parameter, List<ParameterValue>> result = (Map<Parameter, List<ParameterValue>>)
+    public Map<Parameter, List<ParameterValueTuple>> getParameterValueMap() {
+        Map<Parameter, List<ParameterValueTuple>> result = (Map<Parameter, List<ParameterValueTuple>>)
                 GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_MAP);
 
         if (result != null) {
@@ -85,42 +85,42 @@ public class ParameterValueServiceImpl implements IParameterValueService {
     }
 
     /**
-     * Reformat {@link ParameterValue} list to Map, where key is {@link Parameter} object, and value is
-     * list of {@link ParameterValue} and key is equal to each {@link ParameterValue#parameter} object.
+     * Reformat {@link ParameterValueTuple} list to Map, where key is {@link Parameter} object, and value is
+     * list of {@link ParameterValueTuple} and key is equal to each {@link ParameterValueTuple#parameter} object.
      *
      * @param list list, whose params will be regrouped to map
      * @return reformatted list's data, where key is {@link Parameter} object, and value is
-     * list of {@link ParameterValue} and key is equal to each {@link ParameterValue#parameter} object.
+     * list of {@link ParameterValueTuple} and key is equal to each {@link ParameterValueTuple#parameter} object.
      */
-    private Map<Parameter, List<ParameterValue>> parameterValueMapFromList(List<ParameterValue> list) {
-        return list.stream().collect(Collectors.groupingBy(ParameterValue::getParameter));
+    private Map<Parameter, List<ParameterValueTuple>> parameterValueMapFromList(List<ParameterValueTuple> list) {
+        return list.stream().collect(Collectors.groupingBy(ParameterValueTuple::getParameter));
     }
 
     /**
-     * Returns {@link ParameterValue} list, cached from {@link GlobalContext} or as a result of
+     * Returns {@link ParameterValueTuple} list, cached from {@link GlobalContext} or as a result of
      * {@link #addToCacheAndReturn()}.
      *
-     * @return list of {@link ParameterValue}
+     * @return list of {@link ParameterValueTuple}
      */
-    private List<ParameterValue> getAllParams() {
-        List<ParameterValue> parameterValues = (List<ParameterValue>)
+    private List<ParameterValueTuple> getAllParams() {
+        List<ParameterValueTuple> parameterValueTuples = (List<ParameterValueTuple>)
                 GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST); //TODO: тут нужно аккуратно - многопоточность
-        return (parameterValues != null) ? parameterValues : addToCacheAndReturn();
+        return (parameterValueTuples != null) ? parameterValueTuples : addToCacheAndReturn();
     }
 
     /**
      * adds to {@link GlobalContext} result of {@link AbstractParameterValueDao#getAllFullInfo()}
-     * and returns list of {@link ParameterValue}.
+     * and returns list of {@link ParameterValueTuple}.
      *
-     * @return list of {@link ParameterValue}
+     * @return list of {@link ParameterValueTuple}
      * @throws SystemException if exception was thrown during the process of selecting data from persistent storage
      */
-    private List<ParameterValue> addToCacheAndReturn() {
+    private List<ParameterValueTuple> addToCacheAndReturn() {
         try {
-            List<ParameterValue> parameterValues = parameterValueDao.getAllFullInfo();
+            List<ParameterValueTuple> parameterValueTuples = parameterValueDao.getAllFullInfo();
 
-            GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValues);
-            return parameterValues;
+            GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValueTuples);
+            return parameterValueTuples;
 
         } catch (DaoException e) {
             throw new SystemException(MessageCode.GET_PARAMETER_VALUE_LIST_SYSTEM_EXCEPTION, e);

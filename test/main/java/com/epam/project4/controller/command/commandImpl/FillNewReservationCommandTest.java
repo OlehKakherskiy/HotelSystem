@@ -8,7 +8,7 @@ import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.enums.UserType;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.entity.roomParameter.Value;
 import main.java.com.epam.project4.model.service.IParameterValueService;
 import main.java.com.epam.project4.model.service.IReservationService;
@@ -42,13 +42,13 @@ public class FillNewReservationCommandTest {
 
     private static List<Value> values;
 
-    private static List<ParameterValue> parameterValues;
+    private static List<ParameterValueTuple> parameterValueTuples;
 
     @BeforeClass
     public static void beforeClass() {
         parameters = Arrays.asList(new Parameter(1, true, null, "paramName1"), new Parameter(2, true, null, "paramName2"));
         values = Arrays.asList(new Value(1, "value1"), new Value(2, "value2"));
-        parameterValues = Arrays.asList(new ParameterValue(5, parameters.get(0), values.get(0), 1), new ParameterValue(6, parameters.get(1), values.get(1), 20));
+        parameterValueTuples = Arrays.asList(new ParameterValueTuple(5, parameters.get(0), values.get(0), 1), new ParameterValueTuple(6, parameters.get(1), values.get(1), 20));
 
     }
 
@@ -75,11 +75,11 @@ public class FillNewReservationCommandTest {
         EasyMock.expect(request.getParameter("paramName1")).andReturn(String.valueOf(5));
         EasyMock.expect(request.getParameter("paramName2")).andReturn(String.valueOf(6));
 
-        Map<Parameter, List<ParameterValue>> parameterListMap = new HashMap<>();
-        parameterListMap.put(parameters.get(0), Arrays.asList(parameterValues.get(0)));
-        parameterListMap.put(parameters.get(1), Arrays.asList(parameterValues.get(1)));
+        Map<Parameter, List<ParameterValueTuple>> parameterListMap = new HashMap<>();
+        parameterListMap.put(parameters.get(0), Arrays.asList(parameterValueTuples.get(0)));
+        parameterListMap.put(parameters.get(1), Arrays.asList(parameterValueTuples.get(1)));
         EasyMock.expect(parameterValueService.getParameterValueMap()).andReturn(parameterListMap);
-        EasyMock.expect(parameterValueService.getParamValueList(Arrays.asList(5, 6))).andReturn(Arrays.asList(parameterValues.get(0), parameterValues.get(1)));
+        EasyMock.expect(parameterValueService.getParamValueList(Arrays.asList(5, 6))).andReturn(Arrays.asList(parameterValueTuples.get(0), parameterValueTuples.get(1)));
 
         Capture<Reservation> capture = new Capture<>();
 //        Capture<User> userCapture = new Capture<>();

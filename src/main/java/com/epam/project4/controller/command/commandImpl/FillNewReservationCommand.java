@@ -11,7 +11,7 @@ import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.service.IParameterValueService;
 import main.java.com.epam.project4.model.service.IReservationService;
 import org.apache.log4j.Logger;
@@ -84,13 +84,13 @@ public class FillNewReservationCommand extends AbstractCommand {
     }
 
 
-    private List<ParameterValue> getParameterValueList(HttpServletRequest request) {
+    private List<ParameterValueTuple> getParameterValueList(HttpServletRequest request) {
         IParameterValueService parameterValueService = serviceManager.getInstance(IParameterValueService.class);
         return parameterValueService.getParamValueList(parseParameterValueList(request, parameterValueService));
     }
 
     private List<Integer> parseParameterValueList(HttpServletRequest request, IParameterValueService parameterValueService) {
-        Map<Parameter, List<ParameterValue>> parameterParameterValueMap = parameterValueService.getParameterValueMap();
+        Map<Parameter, List<ParameterValueTuple>> parameterParameterValueMap = parameterValueService.getParameterValueMap();
         List<Integer> result = new ArrayList<>();
 
         parameterParameterValueMap.keySet().stream().forEach(key -> result.add(Integer.parseInt(request.getParameter(key.getParamName()))));

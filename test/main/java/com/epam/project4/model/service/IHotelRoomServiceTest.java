@@ -8,7 +8,7 @@ import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.entity.roomParameter.Value;
 import main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService;
 import org.easymock.EasyMock;
@@ -39,7 +39,7 @@ public class IHotelRoomServiceTest {
 
     private IHotelRoomService hotelRoomService;
 
-    private static List<ParameterValue> parameterValueList;
+    private static List<ParameterValueTuple> parameterValueTupleList;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -58,20 +58,20 @@ public class IHotelRoomServiceTest {
         Parameter p1 = new Parameter(1, false, v3, "p1");
         Parameter p2 = new Parameter(2, false, v5, "p2");
 
-        ParameterValue pv1 = new ParameterValue(1, p1, v1, 1);
-        ParameterValue pv2 = new ParameterValue(2, p1, v2, 100);
-        ParameterValue pv3 = new ParameterValue(3, p1, v3, 100);
-        ParameterValue pv4 = new ParameterValue(4, p1, v4, 100);
-        ParameterValue pv5 = new ParameterValue(5, p1, v5, 100);
-        ParameterValue pv6 = new ParameterValue(6, p2, v6, 100);
-        ParameterValue pv7 = new ParameterValue(7, p2, v7, 100);
-        ParameterValue pv8 = new ParameterValue(8, p2, v8, 100);
-        ParameterValue pv9 = new ParameterValue(9, p2, v9, 100);
-        ParameterValue pv10 = new ParameterValue(10, p2, v10, 100);
-        ParameterValue pv11 = new ParameterValue(11, p2, v4, 100);
-        ParameterValue pv12 = new ParameterValue(12, p2, v2, 100);
-        ParameterValue pv13 = new ParameterValue(13, p2, v1, 100);
-        parameterValueList = Arrays.asList(pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13);
+        ParameterValueTuple pv1 = new ParameterValueTuple(1, p1, v1, 1);
+        ParameterValueTuple pv2 = new ParameterValueTuple(2, p1, v2, 100);
+        ParameterValueTuple pv3 = new ParameterValueTuple(3, p1, v3, 100);
+        ParameterValueTuple pv4 = new ParameterValueTuple(4, p1, v4, 100);
+        ParameterValueTuple pv5 = new ParameterValueTuple(5, p1, v5, 100);
+        ParameterValueTuple pv6 = new ParameterValueTuple(6, p2, v6, 100);
+        ParameterValueTuple pv7 = new ParameterValueTuple(7, p2, v7, 100);
+        ParameterValueTuple pv8 = new ParameterValueTuple(8, p2, v8, 100);
+        ParameterValueTuple pv9 = new ParameterValueTuple(9, p2, v9, 100);
+        ParameterValueTuple pv10 = new ParameterValueTuple(10, p2, v10, 100);
+        ParameterValueTuple pv11 = new ParameterValueTuple(11, p2, v4, 100);
+        ParameterValueTuple pv12 = new ParameterValueTuple(12, p2, v2, 100);
+        ParameterValueTuple pv13 = new ParameterValueTuple(13, p2, v1, 100);
+        parameterValueTupleList = Arrays.asList(pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13);
     }
 
     @Test
@@ -80,11 +80,11 @@ public class IHotelRoomServiceTest {
         EasyMock.expect(hotelRoomDao.getAllFullDetails(true)).andReturn(getActualList());
         parameterValueService = EasyMock.createMock(IParameterValueService.class);
         EasyMock.expect(parameterValueService.getParamValueList(Arrays.asList(1, 10)))
-                .andReturn(Arrays.asList(parameterValueList.get(0), parameterValueList.get(9)));
+                .andReturn(Arrays.asList(parameterValueTupleList.get(0), parameterValueTupleList.get(9)));
         EasyMock.expect(parameterValueService.getParamValueList(Arrays.asList(2, 11)))
-                .andReturn(Arrays.asList(parameterValueList.get(1), parameterValueList.get(10)));
+                .andReturn(Arrays.asList(parameterValueTupleList.get(1), parameterValueTupleList.get(10)));
         EasyMock.expect(parameterValueService.getParamValueList(Arrays.asList(3, 12)))
-                .andReturn(Arrays.asList(parameterValueList.get(2), parameterValueList.get(11)));
+                .andReturn(Arrays.asList(parameterValueTupleList.get(2), parameterValueTupleList.get(11)));
         EasyMock.replay(hotelRoomDao, parameterValueService);
 
         hotelRoomService = new HotelRoomService(hotelRoomDao, null, parameterValueService);
@@ -105,9 +105,9 @@ public class IHotelRoomServiceTest {
         result.add(new HotelRoom(1, "room1", true, Arrays.asList(1, 10), 101));
         result.add(new HotelRoom(2, "room2", true, Arrays.asList(2, 11), 200));
         result.add(new HotelRoom(3, "room3", true, Arrays.asList(3, 12), 200));
-        result.get(0).setParameters(Arrays.asList(parameterValueList.get(0), parameterValueList.get(9)));
-        result.get(1).setParameters(Arrays.asList(parameterValueList.get(1), parameterValueList.get(10)));
-        result.get(2).setParameters(Arrays.asList(parameterValueList.get(2), parameterValueList.get(11)));
+        result.get(0).setParameters(Arrays.asList(parameterValueTupleList.get(0), parameterValueTupleList.get(9)));
+        result.get(1).setParameters(Arrays.asList(parameterValueTupleList.get(1), parameterValueTupleList.get(10)));
+        result.get(2).setParameters(Arrays.asList(parameterValueTupleList.get(2), parameterValueTupleList.get(11)));
         return result;
     }
 
@@ -137,9 +137,9 @@ public class IHotelRoomServiceTest {
     @Test
     public void getFullDetails() throws Exception {
 
-        List<ParameterValue> roomParams = new ArrayList<>();
-        roomParams.add(parameterValueList.get(0));
-        roomParams.add(parameterValueList.get(9));
+        List<ParameterValueTuple> roomParams = new ArrayList<>();
+        roomParams.add(parameterValueTupleList.get(0));
+        roomParams.add(parameterValueTupleList.get(9));
         HotelRoom expected = new HotelRoom(1, "name", true, Arrays.asList(1, 10), 101);
         expected.setParameters(roomParams);
 

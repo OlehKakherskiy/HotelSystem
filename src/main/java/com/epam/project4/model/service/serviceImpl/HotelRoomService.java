@@ -8,7 +8,7 @@ import main.java.com.epam.project4.model.dao.AbstractHotelRoomDao;
 import main.java.com.epam.project4.model.dao.AbstractReservationDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.service.IHotelRoomService;
 import main.java.com.epam.project4.model.service.IParameterValueService;
 
@@ -41,7 +41,7 @@ public class HotelRoomService implements IHotelRoomService {
     private AbstractReservationDao reservationDao;
 
     /**
-     * for executing operations with {@link ParameterValue}
+     * for executing operations with {@link ParameterValueTuple}
      */
     private IParameterValueService parameterValueService;
 
@@ -124,7 +124,7 @@ public class HotelRoomService implements IHotelRoomService {
     }
 
     /**
-     * appends room list of {@link ParameterValue} from their ids
+     * appends room list of {@link ParameterValueTuple} from their ids
      *
      * @param hotelRoom target room, for which parameters will be reformatted from ids to objects
      */
@@ -133,13 +133,13 @@ public class HotelRoomService implements IHotelRoomService {
     }
 
     /**
-     * Calculates basic room's price. Each {@link ParameterValue} has a {@link ParameterValue#price}.
+     * Calculates basic room's price. Each {@link ParameterValueTuple} has a {@link ParameterValueTuple#price}.
      * Method sums up all parameterValue prices, which are assosiated with target hotel room.
      *
      * @param room {@link HotelRoom}, for which price will be calculated
      * @return hotel room's price
      */
     private int calculateRoomBasicPrice(HotelRoom room) {
-        return room.getParameters().stream().map(ParameterValue::getPrice).reduce((accumulator, price) -> accumulator + price).orElse(0);
+        return room.getParameters().stream().map(ParameterValueTuple::getPrice).reduce((accumulator, price) -> accumulator + price).orElse(0);
     }
 }

@@ -2,30 +2,30 @@ package main.java.com.epam.project4.model.dao;
 
 import main.java.com.epam.project4.exception.DaoException;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.entity.roomParameter.Value;
 
 import java.util.List;
 
 /**
- * Interface extends basic CRUD operations which are performed whith {@link ParameterValue} entity.
- * Defines additional operation, which allows to get all {@link ParameterValue} objects of specific user.
+ * Interface extends basic CRUD operations which are performed whith {@link ParameterValueTuple} entity.
+ * Defines additional operation, which allows to get all {@link ParameterValueTuple} objects of specific user.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
- * @see ParameterValue
+ * @see ParameterValueTuple
  * @see Parameter
  * @see Value
  */
-public interface AbstractParameterValueDao extends GenericDao<ParameterValue> {
+public interface AbstractParameterValueDao extends GenericDao<ParameterValueTuple> {
 
     /**
-     * maps all data, connected to {@link ParameterValue}, to list of this entity.
+     * maps all data, connected to {@link ParameterValueTuple}, to list of this entity.
      * Inits all fields of this entity type
      *
-     * @return list of {@link ParameterValue}
+     * @return list of {@link ParameterValueTuple}
      * @throws DaoException if there was any type of exceptions during processing operations
      *                      with persistent storage or mapping data from storage format to
      *                      object representation
      */
-    List<ParameterValue> getAllFullInfo() throws DaoException;
+    List<ParameterValueTuple> getAllFullInfo() throws DaoException;
 }

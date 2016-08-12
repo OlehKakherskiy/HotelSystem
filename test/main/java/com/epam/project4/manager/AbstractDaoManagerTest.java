@@ -7,7 +7,7 @@ import main.java.com.epam.project4.model.dao.GenericDao;
 import main.java.com.epam.project4.model.entity.HotelRoom;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ public class AbstractDaoManagerTest {
         }
     }
 
-    private class DaoStubWithoutDataSource implements GenericDao<ParameterValue> {
+    private class DaoStubWithoutDataSource implements GenericDao<ParameterValueTuple> {
 
     }
 

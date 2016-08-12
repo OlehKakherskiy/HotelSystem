@@ -1,6 +1,6 @@
 package main.java.com.epam.project4.app;
 
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ParameterValueTag extends SimpleTagSupport {
 
-    private List<ParameterValue> list;
+    private List<ParameterValueTuple> list;
 
     private LocalizationContext parameterBundle;
 
@@ -27,11 +27,11 @@ public class ParameterValueTag extends SimpleTagSupport {
         try {
             JspWriter writer = getJspContext().getOut();
             writer.println("<ul class=\"list-group\">");
-            for (ParameterValue parameterValue : list) {
+            for (ParameterValueTuple parameterValueTuple : list) {
                 writer.println(MessageFormat.format("<li class=\"list-group-item\">{0}",
-                        parameterBundle.getResourceBundle().getString(parameterValue.getParameter().getParamName())));
+                        parameterBundle.getResourceBundle().getString(parameterValueTuple.getParameter().getParamName())));
                 writer.println(MessageFormat.format("<span class=\"pull-right\">{0}</span>",
-                        valueBundle.getResourceBundle().getString(parameterValue.getValue().getValue())));
+                        valueBundle.getResourceBundle().getString(parameterValueTuple.getValue().getValue())));
             }
             writer.println("</ul>");
         } catch (Exception e) {
@@ -41,8 +41,8 @@ public class ParameterValueTag extends SimpleTagSupport {
     }
 
 
-    public void setList(List<ParameterValue> parameterValueList) {
-        this.list = parameterValueList;
+    public void setList(List<ParameterValueTuple> parameterValueTupleList) {
+        this.list = parameterValueTupleList;
     }
 
     public void setParameterBundle(LocalizationContext parameterBundle) {

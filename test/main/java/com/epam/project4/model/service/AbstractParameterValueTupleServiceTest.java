@@ -5,7 +5,7 @@ import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.model.dao.AbstractParameterValueDao;
 import main.java.com.epam.project4.model.entity.roomParameter.Parameter;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 import main.java.com.epam.project4.model.entity.roomParameter.Value;
 import main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl;
 import org.easymock.EasyMock;
@@ -22,14 +22,14 @@ import java.util.Map;
 /**
  * @author Oleh Kakherskyi (olehkakherskiy@gmail.com)
  */
-public class AbstractParameterValueServiceTest {
+public class AbstractParameterValueTupleServiceTest {
 
     private static IParameterValueService parameterValueService;
 
 
-    private static Map<Parameter, List<ParameterValue>> pvMap = new HashMap<>();
+    private static Map<Parameter, List<ParameterValueTuple>> pvMap = new HashMap<>();
 
-    private static List<ParameterValue> parameterValueList;
+    private static List<ParameterValueTuple> parameterValueTupleList;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -48,20 +48,20 @@ public class AbstractParameterValueServiceTest {
         Parameter p1 = new Parameter(1, false, v3, "p1");
         Parameter p2 = new Parameter(2, false, v5, "p2");
 
-        ParameterValue pv1 = new ParameterValue(1, p1, v1, 1);
-        ParameterValue pv2 = new ParameterValue(2, p1, v2, 100);
-        ParameterValue pv3 = new ParameterValue(3, p1, v3, 100);
-        ParameterValue pv4 = new ParameterValue(4, p1, v4, 100);
-        ParameterValue pv5 = new ParameterValue(5, p1, v5, 100);
-        ParameterValue pv6 = new ParameterValue(6, p2, v6, 100);
-        ParameterValue pv7 = new ParameterValue(7, p2, v7, 100);
-        ParameterValue pv8 = new ParameterValue(8, p2, v8, 100);
-        ParameterValue pv9 = new ParameterValue(9, p2, v9, 100);
-        ParameterValue pv10 = new ParameterValue(10, p2, v10, 100);
-        ParameterValue pv11 = new ParameterValue(11, p2, v4, 100);
-        ParameterValue pv12 = new ParameterValue(12, p2, v2, 100);
-        ParameterValue pv13 = new ParameterValue(13, p2, v1, 100);
-        parameterValueList = Arrays.asList(pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13);
+        ParameterValueTuple pv1 = new ParameterValueTuple(1, p1, v1, 1);
+        ParameterValueTuple pv2 = new ParameterValueTuple(2, p1, v2, 100);
+        ParameterValueTuple pv3 = new ParameterValueTuple(3, p1, v3, 100);
+        ParameterValueTuple pv4 = new ParameterValueTuple(4, p1, v4, 100);
+        ParameterValueTuple pv5 = new ParameterValueTuple(5, p1, v5, 100);
+        ParameterValueTuple pv6 = new ParameterValueTuple(6, p2, v6, 100);
+        ParameterValueTuple pv7 = new ParameterValueTuple(7, p2, v7, 100);
+        ParameterValueTuple pv8 = new ParameterValueTuple(8, p2, v8, 100);
+        ParameterValueTuple pv9 = new ParameterValueTuple(9, p2, v9, 100);
+        ParameterValueTuple pv10 = new ParameterValueTuple(10, p2, v10, 100);
+        ParameterValueTuple pv11 = new ParameterValueTuple(11, p2, v4, 100);
+        ParameterValueTuple pv12 = new ParameterValueTuple(12, p2, v2, 100);
+        ParameterValueTuple pv13 = new ParameterValueTuple(13, p2, v1, 100);
+        parameterValueTupleList = Arrays.asList(pv1, pv2, pv3, pv4, pv5, pv6, pv7, pv8, pv9, pv10, pv11, pv12, pv13);
 
 
         pvMap.put(p1, Arrays.asList(pv1, pv2, pv3, pv4, pv5));
@@ -79,8 +79,8 @@ public class AbstractParameterValueServiceTest {
         AbstractParameterValueDao parameterValueDao = getParameterValueDao();
 
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
-        Assert.assertEquals(parameterValueList, parameterValueService.getParamValueList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)));
-        Assert.assertEquals(parameterValueList, GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST));
+        Assert.assertEquals(parameterValueTupleList, parameterValueService.getParamValueList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)));
+        Assert.assertEquals(parameterValueTupleList, GlobalContext.getValue(GlobalContextConstant.PARAMETER_VALUE_LIST));
 
         EasyMock.verify(parameterValueDao);
     }
@@ -90,8 +90,8 @@ public class AbstractParameterValueServiceTest {
         AbstractParameterValueDao parameterValueDao = getParameterValueDao();
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
 
-        ParameterValue pv1 = parameterValueList.get(3);
-        ParameterValue pv2 = parameterValueList.get(4);
+        ParameterValueTuple pv1 = parameterValueTupleList.get(3);
+        ParameterValueTuple pv2 = parameterValueTupleList.get(4);
 
         Assert.assertEquals(Arrays.asList(pv1, pv2), parameterValueService.getParamValueList(Arrays.asList(pv1.getId(), pv2.getId())));
         EasyMock.verify(parameterValueDao);
@@ -102,9 +102,9 @@ public class AbstractParameterValueServiceTest {
         AbstractParameterValueDao parameterValueDao = getParameterValueDao();
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
 
-        ParameterValue pv1 = parameterValueList.get(3);
-        ParameterValue pv2 = parameterValueList.get(4);
-        ParameterValue pvExtra = new ParameterValue(100, null, null, 100); //null - just stub
+        ParameterValueTuple pv1 = parameterValueTupleList.get(3);
+        ParameterValueTuple pv2 = parameterValueTupleList.get(4);
+        ParameterValueTuple pvExtra = new ParameterValueTuple(100, null, null, 100); //null - just stub
 
         Assert.assertEquals(Arrays.asList(pv1, pv2), parameterValueService.getParamValueList(Arrays.asList(pv1.getId(), pv2.getId(), pvExtra.getId())));
         EasyMock.verify(parameterValueDao);
@@ -112,14 +112,14 @@ public class AbstractParameterValueServiceTest {
 
     @Test
     public void getAllParamsFromCache() throws Exception {
-        GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValueList);
+        GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_LIST, parameterValueTupleList);
         AbstractParameterValueDao parameterValueDao = EasyMock.createMock(AbstractParameterValueDao.class);
 
         EasyMock.expect(parameterValueDao.getAllFullInfo()).andThrow(new AssertionError()).anyTimes();
         EasyMock.replay(parameterValueDao);
         parameterValueService = new ParameterValueServiceImpl(parameterValueDao);
         parameterValueService.getParamValueList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
-        Assert.assertEquals(parameterValueList, parameterValueList);
+        Assert.assertEquals(parameterValueTupleList, parameterValueTupleList);
     }
 
     @Test(expected = SystemException.class)
@@ -138,7 +138,7 @@ public class AbstractParameterValueServiceTest {
         GlobalContext.addToGlobalContext(GlobalContextConstant.PARAMETER_VALUE_MAP, pvMap);
         AbstractParameterValueDao dao = EasyMock.createMock(AbstractParameterValueDao.class);
         EasyMock.expect(dao.getAllFullInfo()).andThrow(new AssertionError()).anyTimes();
-//        EasyMock.expect(dao.getAllFullInfo()).andReturn(parameterValueList);
+//        EasyMock.expect(dao.getAllFullInfo()).andReturn(parameterValueTupleList);
         EasyMock.replay(dao);
 
         parameterValueService = new ParameterValueServiceImpl(dao);
@@ -150,7 +150,7 @@ public class AbstractParameterValueServiceTest {
     @Test
     public void getParameterValueMapLoad() throws Exception {
         AbstractParameterValueDao dao = EasyMock.createMock(AbstractParameterValueDao.class);
-        EasyMock.expect(dao.getAllFullInfo()).andReturn(parameterValueList);
+        EasyMock.expect(dao.getAllFullInfo()).andReturn(parameterValueTupleList);
         EasyMock.replay(dao);
 
         parameterValueService = new ParameterValueServiceImpl(dao);
@@ -172,7 +172,7 @@ public class AbstractParameterValueServiceTest {
     private AbstractParameterValueDao getParameterValueDao() {
         AbstractParameterValueDao parameterValueDao = EasyMock.createMock(AbstractParameterValueDao.class);
         try {
-            EasyMock.expect(parameterValueDao.getAllFullInfo()).andReturn(parameterValueList);
+            EasyMock.expect(parameterValueDao.getAllFullInfo()).andReturn(parameterValueTupleList);
         } catch (main.java.com.epam.project4.exception.DaoException e) {
             e.printStackTrace();
         }

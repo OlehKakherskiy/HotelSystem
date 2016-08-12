@@ -1,7 +1,7 @@
 package main.java.com.epam.project4.model.entity;
 
 import main.java.com.epam.project4.model.entity.enums.ReservationStatus;
-import main.java.com.epam.project4.model.entity.roomParameter.ParameterValue;
+import main.java.com.epam.project4.model.entity.roomParameter.ParameterValueTuple;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -67,7 +67,7 @@ public class Reservation implements Serializable {
     /**
      * request parameters, assosiated with current reservation
      */
-    private List<ParameterValue> requestParameters;
+    private List<ParameterValueTuple> requestParameters;
 
     /**
      * request parameters' ids, assosiated with current reservation
@@ -186,11 +186,11 @@ public class Reservation implements Serializable {
         this.comment = (comment == null) ? "" : comment;
     }
 
-    public List<ParameterValue> getRequestParameters() {
+    public List<ParameterValueTuple> getRequestParameters() {
         return requestParameters;
     }
 
-    public void setRequestParameters(List<ParameterValue> requestParameters) {
+    public void setRequestParameters(List<ParameterValueTuple> requestParameters) {
         this.requestParameters = requestParameters;
     }
 
