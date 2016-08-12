@@ -17,7 +17,7 @@
 
     <filter>
         <filter-name>encodingFilter</filter-name>
-        <filter-class>main.java.com.epam.project4.controller.filter.EncodingFilter</filter-class>
+        <filter-class>main.java.com.hotelSystem.controller.filter.EncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
@@ -25,7 +25,7 @@
     </filter>
     <filter>
         <filter-name>securityFilter</filter-name>
-        <filter-class>main.java.com.epam.project4.controller.filter.AccessFilter</filter-class>
+        <filter-class>main.java.com.hotelSystem.controller.filter.AccessFilter</filter-class>
     </filter>
 
 
@@ -40,7 +40,7 @@
 
     <servlet>
         <servlet-name>universalServlet</servlet-name>
-        <servlet-class>main.java.com.epam.project4.controller.FrontController</servlet-class>
+        <servlet-class>main.java.com.hotelSystem.controller.FrontController</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -55,7 +55,7 @@
     </error-page>
 
     <error-page>
-        <exception-type>main.java.com.epam.project4.exception.RequestException</exception-type>
+        <exception-type>main.java.com.hotelSystem.exception.RequestException</exception-type>
         <location>/WEB-INF/jspf/error/requestException.jsp</location>
     </error-page>
 
@@ -67,7 +67,7 @@
     <jsp-config>
         <jsp-property-group>
             <description>Web-pages (with header)</description>
-            <url-pattern>/WEB-INF/*</url-pattern>
+            <url-pattern>/WEB-INF/jspf/page/*</url-pattern>
             <include-prelude>/WEB-INF/jspf/template/header.jsp</include-prelude>
         </jsp-property-group>
         <jsp-property-group>

@@ -2,44 +2,44 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
-    <entry key="commandManager">main.java.com.epam.project4.manager.managerImpl.CommandManagerImpl</entry>
-    <entry key="serviceManager">main.java.com.epam.project4.manager.managerImpl.ServiceManagerImpl</entry>
-    <entry key="daoManager">main.java.com.epam.project4.manager.managerImpl.DataSourceDaoManagerImpl</entry>
+    <entry key="commandManager">main.java.com.hotelSystem.manager.managerImpl.CommandManagerImpl</entry>
+    <entry key="serviceManager">main.java.com.hotelSystem.manager.managerImpl.ServiceManagerImpl</entry>
+    <entry key="daoManager">main.java.com.hotelSystem.manager.managerImpl.DataSourceDaoManagerImpl</entry>
 
     <entry key="fillNewReservationCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.FillNewReservationCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.FillNewReservationCommand
     </entry>
     <entry key="getHotelRoomListCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.GetHotelRoomListCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.GetHotelRoomListCommand
     </entry>
     <entry key="getReservationListCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.GetReservationListCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.GetReservationListCommand
     </entry>
     <entry key="getReservationProfileCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.GetReservationProfileCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.GetReservationProfileCommand
     </entry>
-    <entry key="loginCommand">main.java.com.epam.project4.controller.command.commandImpl.LoginCommand</entry>
-    <entry key="logoutCommand">main.java.com.epam.project4.controller.command.commandImpl.LogoutCommand</entry>
+    <entry key="loginCommand">main.java.com.hotelSystem.controller.command.commandImpl.LoginCommand</entry>
+    <entry key="logoutCommand">main.java.com.hotelSystem.controller.command.commandImpl.LogoutCommand</entry>
     <entry key="offerHotelRoomCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.OfferHotelRoomCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.OfferHotelRoomCommand
     </entry>
     <entry key="refuseHotelRoomOfferCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.RefuseHotelRoomOfferCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.RefuseHotelRoomOfferCommand
     </entry>
     <entry key="submitHotelRoomOfferCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.SubmitHotelRoomOfferCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.SubmitHotelRoomOfferCommand
     </entry>
     <entry key="prepareReservationPageCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.PrepareReservationPageCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.PrepareReservationPageCommand
     </entry>
     <entry key="getHotelRoomProfileCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.GetHotelRoomProfileCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.GetHotelRoomProfileCommand
     </entry>
     <entry key="deleteReservationCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.DeleteReservationCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.DeleteReservationCommand
     </entry>
     <entry key="refuseReservationProcessingCommand">
-        main.java.com.epam.project4.controller.command.commandImpl.RefuseReservationProcessingCommand
+        main.java.com.hotelSystem.controller.command.commandImpl.RefuseReservationProcessingCommand
     </entry>
 
     <entry key="ADMIN_1">getHotelRoomListCommand</entry>
@@ -62,33 +62,33 @@
     <entry key="REGISTERED_USER_9">getHotelRoomProfileCommand</entry>
     <entry key="REGISTERED_USER_10">deleteReservationCommand</entry>
 
-    <entry key="main.java.com.epam.project4.model.service.IReservationService">
-        main.java.com.epam.project4.model.service.serviceImpl.ReservationService
+    <entry key="main.java.com.hotelSystem.service.IReservationService">
+        main.java.com.hotelSystem.service.serviceImpl.ReservationService
     </entry>
-    <entry key="main.java.com.epam.project4.model.service.IHotelRoomService">
-        main.java.com.epam.project4.model.service.serviceImpl.HotelRoomService
+    <entry key="main.java.com.hotelSystem.service.IHotelRoomService">
+        main.java.com.hotelSystem.service.serviceImpl.HotelRoomService
     </entry>
-    <entry key="main.java.com.epam.project4.model.service.IUserService">
-        main.java.com.epam.project4.model.service.serviceImpl.UserService
+    <entry key="main.java.com.hotelSystem.service.IUserService">
+        main.java.com.hotelSystem.service.serviceImpl.UserService
     </entry>
-    <entry key="main.java.com.epam.project4.model.service.IParameterValueService">
-        main.java.com.epam.project4.model.service.serviceImpl.ParameterValueServiceImpl
+    <entry key="main.java.com.hotelSystem.service.IParameterValueService">
+        main.java.com.hotelSystem.service.serviceImpl.ParameterValueServiceImpl
     </entry>
 
-    <entry key="main.java.com.epam.project4.model.dao.AbstractUserDao">
-        main.java.com.epam.project4.model.dao.daoImpl.AbstractUserDaoImpl
+    <entry key="main.java.com.hotelSystem.dao.AbstractUserDao">
+        main.java.com.hotelSystem.dao.daoImpl.AbstractUserDaoImpl
     </entry>
-    <entry key="main.java.com.epam.project4.model.dao.AbstractHotelRoomDao">
-        main.java.com.epam.project4.model.dao.daoImpl.AbstractHotelRoomDaoImpl
+    <entry key="main.java.com.hotelSystem.dao.AbstractHotelRoomDao">
+        main.java.com.hotelSystem.dao.daoImpl.AbstractHotelRoomDaoImpl
     </entry>
-    <entry key="main.java.com.epam.project4.model.dao.AbstractMobilePhoneDao">
-        main.java.com.epam.project4.model.dao.daoImpl.AbstractMobilePhoneDaoImpl
+    <entry key="main.java.com.hotelSystem.dao.AbstractMobilePhoneDao">
+        main.java.com.hotelSystem.dao.daoImpl.AbstractMobilePhoneDaoImpl
     </entry>
-    <entry key="main.java.com.epam.project4.model.dao.AbstractReservationDao">
-        main.java.com.epam.project4.model.dao.daoImpl.AbstractReservationDaoImpl
+    <entry key="main.java.com.hotelSystem.dao.AbstractReservationDao">
+        main.java.com.hotelSystem.dao.daoImpl.AbstractReservationDaoImpl
     </entry>
-    <entry key="main.java.com.epam.project4.model.dao.AbstractParameterValueDao">
-        main.java.com.epam.project4.model.dao.daoImpl.AbstractParameterValueDaoImpl
+    <entry key="main.java.com.hotelSystem.dao.AbstractParameterValueDao">
+        main.java.com.hotelSystem.dao.daoImpl.AbstractParameterValueDaoImpl
     </entry>
 
 </properties>

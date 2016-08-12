@@ -4,7 +4,7 @@
     <short-name>Custom tag for printing parameter-value list</short-name>
     <tag>
         <name>paramValueList</name>
-        <tag-class>main.java.com.epam.project4.app.ParameterValueTag</tag-class>
+        <tag-class>main.java.com.hotelSystem.app.ParameterValueTag</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
             <name>list</name>
