@@ -3,6 +3,7 @@ package main.java.com.epam.project4.app.util;
 import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.exception.LocalizedRuntimeException;
 import main.java.com.epam.project4.exception.SystemException;
+import main.java.com.epam.project4.model.service.IService;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.InvocationHandler;
@@ -60,7 +61,7 @@ public class DebugLevelLoggerProxy implements InvocationHandler {
      * @return {@inheritDoc}
      */
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         debugLogger.debug(MessageFormat.format("Called method {0} of class {1} with params {2}",
                 method.getName(), proxiedObject.getClass().getName(), Arrays.toString(args)));
         Object result = null;
@@ -73,16 +74,13 @@ public class DebugLevelLoggerProxy implements InvocationHandler {
             }
             return result;
         } catch (IllegalAccessException e) {
-//            debugLogger.error(MessageFormat.format("Error caused during invoking method {0} of class {1}",
-//                    method.getName(), proxiedObject.getClass().getName()), e);
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e);
         } catch (InvocationTargetException e1) {
-//            debugLogger.error(MessageFormat.format("Error caused during invoking method {0} of class {1}",
-//                    method.getName(), proxiedObject.getClass().getName()), e1);
-            if (e1.getTargetException().getClass().isAssignableFrom(LocalizedRuntimeException.class)) {
-                throw (LocalizedRuntimeException) e1.getTargetException();
-            } else {
+            if (IService.class.isAssignableFrom(proxiedObject.getClass())
+                    && LocalizedRuntimeException.class.isAssignableFrom(e1.getTargetException().getClass())) {
                 throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e1);
+            } else {
+                throw e1.getTargetException();
             }
         }
     }
