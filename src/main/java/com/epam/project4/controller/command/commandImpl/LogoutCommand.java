@@ -37,11 +37,11 @@ public class LogoutCommand extends AbstractCommand {
     public String process(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(GlobalContextConstant.USER.getName());
-        request.getSession(false).invalidate();
+        session.invalidate();
 
         logger.info(MessageFormat.format("User (id = {0}) is logged out", user.getIdUser()));
         try {
-            response.sendRedirect(String.format("%s%s", request.getContextPath(), WebPageConstant.LOGIN.getPath())); //TODO: тут можно попробовать через ретурн
+            response.sendRedirect(String.format("%s%s", request.getContextPath(), WebPageConstant.LOGIN.getPath()));
         } catch (IOException e) {
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION);
         }

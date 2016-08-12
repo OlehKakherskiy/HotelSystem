@@ -5,7 +5,6 @@ import main.java.com.epam.project4.app.constants.CommandConstant;
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
 import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
-import main.java.com.epam.project4.controller.command.ICommand;
 import main.java.com.epam.project4.exception.RequestException;
 import main.java.com.epam.project4.manager.AbstractCommandManager;
 import main.java.com.epam.project4.model.entity.User;
@@ -66,8 +65,7 @@ public class LoginCommand extends AbstractCommand {
 
         logger.info(MessageFormat.format("User id = {0} is signed in", user.getIdUser()));
 
-        AbstractCommandManager commandManager = (AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY);
-        ICommand getReservationListCommand = commandManager.getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND);
-        return getReservationListCommand.process(request, response);
+        return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
+                .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
     }
 }

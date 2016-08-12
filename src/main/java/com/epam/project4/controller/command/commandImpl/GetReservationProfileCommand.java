@@ -1,8 +1,10 @@
 package main.java.com.epam.project4.controller.command.commandImpl;
 
 import main.java.com.epam.project4.app.constants.GlobalContextConstant;
+import main.java.com.epam.project4.app.constants.MessageCode;
 import main.java.com.epam.project4.app.constants.WebPageConstant;
 import main.java.com.epam.project4.controller.command.AbstractCommand;
+import main.java.com.epam.project4.exception.SystemException;
 import main.java.com.epam.project4.model.entity.Reservation;
 import main.java.com.epam.project4.model.entity.User;
 import main.java.com.epam.project4.model.service.IReservationService;
@@ -29,11 +31,11 @@ public class GetReservationProfileCommand extends AbstractCommand {
             int id = Integer.parseInt(reservationId);
             IReservationService reservationService = serviceManager.getInstance(IReservationService.class);
             Reservation currentReservation = reservationService.getReservationDetailInfo(id);
-            addNewRequestInfoToLog(user, id);
             session.setAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName(), currentReservation);
+            addNewRequestInfoToLog(user, id);
         } else {
             if (session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName()) == null) {
-                throw new RuntimeException(); //TODO: поменять на RequestException
+                throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION);
             }
         }
         request.setAttribute("newReservation", false);

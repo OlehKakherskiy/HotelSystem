@@ -53,10 +53,6 @@ public class FrontController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            System.out.println("doGet");
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("text/html; charset=UTF-8");
-            resp.setCharacterEncoding("UTF-8");
             if (req.getParameter(GlobalContextConstant.COMMAND_NAME.getName()) == null) {
                 req.getRequestDispatcher(String.format("%s?command=%s", WebPageConstant.LOGIN.getPath(), CommandConstant.LOGIN_COMMAND.name())).include(req, resp);
             }
@@ -76,11 +72,6 @@ public class FrontController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-//            req.setCharacterEncoding("UTF-8");
-//            resp.setContentType("text/html; charset=UTF-8");
-//            resp.setCharacterEncoding("UTF-8");
-//            System.out.println("doPost");
-//            System.out.println("commandFactory = " + commandFactory);
             String newUrl = processCommand(req, resp);
             req.getRequestDispatcher(newUrl).forward(req, resp);
         } catch (SystemException e) {
