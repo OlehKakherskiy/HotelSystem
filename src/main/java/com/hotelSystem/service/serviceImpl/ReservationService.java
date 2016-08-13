@@ -170,7 +170,7 @@ public class ReservationService implements IReservationService {
     @Override
     public void refuseReservationProcessing(Reservation reservation) {
         try {
-            update(reservation, ReservationStatus.REFUSED_FROM_PROCESSING, null, false);
+            update(reservation, ReservationStatus.REFUSED_FROM_PROCESSING, null, true);
         } catch (DaoException e) {
             throw new SystemException(MessageCode.REFUSE_RESERVATION_PROCESSING_SYSTEM_EXCEPTION, e, reservation.getId());
         }

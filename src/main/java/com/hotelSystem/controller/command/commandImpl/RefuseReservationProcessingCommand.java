@@ -39,7 +39,6 @@ public class RefuseReservationProcessingCommand extends AbstractCommand {
         IReservationService reservationService = serviceManager.getInstance(IReservationService.class);
         HttpSession session = request.getSession(false);
         Reservation reservation = (Reservation) session.getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
-//        reservation.setHotelRoomId(-1);
         reservationService.refuseReservationProcessing(reservation);
 
         addInfoToLog(session, reservation);
