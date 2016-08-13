@@ -1,9 +1,10 @@
 package main.java.com.hotelSystem.app.util;
 
 import main.java.com.hotelSystem.app.constants.MessageCode;
+import main.java.com.hotelSystem.exception.DaoException;
 import main.java.com.hotelSystem.exception.LocalizedRuntimeException;
+import main.java.com.hotelSystem.exception.ManagerConfigException;
 import main.java.com.hotelSystem.exception.SystemException;
-import main.java.com.hotelSystem.service.IService;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.InvocationHandler;
@@ -24,6 +25,9 @@ import java.util.List;
 public class DebugLevelLoggerProxy implements InvocationHandler {
 
     private static final Logger debugLogger = Logger.getLogger(DebugLevelLoggerProxy.class);
+
+    private static final List<Class<? extends Exception>> systemDefinedExceptions
+            = Arrays.asList(LocalizedRuntimeException.class, DaoException.class, ManagerConfigException.class);
 
     /**
      * original object, that is wrapped by logger
@@ -67,20 +71,23 @@ public class DebugLevelLoggerProxy implements InvocationHandler {
         try {
             result = method.invoke(proxiedObject, args);
             if (result != null) {
-                debugLogger.debug(MessageFormat.format("Method {0} result {1}", method.getName(), result));
+                debugLogger.debug(MessageFormat.format("Method {0} of class {1} result: {2}", method.getName(),
+                        proxiedObject.getClass().getName(), result));
             } else {
-                debugLogger.debug(MessageFormat.format("Method {0} finished executing", method.getName()));
+                debugLogger.debug(MessageFormat.format("Method {0} of class {1} is finished executing",
+                        method.getName(), proxiedObject.getClass().getName()));
             }
             return result;
         } catch (IllegalAccessException e) {
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e);
         } catch (InvocationTargetException e1) {
-            if (IService.class.isAssignableFrom(proxiedObject.getClass())
-                    && LocalizedRuntimeException.class.isAssignableFrom(e1.getTargetException().getClass())) {
-                throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e1);
-            } else {
-                throw e1.getTargetException();
+            Class<? extends Throwable> targetExceptionClass = e1.getTargetException().getClass();
+            for (Class<? extends Exception> exceptionClass : systemDefinedExceptions) {
+                if (exceptionClass.isAssignableFrom(targetExceptionClass)) {
+                    throw e1.getTargetException();
+                }
             }
+            throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e1);
         }
     }
 
