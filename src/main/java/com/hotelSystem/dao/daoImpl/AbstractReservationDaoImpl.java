@@ -91,7 +91,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private DataSource dataSource;
+    private Connection connection;
 
     /**
      * {@inheritDoc}
@@ -108,8 +108,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     @Override
     public Reservation read(int id) throws DaoException {
         Reservation reservation = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FULL_INFO_REQUEST)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FULL_INFO_REQUEST)) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -144,7 +143,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      */
     @Override
     public void save(Reservation object) throws DaoException {
-        try (Connection connection = dataSource.getConnection()) {
+        try {
             connection.setAutoCommit(false);
 
             saveReservationObject(object, connection);
@@ -152,6 +151,9 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
             saveRequestParams(connection, object);
 
             connection.commit();
+
+            //because the connection is shared, other Daos can't know, that autocommit is disabled, so reset it to default HERE
+            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             throw new DaoException("Exception caused during the process of opening JDBC connection or " +
@@ -253,8 +255,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     @Override
     public boolean update(Reservation object) throws DaoException {
         String query = "Update Reservation SET id_Hotel_Room = ?, id_Reservation_Status = ? WHERE ID = " + object.getId();
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             if (object.getHotelRoomId() == -1) {
                 preparedStatement.setNull(1, java.sql.Types.INTEGER);
             } else {
@@ -264,7 +265,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("Exception was caused during the updating process of {0} " +
-                            "object\\'s hotel room and reservation status. HotelRoom id = {1}, reservation status id = {2}",
+                            "object''s hotel room and reservation status. HotelRoom id = {1}, reservation status id = {2}",
                     Reservation.class.getName(), object.getHotelRoomId(), object.getStatus().getId()));
         }
     }
@@ -286,12 +287,12 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      */
     @Override
     public List<Reservation> getAllRoomReservationsInPeriod(int roomID, ReservationStatus status, LocalDate startDate, LocalDate endDate) throws DaoException {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement;
-            if (status == ReservationStatus.ALL) {
-                preparedStatement = connection.prepareStatement(SHORT_INFO_ABOUT_RESERVATIONS_FILTERING_BY_DATE);
-            } else {
-                preparedStatement = connection.prepareStatement(SHORT_INFO_ABOUT_ROOM_FILTERING_BY_DATE_AND_STATUS);
+        String query = (status == ReservationStatus.ALL)
+                ? SHORT_INFO_ABOUT_RESERVATIONS_FILTERING_BY_DATE
+                : SHORT_INFO_ABOUT_ROOM_FILTERING_BY_DATE_AND_STATUS;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            if (status != ReservationStatus.ALL) {
                 preparedStatement.setInt(5, status.getId());
             }
             String startDateStr = startDate.toString();
@@ -323,8 +324,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     public List<Reservation> getAllReservationsShortInfo(ReservationStatus status) throws DaoException {
         String req = (status == ReservationStatus.ALL) ? GET_SHORT_INFO_BASE : GET_SHORT_INFO_ABOUT_ALL_FILTERING_BY_STATUS;
         ResultSet resultSet = null;
-        try (Connection c = dataSource.getConnection();
-             PreparedStatement preparedStatement = c.prepareStatement(req)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(req)) {
             if (status != ReservationStatus.ALL) {
                 preparedStatement.setInt(1, status.getId());
             }
@@ -348,8 +348,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     @Override
     public boolean delete(int id) throws DaoException {
         String query = "DELETE FROM Reservation WHERE ID = ?";
-        try (Connection c = dataSource.getConnection();
-             PreparedStatement preparedStatement = c.prepareStatement(query)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -376,13 +375,9 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      */
     @Override
     public List<Reservation> getAllUserReservationsShortInfo(int userId, ReservationStatus status) throws DaoException {
-        try (Connection connection = dataSource.getConnection()) {
-            return (status == ReservationStatus.ALL)
-                    ? getAllReservationsForUser(userId, connection)
-                    : getAllReservationsForUser(userId, status, connection);
-        } catch (SQLException e) {
-            throw new DaoException("Exception was occurred while there was an attempt to get a connection from datasource");
-        }
+        return (status == ReservationStatus.ALL)
+                ? getAllReservationsForUser(userId, connection)
+                : getAllReservationsForUser(userId, status, connection);
     }
 
     /**
@@ -527,11 +522,11 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public Connection getConnection() {
+        return connection;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

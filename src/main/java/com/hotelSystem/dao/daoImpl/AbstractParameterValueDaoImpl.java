@@ -48,13 +48,10 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
     private static final String getParameterValueMapDbRequestException = "Exception was occurred while was request of " +
             "selecting parameter-value map data from DB";
 
-    private static final String openConnectionException = "Exception was occurred while was attempt to get connection " +
-            "from datasource object in class {0}";
-
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private DataSource dataSource;
+    private Connection connection;
 
     /**
      * {@inheritDoc}
@@ -71,15 +68,10 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
      */
     @Override
     public List<ParameterValueTuple> getAllFullInfo() throws DaoException {
-        try (Connection connection = dataSource.getConnection()) {
+        List<Value> valuePool = selectValuePool(connection);
+        List<Parameter> parameters = selectParameterList(connection, valuePool);
 
-            List<Value> valuePool = selectValuePool(connection);
-            List<Parameter> parameters = selectParameterList(connection, valuePool);
-
-            return selectParameterValueMapAndBuild(connection, parameters, valuePool);
-        } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format(openConnectionException, this.getClass()));
-        }
+        return selectParameterValueMapAndBuild(connection, parameters, valuePool);
     }
 
     /**
@@ -247,11 +239,11 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
         return list;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
+    public Connection getConnection() {
+        return connection;
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

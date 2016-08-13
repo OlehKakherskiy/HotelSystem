@@ -67,11 +67,15 @@ abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E, T> {
     @Override
     @SuppressWarnings(value = "unchecked")
     public <V extends E> V getInstance(K key) {
+        logger.debug(MessageFormat.format("Method getInstance of class {0} is called with parameter {1}",
+                this.getClass().getName(), key));
         try {
             if (key == null) {
                 throw new ManagerConfigException(MessageFormat.format(NULL_KEY_EXCEPTION, this.getClass().getName()));
             }
-            return (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
+
+            V result = (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
+            return result;
         } catch (RuntimeException | ManagerConfigException e) {
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e);
         }
@@ -90,6 +94,7 @@ abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E, T> {
      */
     @SuppressWarnings("unchecked")
     private <V extends E> V createAndCache(K key) throws ManagerConfigException {
+        logger.debug(MessageFormat.format("Create instance and add to cache with key {0} in class {1}", key, this.getClass().getName()));
         V result = null;
         T intermediateTemplateElement = keyObjectTemplateMap.get(key);
         if (intermediateTemplateElement == null) {
@@ -97,10 +102,13 @@ abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E, T> {
         }
         result = getObjectHook(intermediateTemplateElement);
         if (logger.isDebugEnabled()) {
+            logger.debug(MessageFormat.format("Wrapping {0} instance in {1} proxy",
+                    result.getClass().getName(), DebugLevelLoggerProxy.class.getName()));
             result = (V) DebugLevelLoggerProxy.newInstance(result);
         }
         cache.put(key, result);
-
+        logger.debug(MessageFormat.format("Istance {0} for key {1} is created in class {2} and cached",
+                result.getClass().getName(), key, this.getClass().getName()));
         return result;
     }
 

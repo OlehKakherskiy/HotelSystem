@@ -57,7 +57,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private DataSource dataSource;
+    private Connection connection;
 
     /**
      * {@inheritDoc}
@@ -73,8 +73,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     @Override
     public User read(int id) throws DaoException {
         ResultSet resultSet = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getUserFromID)) {
+        try (PreparedStatement statement = connection.prepareStatement(getUserFromID)) {
 
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
@@ -99,8 +98,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     @Override
     public User tryLogin(String login, String password) throws DaoException {
         ResultSet resultSet = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getUserFromLoginAndPassword)) {
+        try (PreparedStatement statement = connection.prepareStatement(getUserFromLoginAndPassword)) {
 
             statement.setString(1, login);
             statement.setString(2, password);
@@ -139,11 +137,11 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
         }
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public Connection getConnection() {
+        return connection;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

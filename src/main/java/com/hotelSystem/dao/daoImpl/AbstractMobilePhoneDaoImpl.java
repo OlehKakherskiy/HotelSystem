@@ -41,7 +41,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private DataSource dataSource;
+    private Connection connection;
 
     /**
      * {@inheritDoc}
@@ -58,8 +58,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
     @Override
     public List<MobilePhone> getAll(int userId) throws DaoException {
         ResultSet resultSet = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getMobilePhoneList)) {
+        try (PreparedStatement statement = connection.prepareStatement(getMobilePhoneList)) {
             statement.setInt(1, userId);
             resultSet = statement.executeQuery();
             return buildList(resultSet);
@@ -109,11 +108,11 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
         return mobilePhone;
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public Connection getConnection() {
+        return connection;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

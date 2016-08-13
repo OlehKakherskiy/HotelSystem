@@ -1,6 +1,5 @@
 package main.java.com.hotelSystem.manager;
 
-import com.mysql.fabric.jdbc.FabricMySQLDataSource;
 import main.java.com.hotelSystem.app.constants.CommandConstant;
 import main.java.com.hotelSystem.controller.command.ICommand;
 import main.java.com.hotelSystem.controller.command.commandImpl.FillNewReservationCommand;
@@ -21,10 +20,14 @@ import main.java.com.hotelSystem.service.serviceImpl.ReservationService;
 import main.java.com.hotelSystem.service.serviceImpl.UserService;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
+import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +80,16 @@ public class GenericCachingManagerTest {
         daoManagerConfigs.put(AbstractReservationDao.class, AbstractReservationDaoImpl.class);
         daoManagerConfigs.put(AbstractUserDao.class, AbstractUserDaoImpl.class);
 
-        daoManager = new DataSourceDaoManagerImpl(daoManagerConfigs, new FabricMySQLDataSource());
+        DataSource dataSource = EasyMock.createMock(DataSource.class);
+        Connection connection = EasyMock.createMock(Connection.class);
+        try {
+            EasyMock.expect(dataSource.getConnection()).andReturn(connection).anyTimes();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        EasyMock.replay(dataSource);
+        daoManager = new DataSourceDaoManagerImpl(daoManagerConfigs, dataSource);
+
         cachingManagers.add(daoManager);//stub datasource
         initMapsForManagers.add(daoManagerConfigs);
     }
