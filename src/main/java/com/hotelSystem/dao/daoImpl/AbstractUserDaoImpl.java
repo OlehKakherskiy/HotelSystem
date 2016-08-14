@@ -15,23 +15,25 @@ import java.text.MessageFormat;
 
 /**
  * Class represents implementation of {@link AbstractUserDao} for relational databases, represented
- * via {@link DataSource}.
+ * via {@link DataSource}. It uses {@link ConnectionAllocator} for getting connection from datasource.
+ * Restriction: do NOT close allocated connection.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see DataSource
+ * @see ConnectionAllocator
  */
 public class AbstractUserDaoImpl implements AbstractUserDao {
 
-    private static final String userObjectBuildProcessException = "Exception was occurred while User object was being " +
+    private static final String USER_OBJECT_BUILD_PROCESS_EXCEPTION = "Exception was occurred while User object was being " +
             "built from ResultSet object";
 
-    private static final String requestExecException = "Exception was occurred while was attempt " +
+    private static final String REQUEST_EXEC_EXCEPTION = "Exception was occurred while was attempt " +
             "to execute request for reading User object";
 
     /**
      * db select for gettin user info using user id
      */
-    private static final String getUserFromID =
+    private static final String GET_USER_FROM_ID =
             "SELECT idUser, name, last_name, idUserType, " +
                     "FROM USER " +
                     "WHERE idUser=?";
@@ -39,7 +41,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     /**
      * db request for getting user info using signIn and password
      */
-    private static final String getUserFromLoginAndPassword =
+    private static final String GET_USER_FROM_LOGIN_AND_PASSWORD =
             "SELECT idUser, name, last_name, idUserType " +
                     "FROM USER " +
                     "WHERE login=? AND password=?";
@@ -56,14 +58,14 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     }
 
     /**
-     * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
+     * allocator, from which {@link Connection} will be gotten for processing operations with persistent storage
      */
     private ConnectionAllocator connectionAllocator;
 
     /**
      * {@inheritDoc}
      * <p>
-     * Inits statement {@link #getUserFromID}, sets param to it and exectutes it. While {@link ResultSet} is
+     * Inits statement {@link #GET_USER_FROM_ID}, sets param to it and exectutes it. While {@link ResultSet} is
      * get, calls {@link #buildUserObject(ResultSet)}
      * </p>
      *
@@ -75,20 +77,20 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     public User read(int id) throws DaoException {
         ResultSet resultSet = null;
         Connection connection = connectionAllocator.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement(getUserFromID)) {
+        try (PreparedStatement statement = connection.prepareStatement(GET_USER_FROM_ID)) {
 
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             return buildUserObject(resultSet);
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format("{0} using user id", requestExecException), e);
+            throw new DaoException(MessageFormat.format("{0} using user id", REQUEST_EXEC_EXCEPTION), e);
         }
     }
 
     /**
      * {@inheritDoc}
      * <p>
-     * Inits statement {@link #getUserFromLoginAndPassword}, sets params to it and exectutes.
+     * Inits statement {@link #GET_USER_FROM_LOGIN_AND_PASSWORD}, sets params to it and exectutes.
      * After ResultSet is get, calls {@link #buildUserObject(ResultSet)}
      * </p>
      *
@@ -101,14 +103,14 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     public User tryLogin(String login, String password) throws DaoException {
         ResultSet resultSet = null;
         Connection connection = connectionAllocator.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement(getUserFromLoginAndPassword)) {
+        try (PreparedStatement statement = connection.prepareStatement(GET_USER_FROM_LOGIN_AND_PASSWORD)) {
 
             statement.setString(1, login);
             statement.setString(2, password);
             resultSet = statement.executeQuery();
             return buildUserObject(resultSet);
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format("{0} using signIn and password", requestExecException), e);
+            throw new DaoException(MessageFormat.format("{0} using signIn and password", REQUEST_EXEC_EXCEPTION), e);
         }
     }
 
@@ -136,7 +138,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
             }
             return user != null ? user : noUserStub;
         } catch (SQLException e) {
-            throw new DaoException(userObjectBuildProcessException, e);
+            throw new DaoException(USER_OBJECT_BUILD_PROCESS_EXCEPTION, e);
         }
     }
 

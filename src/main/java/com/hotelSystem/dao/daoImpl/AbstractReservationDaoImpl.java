@@ -17,10 +17,12 @@ import java.util.StringJoiner;
 
 /**
  * Class represents implementation of {@link AbstractReservationDao} for relational databases, represented
- * via {@link DataSource}.
+ * via {@link DataSource}. It uses {@link ConnectionAllocator} for getting connection from datasource.
+ * Restriction: do NOT close allocated connection.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see DataSource
+ * @see ConnectionAllocator
  */
 public class AbstractReservationDaoImpl implements AbstractReservationDao {
 
@@ -78,10 +80,21 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     /**
      * db request for inserting new reservation
      */
-    private static final String insertNewReservation = "INSERT INTO Reservation" +
+    private static final String INSERT_NEW_RESERVATION = "INSERT INTO Reservation" +
             "(date_from, date_to, id_User, date_request, comment, id_Hotel_Room, id_reservation_status)" +
             "VALUES" +
             "(?,?,?,?,?,?,?)";
+
+    /**
+     * db request for updating target reservation's hotelRoom id and status
+     */
+    private static final String UPDATE_RESERVATION_HOTEL_ROOM_AND_STATUS = "UPDATE Reservation SET id_Hotel_Room = ?, " +
+            "id_Reservation_Status = ? WHERE ID = ?";
+
+    /**
+     * db request for removing target reservation
+     */
+    private static final String DELETE_RESERVATION = "DELETE FROM Reservation WHERE ID = ?";
 
     /**
      * db request for inserting all reservation's parameters
@@ -90,7 +103,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
             "(id_Parameter_Values , id_reservation_request) VALUES ";
 
     /**
-     * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
+     * allocator, from which {@link Connection} will be gotten for processing operations with persistent storage
      */
     private ConnectionAllocator connectionAllocator;
 
@@ -155,7 +168,8 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
 
             connection.commit();
 
-            //because the connection is shared, other Daos can't know, that autocommit is disabled, so reset it to default HERE
+            //because the connection is shared, other Daos can't know,
+            // that autocommit is disabled, so reset it to default HERE
             connection.setAutoCommit(true);
 
         } catch (SQLException e) {
@@ -169,19 +183,19 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      * and executing jdbc statement. After execution initializes {@link Reservation#id}.
      *
      * @param reservation entity, that will be saved to db
-     * @param connection  connection, through which select {@link #insertNewReservation} will be executed
+     * @param connection  connection, through which select {@link #INSERT_NEW_RESERVATION} will be executed
      * @throws DaoException if exception was thrown during executing insert statement or if entity wasn't
      *                      inserted (there wasn't generated key)
      * @throws SQLException if exception was thrown during the rollback operation
      */
     private void saveReservationObject(Reservation reservation, Connection connection) throws DaoException, SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertNewReservation, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_NEW_RESERVATION, Statement.RETURN_GENERATED_KEYS)) {
             appendReservationParamsToStatement(preparedStatement, reservation);
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             int newId = (generatedKeys.next()) ? generatedKeys.getInt(1) : -1;
             if (newId == -1) {
-                throw new DaoException(MessageFormat.format("Exception caused because the {0} object wasn\\'t " +
+                throw new DaoException(MessageFormat.format("Exception caused because the {0} object wasn''t " +
                         "inserted to BD as a result of executing Sql query", Reservation.class.getName()));
             }
             reservation.setId(newId);
@@ -219,7 +233,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     }
 
 
-    private void saveRequestParams(Connection connection, Reservation reservation) throws SQLException, DaoException {
+    private void saveRequestParams(Connection connection, Reservation reservation) throws SQLException, DaoException { //TODO:через batch!!!!
         String template = "(?," + reservation.getId() + ")";
         StringJoiner joiner = new StringJoiner(",", insertRequestParameters, "");
         for (int i = 0; i < reservation.getRequestParameters().size(); i++) {
@@ -258,14 +272,14 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     @Override
     public boolean update(Reservation object) throws DaoException {
         Connection connection = connectionAllocator.getConnection();
-        String query = "Update Reservation SET id_Hotel_Room = ?, id_Reservation_Status = ? WHERE ID = " + object.getId();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_RESERVATION_HOTEL_ROOM_AND_STATUS)) {
+            preparedStatement.setInt(1, object.getId());
             if (object.getHotelRoomId() == -1) {
-                preparedStatement.setNull(1, java.sql.Types.INTEGER);
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
             } else {
-                preparedStatement.setInt(1, object.getHotelRoomId());
+                preparedStatement.setInt(2, object.getHotelRoomId());
             }
-            preparedStatement.setInt(2, object.getStatus().getId());
+            preparedStatement.setInt(3, object.getStatus().getId());
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("Exception was caused during the updating process of {0} " +
@@ -353,9 +367,8 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      */
     @Override
     public boolean delete(int id) throws DaoException {
-        String query = "DELETE FROM Reservation WHERE ID = ?";
         Connection connection = connectionAllocator.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_RESERVATION)) {
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {

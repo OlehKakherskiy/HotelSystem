@@ -16,31 +16,33 @@ import java.util.List;
 
 /**
  * Class represents implementation of {@link AbstractMobilePhoneDao} for relational databases, represented
- * via {@link DataSource}.
+ * via {@link DataSource}. It uses {@link ConnectionAllocator} for getting connection from datasource.
+ * Restriction: do NOT close allocated connection.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see DataSource
+ * @see ConnectionAllocator
  */
 public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
 
-    private static final String sqlRequestException = "Exception was occurred while was executing sql request " +
+    private static final String SQL_REQUEST_EXCEPTION = "Exception was occurred while was executing sql request " +
             "for getting mobilePhoneList";
 
-    private static final String buildMobilePhoneException = "Exception was occurred while was building operation of " +
+    private static final String BUILD_MOBILE_PHONE_EXCEPTION = "Exception was occurred while was building operation of " +
             "MobilePhone entity from ResultSet";
 
-    private static final String getNextDataForMobilePhoneBuildingException = "Exception was occurred because next() " +
+    private static final String GET_NEXT_DATA_FOR_MOBILE_PHONE_BUILDING_EXCEPTION = "Exception was occurred because next() " +
             "method was called from resultSet object while MobilePhone list was being built";
 
     /**
      * db select for gettin all mobile phones of specific user
      */
-    private static final String getMobilePhoneList = "SELECT idMobilePhone, phone_number " +
+    private static final String GET_MOBILE_PHONE_LIST = "SELECT idMobilePhone, phone_number " +
             "FROM MOBILE_PHONE " +
             "WHERE id_User=?";
 
     /**
-     * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
+     * allocator, from which {@link Connection} will be gotten for processing operations with persistent storage
      */
     private ConnectionAllocator connectionAllocator;
 
@@ -48,7 +50,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
      * {@inheritDoc}
      * <p>
      * <p>
-     * Inits statement {@link #getMobilePhoneList}, sets param to it and exectutes it. While {@link ResultSet} is
+     * Inits statement {@link #GET_MOBILE_PHONE_LIST}, sets param to it and exectutes it. While {@link ResultSet} is
      * get, calls {@link #buildList(ResultSet)}
      * </p>
      *
@@ -60,12 +62,12 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
     public List<MobilePhone> getAll(int userId) throws DaoException {
         ResultSet resultSet = null;
         Connection connection = connectionAllocator.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement(getMobilePhoneList)) {
+        try (PreparedStatement statement = connection.prepareStatement(GET_MOBILE_PHONE_LIST)) {
             statement.setInt(1, userId);
             resultSet = statement.executeQuery();
             return buildList(resultSet);
         } catch (SQLException e) {
-            throw new DaoException(sqlRequestException, e);
+            throw new DaoException(SQL_REQUEST_EXCEPTION, e);
         }
     }
 
@@ -85,7 +87,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
             }
             return resultList;
         } catch (SQLException e) {
-            throw new DaoException(getNextDataForMobilePhoneBuildingException, e);
+            throw new DaoException(GET_NEXT_DATA_FOR_MOBILE_PHONE_BUILDING_EXCEPTION, e);
         }
 
     }
@@ -104,7 +106,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
             mobilePhone.setIdMobilePhone(resultSet.getInt(1));
             mobilePhone.setMobilePhone(resultSet.getString(2));
         } catch (SQLException e) {
-            throw new DaoException(buildMobilePhoneException, e);
+            throw new DaoException(BUILD_MOBILE_PHONE_EXCEPTION, e);
         }
 
         return mobilePhone;

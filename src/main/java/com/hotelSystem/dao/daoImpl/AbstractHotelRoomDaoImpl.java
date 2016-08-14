@@ -16,10 +16,12 @@ import java.util.List;
 
 /**
  * Class represents implementation of {@link AbstractHotelRoomDao} for relational databases, represented
- * via {@link DataSource}.
+ * via {@link DataSource}. It uses {@link ConnectionAllocator} for getting connection from datasource.
+ * Restriction: do NOT close allocated connection.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see DataSource
+ * @see ConnectionAllocator
  */
 public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
 
@@ -53,10 +55,18 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
     private static final String BUILD_HOTEL_ROOM_FROM_RESULT_SET_EXCEPTION = "Exception caused while was attempt to map ResultSet object to %s";
 
     /**
-     * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
+     * allocator, from wich {@link Connection} will be get for processing operations with persistent storage
      */
     private ConnectionAllocator connectionAllocator;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param onlyActive defines, rooms with active status will be returned or with
+     *                   all statuses
+     * @return {@inheritDoc}
+     * @throws DaoException {@inheritDoc}
+     */
     @Override
     public List<HotelRoom> getAllFullDetails(boolean onlyActive) throws DaoException {
         List<HotelRoom> hotelRooms = new ArrayList<>();

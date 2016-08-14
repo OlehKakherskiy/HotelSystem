@@ -222,7 +222,6 @@ public class ApplicationConfigurer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("called contextInitialized");
         logger.info("Application configuring is started");
         configureApplication();
         logger.info("Application configuring is finished");

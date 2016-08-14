@@ -11,31 +11,31 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Map;
 
 /**
  * Manager implementation for DAOs, that are using {@link DataSource} for
- * servicing invoked methods. DataSource object is injected using
+ * servicing invoked methods. {@link ConnectionAllocator} object is injected using
  * {@link PropertyDescriptor} object and reflection API.
  * <p>
- * The restriction on DAO object is that it must have field with datasource
+ * The restriction on DAO object is that it must have field with {@link ConnectionAllocator}
  * type and get/set pair methods, so that property
- * descriptor can lookup Bean property and inject datasource object. Also DAO
+ * descriptor can lookup Bean property and inject allocator object. Also DAO
  * object must have constructor without parameters
  * </p>
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see DataSource
  * @see PropertyDescriptor
+ * @see ConnectionAllocator
  */
 public class DataSourceDaoManagerImpl extends AbstractDaoManager {
 
-    private static final String NO_CONNECTION_FIELD = "There\\'s no DataSource type field declared in Dao class {0}";
+    private static final String NO_CONNECTION_FIELD = "There''s no DataSource type field declared in Dao class {0}";
 
-    private static final String NO_SET_CONNECTION_METHOD = "There\\'s no set method for DataSource type field in class {0}";
+    private static final String NO_SET_CONNECTION_METHOD = "There''s no set method for DataSource type field in class {0}";
 
     private static final String CREATE_OBJECT_EXCEPTION_MESSAGE = "Exception caused while " +
             "creating object of type {0} or injecting dataSource to instance";
@@ -50,7 +50,7 @@ public class DataSourceDaoManagerImpl extends AbstractDaoManager {
 
     /**
      * @param keyObjectTemplateMap key/extra_info for instantiation target object map
-     * @param allocator
+     * @param allocator            allocator, using which DAOs will get connection
      */
     public DataSourceDaoManagerImpl(Map<Class<? extends GenericDao>, Class<? extends GenericDao>> keyObjectTemplateMap,
                                     ConnectionAllocator allocator) {
@@ -60,7 +60,7 @@ public class DataSourceDaoManagerImpl extends AbstractDaoManager {
 
     /**
      * {@inheritDoc}
-     * Also injects
+     * Also injects {@link #allocator allocator} to all Daos via {@link PropertyDescriptor PropertyDescriptor}.
      *
      * @param objectClass {@inheritDoc}
      * @param <V>         {@inheritDoc}
@@ -95,11 +95,11 @@ public class DataSourceDaoManagerImpl extends AbstractDaoManager {
     }
 
     /**
-     * Scans Class object for {@link Connection Connection} type or it subtypes field
+     * Scans Class object for {@link ConnectionAllocator ConnectionAllocator} type or it subtype's field.
      *
      * @param objectClass object, that will be scanned for datasource's field existence.
-     * @return {@link Field} which type is {@link Class#isAssignableFrom(Class)} Connection. If there's
-     * no target fields, returns null.
+     * @return {@link Field} which type is {@link Class#isAssignableFrom(Class) assignable from} ConnectionAllocator.
+     * If there's no target fields, returns null.
      */
     private Field getConnectionAllocatorField(Class objectClass) {
         return Arrays.stream(objectClass.getDeclaredFields())

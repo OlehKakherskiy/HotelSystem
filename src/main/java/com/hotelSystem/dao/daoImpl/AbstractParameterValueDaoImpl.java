@@ -18,39 +18,41 @@ import java.util.List;
 
 /**
  * Class represents implementation of {@link AbstractParameterValueDao} for relational databases, represented
- * via {@link DataSource}.
+ * via {@link DataSource}.It uses {@link ConnectionAllocator} for getting connection from datasource.
+ * Restriction: do NOT close allocated connection.
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see DataSource
+ * @see ConnectionAllocator
  */
 public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao {
 
     /**
      * db request for selecting all {@link Value} data
      */
-    private static final String allValues = "SELECT * FROM Value_Pool";
+    private static final String ALL_VALUES = "SELECT * FROM Value_Pool";
 
     /**
      * db request for selecting all {@link Parameter} data
      */
-    private static final String allParams = "SELECT * FROM Room_Parameter";
+    private static final String ALL_PARAMS = "SELECT * FROM Room_Parameter";
 
     /**
      * db request for selecting all {@link ParameterValueTuple} data
      */
-    private static final String allParamValues = "SELECT * FROM Parameter_Values";
+    private static final String ALL_PARAM_VALUES = "SELECT * FROM Parameter_Values";
 
-    private static final String buildEntityListException = "Exception caused while was request of selecting data for " +
+    private static final String BUILD_ENTITY_LIST_EXCEPTION = "Exception caused while was request of selecting data for " +
             "building list of {0}";
 
-    private static final String buildingNextEntityException = "Exception was occurred because of building next {0} " +
+    private static final String BUILDING_NEXT_ENTITY_EXCEPTION = "Exception was occurred because of building next {0} " +
             "object from ResultSet";
 
-    private static final String getParameterValueMapDbRequestException = "Exception was occurred while was request of " +
+    private static final String GET_PARAMETER_VALUE_MAP_DB_REQUEST_EXCEPTION = "Exception was occurred while was request of " +
             "selecting parameter-value map data from DB";
 
     /**
-     * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
+     * datasource, from which {@link Connection} will be gotten for processing operations with persistent storage
      */
     private ConnectionAllocator connectionAllocator;
 
@@ -80,7 +82,7 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
      * Map data, representing {@link ParameterValueTuple}, from relational representation to list of {@link ParameterValueTuple}.
      * If there are no values in DB, returns empty list
      *
-     * @param connection connection, through which select {@link #allParams} will be executed
+     * @param connection connection, through which select {@link #ALL_PARAMS} will be executed
      * @param parameters list of {@link Parameter}, that is used to init {@link ParameterValueTuple#parameter}
      * @param valuePool  list of {@link Value}, that is used to init {@link ParameterValueTuple#value}
      * @return list of {@link ParameterValueTuple} or empty list
@@ -89,11 +91,11 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
     private List<ParameterValueTuple> selectParameterValueMapAndBuild(Connection connection, List<Parameter> parameters,
                                                                       List<Value> valuePool) throws DaoException {
         List<ParameterValueTuple> parameterValueTuples = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(allParamValues);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ALL_PARAM_VALUES);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             parameterValueTuples = buildResultList(resultSet, parameters, valuePool);
         } catch (SQLException e) {
-            throw new DaoException(getParameterValueMapDbRequestException, e);
+            throw new DaoException(GET_PARAMETER_VALUE_MAP_DB_REQUEST_EXCEPTION, e);
         }
         return parameterValueTuples;
     }
@@ -119,7 +121,7 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
                 list.add(parameterValueTuple);
             }
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format(buildEntityListException, ParameterValueTuple.class.getName()));
+            throw new DaoException(MessageFormat.format(BUILD_ENTITY_LIST_EXCEPTION, ParameterValueTuple.class.getName()));
         }
         return list;
     }
@@ -139,17 +141,17 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
      * Map data, representing {@link Parameter}, from relational representation to list of {@link Parameter}.
      * If there are no values in DB, returns empty list
      *
-     * @param connection connection, through which select {@link #allParams} will be executed
+     * @param connection connection, through which select {@link #ALL_PARAMS} will be executed
      * @param values     list of {@link Value}, that is used to init {@link Parameter#defaultValue}
      * @return list of {@link Value} or empty list
      * @throws DaoException if there was an exception during the object-relational mapping process
      */
     private List<Parameter> selectParameterList(Connection connection, List<Value> values) throws DaoException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(allParams);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ALL_PARAMS);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             return buildParameterList(resultSet, values);
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format(buildEntityListException, Parameter.class.getName()), e);
+            throw new DaoException(MessageFormat.format(BUILD_ENTITY_LIST_EXCEPTION, Parameter.class.getName()), e);
         }
     }
 
@@ -178,7 +180,7 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
                 list.add(parameter);
             }
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format(buildingNextEntityException, Parameter.class.getName()));
+            throw new DaoException(MessageFormat.format(BUILDING_NEXT_ENTITY_EXCEPTION, Parameter.class.getName()));
         }
         return list;
     }
@@ -198,20 +200,20 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
      * Map data, representing {@link Value}, from relational representation to list of {@link Value}.
      * If there are no values in DB, returns empty list
      *
-     * @param connection connection, through which select {@link #allValues} will be executed
+     * @param connection connection, through which select {@link #ALL_VALUES} will be executed
      * @return list of {@link Value} or empty list
      * @throws DaoException if there was an exception during the object-relational mapping process
      */
     private List<Value> selectValuePool(Connection connection) throws DaoException {
         List<Value> result = null;
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(allValues);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ALL_VALUES);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             result = buildValueList(resultSet);
 
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format(buildEntityListException, Value.class.getName()), e);
+            throw new DaoException(MessageFormat.format(BUILD_ENTITY_LIST_EXCEPTION, Value.class.getName()), e);
         }
         return result;
     }
@@ -236,7 +238,7 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
             }
             resultSet.close();
         } catch (SQLException e) {
-            throw new DaoException(MessageFormat.format(buildingNextEntityException, Value.class.getName()), e);
+            throw new DaoException(MessageFormat.format(BUILDING_NEXT_ENTITY_EXCEPTION, Value.class.getName()), e);
         }
         return list;
     }
