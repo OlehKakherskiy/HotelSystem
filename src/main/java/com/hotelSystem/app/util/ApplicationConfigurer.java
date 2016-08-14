@@ -64,9 +64,10 @@ public class ApplicationConfigurer implements ServletContextListener {
         try {
             logger.info("Loading properties from file");
             mainProperties.loadFromXML(new BufferedInputStream(this.getClass().getResourceAsStream(propertiesPath)));
+
             logger.debug("Loading is finished: " + Arrays.toString(mainProperties.stringPropertyNames().toArray()));
             logger.info("Configuring command manager...");
-            Class<? extends AbstractCommandManager> commandManager = (Class<? extends AbstractCommandManager>) Class.forName(mainProperties.getProperty("commandManager"));
+            Class<? extends AbstractCommandManager> commandManager = (Class<? extends AbstractCommandManager>) Class.forName(mainProperties.getProperty("commandManager").trim());
             configureCommandManager(getPropsUsingKeyEnding(mainProperties, "Command"), commandManager);
             logger.info("Configuring data source...");
             configureDataSource();
@@ -76,12 +77,12 @@ public class ApplicationConfigurer implements ServletContextListener {
             GlobalContext.addToGlobalContext(GlobalContextConstant.CONNECTION_ALLOCATOR, allocator);
 
             logger.info("Configuring dao manager...");
-            Class<? extends AbstractDaoManager> daoManager = (Class<? extends AbstractDaoManager>) Class.forName(mainProperties.getProperty("daoManager"));
+            Class<? extends AbstractDaoManager> daoManager = (Class<? extends AbstractDaoManager>) Class.forName(mainProperties.getProperty("daoManager").trim());
             configureManager(getPropsUsingKeyEnding(mainProperties, "Dao"), daoManager, GlobalContextConstant.DAO_MANAGER, allocator);
             logger.info("Dao manager configuring is finished...");
 
             logger.info("Configuring service manager...");
-            Class<? extends AbstractServiceManager> serviceManager = (Class<? extends AbstractServiceManager>) Class.forName(mainProperties.getProperty("serviceManager"));
+            Class<? extends AbstractServiceManager> serviceManager = (Class<? extends AbstractServiceManager>) Class.forName(mainProperties.getProperty("serviceManager").trim());
             configureManager(getPropsUsingKeyEnding(mainProperties, "Service"), serviceManager, GlobalContextConstant.SERVICE_MANAGER, (AbstractDaoManager) GlobalContext.getValue(GlobalContextConstant.DAO_MANAGER));
             logger.info("Service manager configuring is finished");
 
