@@ -233,7 +233,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     }
 
 
-    private void saveRequestParams(Connection connection, Reservation reservation) throws SQLException, DaoException { //TODO:через batch!!!!
+    private void saveRequestParams(Connection connection, Reservation reservation) throws SQLException, DaoException {
         String template = "(?," + reservation.getId() + ")";
         StringJoiner joiner = new StringJoiner(",", insertRequestParameters, "");
         for (int i = 0; i < reservation.getRequestParameters().size(); i++) {
@@ -273,13 +273,13 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     public boolean update(Reservation object) throws DaoException {
         Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_RESERVATION_HOTEL_ROOM_AND_STATUS)) {
-            preparedStatement.setInt(1, object.getId());
+            preparedStatement.setInt(3, object.getId());
             if (object.getHotelRoomId() == -1) {
-                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                preparedStatement.setNull(1, java.sql.Types.INTEGER);
             } else {
-                preparedStatement.setInt(2, object.getHotelRoomId());
+                preparedStatement.setInt(1, object.getHotelRoomId());
             }
-            preparedStatement.setInt(3, object.getStatus().getId());
+            preparedStatement.setInt(2, object.getStatus().getId());
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("Exception was caused during the updating process of {0} " +
