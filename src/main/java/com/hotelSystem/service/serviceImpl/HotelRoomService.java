@@ -91,6 +91,9 @@ public class HotelRoomService implements IHotelRoomService {
      */
     @Override
     public void appendReservations(HotelRoom hotelRoom, Month month, Year year, ReservationStatus status) {
+        LocalDate now = LocalDate.now();
+        month = (month == null) ? now.getMonth() : month;
+        year = (year == null) ? Year.of(now.getYear()) : year;
         LocalDate startDate = LocalDate.of(year.getValue(), month.getValue(), 1);
         LocalDate endMonthDate = startDate.with(lastDayOfMonth());
         try {

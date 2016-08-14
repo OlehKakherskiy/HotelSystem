@@ -4,6 +4,7 @@ import main.java.com.hotelSystem.app.constants.GlobalContextConstant;
 import main.java.com.hotelSystem.app.constants.WebPageConstant;
 import main.java.com.hotelSystem.controller.command.AbstractCommand;
 import main.java.com.hotelSystem.model.HotelRoom;
+import main.java.com.hotelSystem.model.Reservation;
 import main.java.com.hotelSystem.model.User;
 import main.java.com.hotelSystem.model.enums.ReservationStatus;
 import main.java.com.hotelSystem.model.enums.UserType;
@@ -13,7 +14,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
@@ -84,13 +84,12 @@ public class GetHotelRoomProfileCommand extends AbstractCommand {
      * @param hotelRoomService service object, that will provide operation execution
      */
     private void appendReservationInfo(HttpServletRequest request, HotelRoom hotelRoom, IHotelRoomService hotelRoomService) {
-        LocalDate now = LocalDate.now();
+        Reservation reservation = (Reservation) request.getSession(false).getAttribute(GlobalContextConstant.CURRENT_RESERVATION.getName());
         String monthStr = request.getParameter(GlobalContextConstant.RESERVATION_MONTH.getName());
-        Month month = (monthStr == null || monthStr.isEmpty()) ? now.getMonth() : Month.of(Integer.valueOf(monthStr));
+        Month month = (monthStr == null || monthStr.isEmpty()) ? reservation.getDateFrom().getMonth() : Month.of(Integer.valueOf(monthStr));
 
         String yearStr = request.getParameter(GlobalContextConstant.RESERVATION_YEAR.getName());
-        Year year = (yearStr == null || yearStr.isEmpty()) ? Year.of(now.getYear()) : Year.of(Integer.valueOf(yearStr));
-
+        Year year = (yearStr == null || yearStr.isEmpty()) ? Year.of(reservation.getDateTo().getYear()) : Year.of(Integer.valueOf(yearStr));
 
         hotelRoomService.appendReservations(hotelRoom, month, year, ReservationStatus.SUBMITTED);
         request.setAttribute(GlobalContextConstant.RESERVATION_MONTH.getName(), month);
