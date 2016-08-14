@@ -2,8 +2,8 @@ package main.java.com.hotelSystem.manager;
 
 import main.java.com.hotelSystem.dao.AbstractMobilePhoneDao;
 import main.java.com.hotelSystem.exception.SystemException;
-import main.java.com.hotelSystem.manager.managerImpl.DataSourceDaoManagerImpl;
 import main.java.com.hotelSystem.manager.managerImpl.ServiceManagerImpl;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.DataSourceDaoManagerImpl;
 import main.java.com.hotelSystem.service.IHotelRoomService;
 import main.java.com.hotelSystem.service.IService;
 import org.junit.Assert;

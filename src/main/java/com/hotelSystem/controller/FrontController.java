@@ -4,7 +4,6 @@ import main.java.com.hotelSystem.app.GlobalContext;
 import main.java.com.hotelSystem.app.constants.CommandConstant;
 import main.java.com.hotelSystem.app.constants.GlobalContextConstant;
 import main.java.com.hotelSystem.app.constants.WebPageConstant;
-import main.java.com.hotelSystem.app.util.ApplicationConfigurer;
 import main.java.com.hotelSystem.controller.command.ICommand;
 import main.java.com.hotelSystem.exception.LocalizedRuntimeException;
 import main.java.com.hotelSystem.exception.RequestException;
@@ -35,12 +34,6 @@ public class FrontController extends HttpServlet {
 
     private static Logger logger = Logger.getLogger(FrontController.class);
 
-    /**
-     * inits application configuring
-     */
-    static {
-        new ApplicationConfigurer();
-    }
 
     @Override
     public void init() throws ServletException {

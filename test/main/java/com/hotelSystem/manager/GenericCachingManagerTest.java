@@ -10,8 +10,9 @@ import main.java.com.hotelSystem.dao.*;
 import main.java.com.hotelSystem.dao.daoImpl.*;
 import main.java.com.hotelSystem.exception.SystemException;
 import main.java.com.hotelSystem.manager.managerImpl.CommandManagerImpl;
-import main.java.com.hotelSystem.manager.managerImpl.DataSourceDaoManagerImpl;
 import main.java.com.hotelSystem.manager.managerImpl.ServiceManagerImpl;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.DataSourceDaoManagerImpl;
 import main.java.com.hotelSystem.model.Reservation;
 import main.java.com.hotelSystem.service.*;
 import main.java.com.hotelSystem.service.serviceImpl.HotelRoomService;
@@ -25,9 +26,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,15 +79,11 @@ public class GenericCachingManagerTest {
         daoManagerConfigs.put(AbstractReservationDao.class, AbstractReservationDaoImpl.class);
         daoManagerConfigs.put(AbstractUserDao.class, AbstractUserDaoImpl.class);
 
-        DataSource dataSource = EasyMock.createMock(DataSource.class);
+        ConnectionAllocator allocator = EasyMock.createMock(ConnectionAllocator.class);
         Connection connection = EasyMock.createMock(Connection.class);
-        try {
-            EasyMock.expect(dataSource.getConnection()).andReturn(connection).anyTimes();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        EasyMock.replay(dataSource);
-        daoManager = new DataSourceDaoManagerImpl(daoManagerConfigs, dataSource);
+        EasyMock.expect(allocator.getConnection()).andReturn(connection).anyTimes();
+        EasyMock.replay(allocator);
+        daoManager = new DataSourceDaoManagerImpl(daoManagerConfigs, allocator);
 
         cachingManagers.add(daoManager);//stub datasource
         initMapsForManagers.add(daoManagerConfigs);

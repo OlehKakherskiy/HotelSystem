@@ -1,7 +1,5 @@
 package main.java.com.hotelSystem.app.constants;
 
-import java.util.Arrays;
-
 /**
  * Global constants.
  *
@@ -45,21 +43,14 @@ public enum GlobalContextConstant {
 
     RESERVATION_STATUS("reservationStatus"),
 
-    CURRENT_LOCALE("lang");
+    CURRENT_LOCALE("lang"),
 
+    CONNECTION_ALLOCATOR("connectionAllocator");
 
     private String name;
 
     GlobalContextConstant(String name) {
         this.name = name;
-    }
-
-    public GlobalContextConstant fromValue(String name) {
-        return Arrays.asList(GlobalContextConstant.values())
-                .stream()
-                .filter(constant -> constant.name.equals(name))
-                .findFirst()
-                .orElse(null);
     }
 
     public String getName() {

@@ -2,6 +2,7 @@ package main.java.com.hotelSystem.dao.daoImpl;
 
 import main.java.com.hotelSystem.dao.AbstractReservationDao;
 import main.java.com.hotelSystem.exception.DaoException;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
 import main.java.com.hotelSystem.model.Reservation;
 import main.java.com.hotelSystem.model.enums.ReservationStatus;
 import main.java.com.hotelSystem.model.roomParameter.ParameterValueTuple;
@@ -91,7 +92,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private Connection connection;
+    private ConnectionAllocator connectionAllocator;
 
     /**
      * {@inheritDoc}
@@ -108,6 +109,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     @Override
     public Reservation read(int id) throws DaoException {
         Reservation reservation = null;
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(FULL_INFO_REQUEST)) {
 
             preparedStatement.setInt(1, id);
@@ -144,6 +146,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     @Override
     public void save(Reservation object) throws DaoException {
         try {
+            Connection connection = connectionAllocator.getConnection();
             connection.setAutoCommit(false);
 
             saveReservationObject(object, connection);
@@ -254,6 +257,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      */
     @Override
     public boolean update(Reservation object) throws DaoException {
+        Connection connection = connectionAllocator.getConnection();
         String query = "Update Reservation SET id_Hotel_Room = ?, id_Reservation_Status = ? WHERE ID = " + object.getId();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             if (object.getHotelRoomId() == -1) {
@@ -291,6 +295,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
                 ? SHORT_INFO_ABOUT_RESERVATIONS_FILTERING_BY_DATE
                 : SHORT_INFO_ABOUT_ROOM_FILTERING_BY_DATE_AND_STATUS;
 
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             if (status != ReservationStatus.ALL) {
                 preparedStatement.setInt(5, status.getId());
@@ -324,6 +329,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     public List<Reservation> getAllReservationsShortInfo(ReservationStatus status) throws DaoException {
         String req = (status == ReservationStatus.ALL) ? GET_SHORT_INFO_BASE : GET_SHORT_INFO_ABOUT_ALL_FILTERING_BY_STATUS;
         ResultSet resultSet = null;
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(req)) {
             if (status != ReservationStatus.ALL) {
                 preparedStatement.setInt(1, status.getId());
@@ -348,6 +354,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
     @Override
     public boolean delete(int id) throws DaoException {
         String query = "DELETE FROM Reservation WHERE ID = ?";
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() > 0;
@@ -375,6 +382,7 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
      */
     @Override
     public List<Reservation> getAllUserReservationsShortInfo(int userId, ReservationStatus status) throws DaoException {
+        Connection connection = connectionAllocator.getConnection();
         return (status == ReservationStatus.ALL)
                 ? getAllReservationsForUser(userId, connection)
                 : getAllReservationsForUser(userId, status, connection);
@@ -522,11 +530,11 @@ public class AbstractReservationDaoImpl implements AbstractReservationDao {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
+    public ConnectionAllocator getConnectionAllocator() {
+        return connectionAllocator;
     }
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void setConnectionAllocator(ConnectionAllocator connectionAllocator) {
+        this.connectionAllocator = connectionAllocator;
     }
 }

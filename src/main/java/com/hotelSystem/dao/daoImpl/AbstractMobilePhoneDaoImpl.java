@@ -2,6 +2,7 @@ package main.java.com.hotelSystem.dao.daoImpl;
 
 import main.java.com.hotelSystem.dao.AbstractMobilePhoneDao;
 import main.java.com.hotelSystem.exception.DaoException;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
 import main.java.com.hotelSystem.model.MobilePhone;
 import main.java.com.hotelSystem.model.User;
 
@@ -41,7 +42,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private Connection connection;
+    private ConnectionAllocator connectionAllocator;
 
     /**
      * {@inheritDoc}
@@ -58,6 +59,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
     @Override
     public List<MobilePhone> getAll(int userId) throws DaoException {
         ResultSet resultSet = null;
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(getMobilePhoneList)) {
             statement.setInt(1, userId);
             resultSet = statement.executeQuery();
@@ -108,11 +110,11 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
         return mobilePhone;
     }
 
-    public Connection getConnection() {
-        return connection;
+    public ConnectionAllocator getConnectionAllocator() {
+        return connectionAllocator;
     }
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void setConnectionAllocator(ConnectionAllocator connectionAllocator) {
+        this.connectionAllocator = connectionAllocator;
     }
 }

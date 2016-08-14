@@ -1,17 +1,19 @@
 package main.java.com.hotelSystem.manager;
 
-import com.mysql.fabric.jdbc.FabricMySQLDataSource;
 import main.java.com.hotelSystem.dao.GenericDao;
 import main.java.com.hotelSystem.exception.SystemException;
-import main.java.com.hotelSystem.manager.managerImpl.DataSourceDaoManagerImpl;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.DataSourceDaoManagerImpl;
 import main.java.com.hotelSystem.model.HotelRoom;
 import main.java.com.hotelSystem.model.Reservation;
 import main.java.com.hotelSystem.model.User;
 import main.java.com.hotelSystem.model.roomParameter.ParameterValueTuple;
+import org.easymock.EasyMock;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +64,12 @@ public class AbstractDaoManagerTest {
         daoMap.put(DaoStubWithoutSetDataSourceMethod.class, DaoStubWithoutSetDataSourceMethod.class);
         daoMap.put(DaoStubWithoutGetDataSourceMethod.class, DaoStubWithoutGetDataSourceMethod.class);
 
-        daoManager = new DataSourceDaoManagerImpl(daoMap, new FabricMySQLDataSource()/*stub*/);
+        ConnectionAllocator allocator = EasyMock.createMock(ConnectionAllocator.class);
+        Connection connection = EasyMock.createMock(Connection.class);
+        EasyMock.expect(allocator.getConnection()).andReturn(connection).anyTimes();
+        EasyMock.replay(allocator);
+
+        daoManager = new DataSourceDaoManagerImpl(daoMap, allocator);
     }
 
     @Test(expected = SystemException.class)

@@ -2,6 +2,7 @@ package main.java.com.hotelSystem.dao.daoImpl;
 
 import main.java.com.hotelSystem.dao.AbstractHotelRoomDao;
 import main.java.com.hotelSystem.exception.DaoException;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
 import main.java.com.hotelSystem.model.HotelRoom;
 import main.java.com.hotelSystem.model.roomParameter.ParameterValueTuple;
 
@@ -54,11 +55,12 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private Connection connection;
+    private ConnectionAllocator connectionAllocator;
 
     @Override
     public List<HotelRoom> getAllFullDetails(boolean onlyActive) throws DaoException {
         List<HotelRoom> hotelRooms = new ArrayList<>();
+        Connection connection = connectionAllocator.getConnection();
         String req = onlyActive ? GET_ALL_ACTIVE_ROOMS_REQUEST : GET_ALL_ROOMS_REQUEST;
         try (PreparedStatement preparedStatement = connection.prepareStatement(req);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -85,6 +87,7 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
     @Override
     public HotelRoom read(int id) throws DaoException {
         HotelRoom room = null;
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROOM_REQUEST)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -146,11 +149,11 @@ public class AbstractHotelRoomDaoImpl implements AbstractHotelRoomDao {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
+    public ConnectionAllocator getConnectionAllocator() {
+        return connectionAllocator;
     }
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void setConnectionAllocator(ConnectionAllocator connectionAllocator) {
+        this.connectionAllocator = connectionAllocator;
     }
 }

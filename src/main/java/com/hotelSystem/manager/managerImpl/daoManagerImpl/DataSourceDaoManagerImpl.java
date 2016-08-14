@@ -1,4 +1,4 @@
-package main.java.com.hotelSystem.manager.managerImpl;
+package main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl;
 
 import main.java.com.hotelSystem.dao.GenericDao;
 import main.java.com.hotelSystem.exception.ManagerConfigException;
@@ -12,11 +12,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manager implementation for DAOs, that are using {@link DataSource} for
@@ -43,23 +41,21 @@ public class DataSourceDaoManagerImpl extends AbstractDaoManager {
             "creating object of type {0} or injecting dataSource to instance";
 
     private static final Logger logger = Logger.getLogger(DataSourceDaoManagerImpl.class);
+
     /**
      * this instance will be injected to all DAO, that are created
      * by this type of manager.
      */
-    private DataSource dataSource;
-
-    private Map<String, Connection> threadConnectionMap;
+    private ConnectionAllocator allocator;
 
     /**
      * @param keyObjectTemplateMap key/extra_info for instantiation target object map
-     * @param dataSource           target {@link DataSource} object, that will be injected to all DAOs
+     * @param allocator
      */
     public DataSourceDaoManagerImpl(Map<Class<? extends GenericDao>, Class<? extends GenericDao>> keyObjectTemplateMap,
-                                    DataSource dataSource) {
+                                    ConnectionAllocator allocator) {
         super(keyObjectTemplateMap);
-        this.dataSource = dataSource;
-        threadConnectionMap = new ConcurrentHashMap<>();
+        this.allocator = allocator;
     }
 
     /**
@@ -79,7 +75,7 @@ public class DataSourceDaoManagerImpl extends AbstractDaoManager {
         V result;
         try {
             result = objectClass.newInstance();
-            Field connectionField = getConnectionField(objectClass);
+            Field connectionField = getConnectionAllocatorField(objectClass);
             if (connectionField == null) {
                 throw new ManagerConfigException(MessageFormat.format(NO_CONNECTION_FIELD, objectClass.getName()));
             }
@@ -88,15 +84,14 @@ public class DataSourceDaoManagerImpl extends AbstractDaoManager {
             if (setMethod == null) {
                 throw new ManagerConfigException(MessageFormat.format(NO_SET_CONNECTION_METHOD, objectClass.getName()));
             }
-            setMethod.invoke(result, getConnectionForThread());
+            setMethod.invoke(result, allocator);
+
+            logger.debug(MessageFormat.format("Method getInstance of class {0} returned {1}",
+                    this.getClass().getName(), result.getClass().getName()));
+            return result;
         } catch (InstantiationException | IllegalAccessException | IntrospectionException | InvocationTargetException e) {
             throw new ManagerConfigException(MessageFormat.format(CREATE_OBJECT_EXCEPTION_MESSAGE, objectClass.getName()));
-        } catch (SQLException e) {
-            throw new ManagerConfigException(MessageFormat.format("Exception was thrown during getting connection from datasource for instantiating {0}", objectClass.getName()));
         }
-        logger.debug(MessageFormat.format("Method getInstance of class {0} returned {1}",
-                this.getClass().getName(), result.getClass().getName()));
-        return result;
     }
 
     /**
@@ -106,25 +101,11 @@ public class DataSourceDaoManagerImpl extends AbstractDaoManager {
      * @return {@link Field} which type is {@link Class#isAssignableFrom(Class)} Connection. If there's
      * no target fields, returns null.
      */
-    private Field getConnectionField(Class objectClass) {
+    private Field getConnectionAllocatorField(Class objectClass) {
         return Arrays.stream(objectClass.getDeclaredFields())
-                .filter(f -> f.getType().isAssignableFrom(Connection.class))
+                .filter(f -> f.getType().isAssignableFrom(ConnectionAllocator.class))
                 .findFirst()
                 .orElse(null);
     }
 
-    private Connection getConnectionForThread() throws SQLException {
-        String threadName = Thread.currentThread().getName();
-        logger.debug(MessageFormat.format("Getting {0} object for thread {1} in class {2} and method 'getConnectionForThread'",
-                Connection.class.getName(), threadName, this.getClass().getName()));
-
-        Connection resultConnection = threadConnectionMap.get(threadName);
-        if (resultConnection == null) {
-            logger.debug(MessageFormat.format("Create new connection for thread {0} and putting into cache...", threadName));
-            resultConnection = dataSource.getConnection();
-            threadConnectionMap.put(threadName, resultConnection);
-        }
-        logger.debug(MessageFormat.format("returning {0} object for thread {1}", Connection.class.getName(), threadName));
-        return resultConnection;
-    }
 }

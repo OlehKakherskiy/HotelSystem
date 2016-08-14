@@ -4,7 +4,8 @@
 
     <entry key="commandManager">main.java.com.hotelSystem.manager.managerImpl.CommandManagerImpl</entry>
     <entry key="serviceManager">main.java.com.hotelSystem.manager.managerImpl.ServiceManagerImpl</entry>
-    <entry key="daoManager">main.java.com.hotelSystem.manager.managerImpl.DataSourceDaoManagerImpl</entry>
+    <entry key="daoManager">main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.DataSourceDaoManagerImpl
+    </entry>
 
     <entry key="fillNewReservationCommand">
         main.java.com.hotelSystem.controller.command.commandImpl.FillNewReservationCommand

@@ -8,11 +8,14 @@ import main.java.com.hotelSystem.controller.command.ICommand;
 import main.java.com.hotelSystem.manager.AbstractCommandManager;
 import main.java.com.hotelSystem.manager.AbstractDaoManager;
 import main.java.com.hotelSystem.manager.AbstractServiceManager;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
 import main.java.com.hotelSystem.model.enums.UserType;
 import org.apache.log4j.Logger;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.sql.DataSource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -31,7 +34,7 @@ import java.util.*;
  *
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  */
-public class ApplicationConfigurer {
+public class ApplicationConfigurer implements ServletContextListener {
 
     private static final Logger logger = Logger.getLogger(ApplicationConfigurer.class);
 
@@ -50,15 +53,6 @@ public class ApplicationConfigurer {
      */
     private static final String dataSourceJndiName = "java:/comp/env/jdbc/mysql";
 
-    /**
-     * calls {@link #configureApplication()}
-     */
-    public ApplicationConfigurer() {
-        logger.info("Application configuring is started");
-        configureApplication();
-        logger.info("Application configuring is finished");
-    }
-
 
     /**
      * executes application configuring. Configures managers, security map,
@@ -74,13 +68,16 @@ public class ApplicationConfigurer {
             logger.info("Configuring command manager...");
             Class<? extends AbstractCommandManager> commandManager = (Class<? extends AbstractCommandManager>) Class.forName(mainProperties.getProperty("commandManager"));
             configureCommandManager(getPropsUsingKeyEnding(mainProperties, "Command"), commandManager);
-            logger.info("Configuring command manager...");
+            logger.info("Configuring data source...");
             configureDataSource();
-            logger.info("Command manager configuring is finished");
+            logger.info("Data source configuring is finished");
+
+            ConnectionAllocator allocator = new ConnectionAllocator((DataSource) GlobalContext.getValue(GlobalContextConstant.DATA_SOURCE));
+            GlobalContext.addToGlobalContext(GlobalContextConstant.CONNECTION_ALLOCATOR, allocator);
 
             logger.info("Configuring dao manager...");
             Class<? extends AbstractDaoManager> daoManager = (Class<? extends AbstractDaoManager>) Class.forName(mainProperties.getProperty("daoManager"));
-            configureManager(getPropsUsingKeyEnding(mainProperties, "Dao"), daoManager, GlobalContextConstant.DAO_MANAGER, GlobalContext.getValue(GlobalContextConstant.DATA_SOURCE));
+            configureManager(getPropsUsingKeyEnding(mainProperties, "Dao"), daoManager, GlobalContextConstant.DAO_MANAGER, allocator);
             logger.info("Dao manager configuring is finished...");
 
             logger.info("Configuring service manager...");
@@ -223,4 +220,16 @@ public class ApplicationConfigurer {
         }
     }
 
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        System.out.println("called contextInitialized");
+        logger.info("Application configuring is started");
+        configureApplication();
+        logger.info("Application configuring is finished");
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+
+    }
 }

@@ -2,6 +2,7 @@ package main.java.com.hotelSystem.dao.daoImpl;
 
 import main.java.com.hotelSystem.dao.AbstractUserDao;
 import main.java.com.hotelSystem.exception.DaoException;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
 import main.java.com.hotelSystem.model.User;
 import main.java.com.hotelSystem.model.enums.UserType;
 
@@ -57,7 +58,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private Connection connection;
+    private ConnectionAllocator connectionAllocator;
 
     /**
      * {@inheritDoc}
@@ -73,6 +74,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     @Override
     public User read(int id) throws DaoException {
         ResultSet resultSet = null;
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(getUserFromID)) {
 
             statement.setInt(1, id);
@@ -98,6 +100,7 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     @Override
     public User tryLogin(String login, String password) throws DaoException {
         ResultSet resultSet = null;
+        Connection connection = connectionAllocator.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(getUserFromLoginAndPassword)) {
 
             statement.setString(1, login);
@@ -137,11 +140,11 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
+    public ConnectionAllocator getConnectionAllocator() {
+        return connectionAllocator;
     }
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void setConnectionAllocator(ConnectionAllocator connectionAllocator) {
+        this.connectionAllocator = connectionAllocator;
     }
 }

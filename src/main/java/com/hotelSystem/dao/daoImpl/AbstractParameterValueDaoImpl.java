@@ -2,6 +2,7 @@ package main.java.com.hotelSystem.dao.daoImpl;
 
 import main.java.com.hotelSystem.dao.AbstractParameterValueDao;
 import main.java.com.hotelSystem.exception.DaoException;
+import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
 import main.java.com.hotelSystem.model.roomParameter.Parameter;
 import main.java.com.hotelSystem.model.roomParameter.ParameterValueTuple;
 import main.java.com.hotelSystem.model.roomParameter.Value;
@@ -51,7 +52,7 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
     /**
      * datasource, from wich {@link Connection} will be get for processing operations with persistent storage
      */
-    private Connection connection;
+    private ConnectionAllocator connectionAllocator;
 
     /**
      * {@inheritDoc}
@@ -68,6 +69,7 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
      */
     @Override
     public List<ParameterValueTuple> getAllFullInfo() throws DaoException {
+        Connection connection = connectionAllocator.getConnection();
         List<Value> valuePool = selectValuePool(connection);
         List<Parameter> parameters = selectParameterList(connection, valuePool);
 
@@ -239,11 +241,11 @@ public class AbstractParameterValueDaoImpl implements AbstractParameterValueDao 
         return list;
     }
 
-    public Connection getConnection() {
-        return connection;
+    public ConnectionAllocator getConnectionAllocator() {
+        return connectionAllocator;
     }
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void setConnectionAllocator(ConnectionAllocator connectionAllocator) {
+        this.connectionAllocator = connectionAllocator;
     }
 }
