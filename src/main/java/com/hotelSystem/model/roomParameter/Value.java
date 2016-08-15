@@ -68,4 +68,12 @@ public class Value {
         result = 31 * result + value.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

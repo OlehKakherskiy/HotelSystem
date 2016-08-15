@@ -117,4 +117,14 @@ public class ParameterValueTuple {
         result = 31 * result + price;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "ParameterValueTuple{" +
+                "id=" + id +
+                ", parameter=" + parameter +
+                ", value=" + value +
+                ", price=" + price +
+                '}';
+    }
 }

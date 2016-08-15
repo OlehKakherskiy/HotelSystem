@@ -104,4 +104,14 @@ public class Parameter {
         result = 31 * result + paramName.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Parameter{" +
+                "id=" + id +
+                ", optional=" + optional +
+                ", defaultValue=" + defaultValue +
+                ", paramName='" + paramName + '\'' +
+                '}';
+    }
 }
