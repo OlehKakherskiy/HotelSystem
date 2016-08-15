@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setLocale value="${sessionScope['lang']}" scope="session"/>
 <fmt:setBundle basename="main" var="main"/>
 <nav class="navbar navbar-default">
     <div class="container-fluid">

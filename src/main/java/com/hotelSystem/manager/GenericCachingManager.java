@@ -74,8 +74,7 @@ abstract class GenericCachingManager<K, E, T> extends GenericManager<K, E, T> {
                 throw new ManagerConfigException(MessageFormat.format(NULL_KEY_EXCEPTION, this.getClass().getName()));
             }
 
-            V result = (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
-            return result;
+            return (cache.containsKey(key)) ? (V) cache.get(key) : createAndCache(key);
         } catch (RuntimeException | ManagerConfigException e) {
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e);
         }
