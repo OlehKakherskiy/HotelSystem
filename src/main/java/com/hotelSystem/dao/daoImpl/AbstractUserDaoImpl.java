@@ -3,6 +3,7 @@ package main.java.com.hotelSystem.dao.daoImpl;
 import main.java.com.hotelSystem.dao.AbstractUserDao;
 import main.java.com.hotelSystem.exception.DaoException;
 import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
+import main.java.com.hotelSystem.model.MobilePhone;
 import main.java.com.hotelSystem.model.User;
 import main.java.com.hotelSystem.model.enums.UserType;
 
@@ -12,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Class represents implementation of {@link AbstractUserDao} for relational databases, represented
@@ -84,6 +87,49 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
             return buildUserObject(resultSet);
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("{0} using user id", REQUEST_EXEC_EXCEPTION), e);
+        }
+    }
+
+    @Override
+    public boolean update(User object) throws DaoException {
+        Connection connection = connectionAllocator.allocateConnection();
+        String updateUser = "UPDATE User SET idUserType=?, name=?, last_name=? WHERE idUser=?";
+        try {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateUser)) {
+                preparedStatement.setInt(4, object.getIdUser());
+                preparedStatement.setInt(1, object.getUserType().getId());
+                preparedStatement.setString(2, object.getName());
+                preparedStatement.setString(3, object.getLastName());
+                if (preparedStatement.executeUpdate() == 0) {
+                    connection.rollback();
+                    return false;
+                }
+                updateMobilePhoneList(object.getMobilePhoneList(), connection);
+                connection.commit();
+                connection.setAutoCommit(true);
+                return true;
+            } catch (SQLException e1) {
+                connection.rollback();
+                throw new DaoException(MessageFormat.format("Exception was thrown during updating User''s object with params: {0}", object.toString()), e1);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Exception was thrown during setting settin autocommit or rollbacking.");
+        }
+    }
+
+    private void updateMobilePhoneList(List<MobilePhone> mobilePhoneList, Connection connection) throws SQLException {
+        String query = "UPDATE Mobile_Phone SET phone_number=? WHERE idMobilePhone=?";
+        try (PreparedStatement updateStatement = connection.prepareStatement(query)) {
+            for (MobilePhone mobilePhone : mobilePhoneList) {
+                updateStatement.setString(1, mobilePhone.getMobilePhone());
+                updateStatement.setInt(2, mobilePhone.getIdMobilePhone());
+                if (updateStatement.executeUpdate() == 0)
+                    throw new SQLException();
+            }
+        } catch (SQLException e) {
+            throw new SQLException(MessageFormat.format("Exception was cauesd during the process of updating list of mobile phones.List:{0}",
+                    Arrays.toString(mobilePhoneList.toArray())), e);
         }
     }
 

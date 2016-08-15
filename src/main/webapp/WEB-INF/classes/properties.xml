@@ -42,6 +42,8 @@
     <entry key="refuseReservationProcessingCommand">
         main.java.com.hotelSystem.controller.command.commandImpl.RefuseReservationProcessingCommand
     </entry>
+    <entry key="updateUserProfileCommand">main.java.com.hotelSystem.controller.command.commandImpl.UpdateUserCommand
+    </entry>
 
     <entry key="ADMIN_1">getHotelRoomListCommand</entry>
     <entry key="ADMIN_2">getReservationListCommand</entry>
@@ -51,6 +53,7 @@
     <entry key="ADMIN_6">offerHotelRoomCommand</entry>
     <entry key="ADMIN_7">getHotelRoomProfileCommand</entry>
     <entry key="ADMIN_8">refuseReservationProcessingCommand</entry>
+    <entry key="ADMIN_9">updateUserProfileCommand</entry>
 
     <entry key="REGISTERED_USER_1">fillNewReservationCommand</entry>
     <entry key="REGISTERED_USER_2">getReservationListCommand</entry>
@@ -62,6 +65,7 @@
     <entry key="REGISTERED_USER_8">prepareReservationPageCommand</entry>
     <entry key="REGISTERED_USER_9">getHotelRoomProfileCommand</entry>
     <entry key="REGISTERED_USER_10">deleteReservationCommand</entry>
+    <entry key="REGISTERED_USER_11">updateUserProfileCommand</entry>
 
     <entry key="main.java.com.hotelSystem.service.IReservationService">
         main.java.com.hotelSystem.service.serviceImpl.ReservationService

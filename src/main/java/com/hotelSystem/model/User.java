@@ -3,6 +3,7 @@ package main.java.com.hotelSystem.model;
 import main.java.com.hotelSystem.model.enums.UserType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * @see UserType
  * @see MobilePhone
  */
-public class User implements Serializable {
+public class User implements Serializable, Cloneable {
 
     /**
      * user's id
@@ -134,5 +135,19 @@ public class User implements Serializable {
                 ", userType=" + userType +
                 ", mobilePhoneList=" + mobilePhoneList +
                 '}';
+    }
+
+    @Override
+    public User clone() throws CloneNotSupportedException {
+        User user = (User) super.clone();
+        user.idUser = idUser;
+        user.lastName = lastName;
+        user.userType = userType;
+        List<MobilePhone> mobilePhones = new ArrayList<>();
+        for (MobilePhone mobilePhone : user.getMobilePhoneList()) {
+            mobilePhones.add(mobilePhone.clone());
+        }
+        user.setMobilePhoneList(mobilePhones);
+        return user;
     }
 }

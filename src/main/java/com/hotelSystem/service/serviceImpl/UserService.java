@@ -84,12 +84,34 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public void update(User user, String name, String surname, List<String> mobilePhones) {
+        user.setName(name);
+        user.setLastName(surname);
+        changePhones(user, mobilePhones);
+        try {
+            if (!userDao.update(user)) {
+                throw new RequestException(null);//TODO: throw RequestException
+            }
+        } catch (DaoException e) {
+            e.printStackTrace(); //TODO: throw localized system exception
+        }
+    }
+
+    private void changePhones(User user, List<String> mobilePhones) {
+        List<MobilePhone> list = user.getMobilePhoneList();
+        for (int i = 0; i < mobilePhones.size(); i++) {
+            list.get(i).setMobilePhone(mobilePhones.get(i));
+        }
+    }
+
+
     /**
      * Appends mobile phone list, assosiated with target user object, to this object
      *
      * @param user target user object, to which assosiated mobile phone's list will be injected
      * @throws SystemException if exception was
-     *                                                               thrown during processing any underlying operation
+     *                         thrown during processing any underlying operation
      */
     private void appendMobilePhoneList(User user) {
         try {

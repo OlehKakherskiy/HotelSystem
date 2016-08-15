@@ -33,7 +33,9 @@ public enum CommandConstant {
 
     DELETE_RESERVATION_COMMAND("deleteReservationCommand"),
 
-    REFUSE_RESERVATION_PROCESSING_COMMAND("refuseReservationProcessingCommand");
+    REFUSE_RESERVATION_PROCESSING_COMMAND("refuseReservationProcessingCommand"),
+
+    UPDATE_USER_PROFILE_COMMAND("updateUserProfileCommand");
 
     private String commandName;
 

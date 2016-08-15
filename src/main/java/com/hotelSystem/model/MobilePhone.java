@@ -1,5 +1,7 @@
 package main.java.com.hotelSystem.model;
 
+import java.io.Serializable;
+
 /**
  * Class represents mobile phone's entity, that can be assosiated with {@link User}.
  * Each one contains id and string representation of mobile phone
@@ -7,7 +9,7 @@ package main.java.com.hotelSystem.model;
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see User
  */
-public class MobilePhone {
+public class MobilePhone implements Serializable, Cloneable {
 
     /**
      * id
@@ -61,6 +63,14 @@ public class MobilePhone {
 
         return getIdMobilePhone() == that.getIdMobilePhone();
 
+    }
+
+    @Override
+    public MobilePhone clone() throws CloneNotSupportedException {
+        MobilePhone mobilePhone = (MobilePhone) super.clone();
+        mobilePhone.setIdMobilePhone(idMobilePhone);
+        mobilePhone.setMobilePhone(this.mobilePhone);
+        return mobilePhone;
     }
 
     @Override

@@ -18,7 +18,9 @@ public enum WebPageConstant {
 
     HOTEL_ROOM_LIST("hotelRoomList"),
 
-    HOTEL_ROOM_PROFILE("hotelRoomProfile");
+    HOTEL_ROOM_PROFILE("hotelRoomProfile"),
+
+    UPDATE_USER_PAGE("updateUserPage");
 
     private String path;
 

@@ -4,6 +4,8 @@ import main.java.com.hotelSystem.exception.RequestException;
 import main.java.com.hotelSystem.exception.SystemException;
 import main.java.com.hotelSystem.model.User;
 
+import java.util.List;
+
 /**
  * Interface represents API for executing operations, assosiated with {@link User} entity
  *
@@ -22,9 +24,9 @@ public interface IUserService extends IService {
      * @param password user's password
      * @return {@link User} object, assosiated with current signIn and password
      * @throws RequestException if there's no
-     *                                                                combination of signIn and password
+     *                          combination of signIn and password
      * @throws SystemException  if exception was
-     *                                                                thrown during processing any underlying operation
+     *                          thrown during processing any underlying operation
      */
     User signIn(String login, String password);
 
@@ -37,10 +39,12 @@ public interface IUserService extends IService {
      * @param id User's id
      * @return {@link User} object, assosiated with target id parameter.
      * @throws RequestException if there's no
-     *                                                                user with current id
+     *                          user with current id
      * @throws SystemException  if exception was
-     *                                                                thrown during processing any underlying operation
+     *                          thrown during processing any underlying operation
      */
     User getUserInfo(int id);
+
+    void update(User user, String name, String surname, List<String> mobilePhones);
 
 }

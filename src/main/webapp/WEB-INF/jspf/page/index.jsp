@@ -28,43 +28,40 @@
     <div class="col-md-4" id="userInfo">
         <div id="personalInfo">
             <h4><fmt:message key="personalInfoHeader" bundle="${index}"/></h4>
-            <form class="form-horizontal">
+            <form class="form-horizontal" method="post" id="userForm">
+                <input type="hidden" name="commandName" value="updateUserProfileCommand">
                 <div class="form-group">
                     <label for="name" class="col-sm-2 control-label"><fmt:message key="name" bundle="${index}"/></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="name" placeholder="${user.name}" disabled>
+                        <input type="text" class="form-control" id="name" name="name" value="${user.name}">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="surname" class="col-sm-2 control-label"><fmt:message key="surname"
                                                                                      bundle="${index}"/></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="surname" placeholder="${user.lastName}" disabled>
+                        <input type="text" class="form-control" id="surname" name="surname" value="${user.lastName}">
                     </div>
                 </div>
-            </form>
-        </div>
-        <div id="mobilePhonesInfo">
-            <h4><fmt:message key="mobilePhonesHeader" bundle="${index}"/></h4>
-            <form class="form-horizontal">
-                <c:forEach items="${user.mobilePhoneList}" var="mobilePhone">
+                <h4><fmt:message key="mobilePhonesHeader" bundle="${index}"/></h4>
+                <c:forEach items="${user.mobilePhoneList}" var="mobilePhone" varStatus="loop">
                     <div class="form-group">
-                        <label for="mobilePhone" class="col-sm-2 control-label"><fmt:message key="mobilePhone"
-                                                                                             bundle="${index}"/></label>
+                        <label for="mobilePhone${loop.index}" class="col-sm-2 control-label"><fmt:message
+                                key="mobilePhone"
+                                bundle="${index}"/></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="mobilePhone"
-                                   placeholder="${mobilePhone.mobilePhone}"
-                                   disabled>
+                            <input type="text" class="form-control" id="mobilePhone${loop.index}"
+                                   name="mobilePhone${loop.index}"
+                                   value="${mobilePhone.mobilePhone}">
                         </div>
                     </div>
                 </c:forEach>
             </form>
+            <button type="submit" class="btn btn-success" form="userForm">Update</button>
         </div>
-
+        <div class="col-md-4"></div>
     </div>
-    <div class="col-md-4"></div>
 </div>
-
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
