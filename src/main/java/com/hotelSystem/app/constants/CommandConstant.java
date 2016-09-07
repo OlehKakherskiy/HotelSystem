@@ -35,7 +35,11 @@ public enum CommandConstant {
 
     REFUSE_RESERVATION_PROCESSING_COMMAND("refuseReservationProcessingCommand"),
 
-    UPDATE_USER_PROFILE_COMMAND("updateUserProfileCommand");
+    UPDATE_USER_PROFILE_COMMAND("updateUserProfileCommand"),
+
+    PASSWORD_RECOVERY_COMMAND("passwordRecoveryCommand"),
+
+    REGISTRATION_COMMAND("registrationCommand");
 
     private String commandName;
 

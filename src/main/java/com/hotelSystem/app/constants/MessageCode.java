@@ -67,7 +67,19 @@ public enum MessageCode {
 
     DATE_TO_IS_BEFORE_REQ_DATE_EXCEPTION("dateToIsBeforeReqDateException"),
 
-    DATE_TO_IS_BEFORE_DATE_FROM_EXCEPTION("dateToIsBeforeDateFromException");
+    DATE_TO_IS_BEFORE_DATE_FROM_EXCEPTION("dateToIsBeforeDateFromException"),
+
+    UPDATE_USER_PROFILE_FAILED("updateUserProfileFailed"),
+
+    SYSTEM_EXCEPTION_DURING_USER_UPDATING_OPERATION("systemExceptionDuringUserUpdatingOperation"),
+
+    INVALID_LOGIN_MESSAGE("invalidLoginMessage"),
+
+    PASSWORD_RECOVERY_OPERATION_EXCEPTION_MESSAGE("passwordRecoveryExceptionMessage"),
+
+    REGISTER_OPERATION_SYSTEM_MESSAGE("registerOperationSystemMessage"),
+
+    PASSWORD_CONFIRMATION_EXCEPTION_MESSAGE("passwordConfirmationExceptionMessage");
 
 
     private String code;
