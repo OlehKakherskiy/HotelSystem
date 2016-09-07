@@ -85,16 +85,41 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void register(User user) {
+        try {
+            userDao.save(user);
+        } catch (DaoException e) {
+            throw new SystemException(MessageCode.REGISTER_OPERATION_SYSTEM_MESSAGE);
+        }
+    }
+
+    @Override
+    public void updatePassword(String login, String newPassword, String confirmPassword) {
+        try {
+            if (!newPassword.equals(confirmPassword)) {
+                throw new RequestException(MessageCode.PASSWORD_CONFIRMATION_EXCEPTION_MESSAGE);
+            }
+            if (userDao.isValidLogin(login)) {
+                userDao.updatePassword(login, newPassword);
+            } else {
+                throw new RequestException(MessageCode.INVALID_LOGIN_MESSAGE);
+            }
+        } catch (DaoException e) {
+            throw new SystemException(MessageCode.PASSWORD_RECOVERY_OPERATION_EXCEPTION_MESSAGE);
+        }
+    }
+
+    @Override
     public void update(User user, String name, String surname, List<String> mobilePhones) {
         user.setName(name);
         user.setLastName(surname);
         changePhones(user, mobilePhones);
         try {
             if (!userDao.update(user)) {
-                throw new RequestException(null);//TODO: throw RequestException
+                throw new SystemException(MessageCode.UPDATE_USER_PROFILE_FAILED);
             }
         } catch (DaoException e) {
-            e.printStackTrace(); //TODO: throw localized system exception
+            throw new SystemException(MessageCode.SYSTEM_EXCEPTION_DURING_USER_UPDATING_OPERATION);
         }
     }
 
@@ -104,7 +129,6 @@ public class UserService implements IUserService {
             list.get(i).setMobilePhone(mobilePhones.get(i));
         }
     }
-
 
     /**
      * Appends mobile phone list, assosiated with target user object, to this object

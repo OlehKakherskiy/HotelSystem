@@ -55,7 +55,7 @@ public class AbstractUserServiceTest {
 
     private static List<MobilePhone> getActualMobilePhones() {
         List<MobilePhone> mobilePhones = new ArrayList<>();
-        mobilePhones.addAll(Arrays.asList(new MobilePhone(1, "(136) 605-3124"), new MobilePhone(2, "(558) 881-2918"), new MobilePhone(3, "(234) 752-9345")));
+        mobilePhones.addAll(Arrays.asList(new MobilePhone(1, "(136) 605-3124", ID), new MobilePhone(2, "(558) 881-2918", ID), new MobilePhone(3, "(234) 752-9345", ID)));
         return mobilePhones;
     }
 

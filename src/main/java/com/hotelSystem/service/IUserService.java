@@ -45,6 +45,18 @@ public interface IUserService extends IService {
      */
     User getUserInfo(int id);
 
+    void register(User user);
+
+    void updatePassword(String login, String newPassword, String confirmPassword);
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param user         {@inheritDoc}
+     * @param name         {@inheritDoc}
+     * @param surname      {@inheritDoc}
+     * @param mobilePhones {@inheritDoc}
+     */
     void update(User user, String name, String surname, List<String> mobilePhones);
 
 }

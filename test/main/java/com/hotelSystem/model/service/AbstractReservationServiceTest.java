@@ -39,11 +39,11 @@ public class AbstractReservationServiceTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         userStub = new User(1, "name", "surname", UserType.REGISTERED_USER, new ArrayList() {{
-            add(new MobilePhone(1, "stub"));
+            add(new MobilePhone(1, "stub", 1));
         }});
 
         adminStub = new User(1, "name", "surname", UserType.ADMIN, new ArrayList() {{
-            add(new MobilePhone(1, "stub"));
+            add(new MobilePhone(1, "stub", 1));
         }});
     }
 
