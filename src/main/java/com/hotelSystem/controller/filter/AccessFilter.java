@@ -78,6 +78,10 @@ public class AccessFilter implements Filter {
      * @return true, if user can invoke command, mapped to target commandName, otherwise - false
      */
     private boolean hasRights(User user, CommandConstant commandName) {
+        if (commandName == CommandConstant.PASSWORD_RECOVERY_COMMAND
+                || commandName == CommandConstant.REGISTRATION_COMMAND) {
+            return true;
+        }
         accessRights = (accessRights != null) ? accessRights : (Map<UserType, List<CommandConstant>>)
                 GlobalContext.getValue(GlobalContextConstant.SECURITY_CONFIGURATION);
         if (!accessRights.containsKey(user.getUserType()))

@@ -45,6 +45,12 @@
     <entry key="updateUserProfileCommand">main.java.com.hotelSystem.controller.command.commandImpl.UpdateUserCommand
     </entry>
 
+    <entry key="registrationCommand">main.java.com.hotelSystem.controller.command.commandImpl.RegistrationCommand
+    </entry>
+    <entry key="passwordRecoveryCommand">
+        main.java.com.hotelSystem.controller.command.commandImpl.RecoveryPasswordCommand
+    </entry>
+
     <entry key="ADMIN_1">getHotelRoomListCommand</entry>
     <entry key="ADMIN_2">getReservationListCommand</entry>
     <entry key="ADMIN_3">getReservationProfileCommand</entry>
