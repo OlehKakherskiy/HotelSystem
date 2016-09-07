@@ -48,8 +48,7 @@ public enum CommandConstant {
     }
 
     public static CommandConstant fromValue(String commandName) {
-        return Arrays.asList(CommandConstant.values()).
-                stream().filter(name -> name.commandName.equals(commandName)).findFirst().orElse(null);
+        return Arrays.stream(CommandConstant.values()).filter(name -> name.commandName.equals(commandName)).findFirst().orElse(null);
     }
 
     public String getName() {
