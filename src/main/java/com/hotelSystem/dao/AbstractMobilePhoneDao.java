@@ -13,7 +13,7 @@ import java.util.List;
  * @author Oleh Kakherskyi, IP-31, FICT, NTUU "KPI", olehkakherskiy@gmail.com
  * @see MobilePhone
  */
-public interface AbstractMobilePhoneDao extends GenericDao {
+public interface AbstractMobilePhoneDao extends GenericDao<MobilePhone> {
 
     /**
      * Returns all {@link MobilePhone} objects which are connected with

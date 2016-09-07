@@ -21,6 +21,8 @@ public class MobilePhone implements Serializable, Cloneable {
      */
     private String mobilePhone;
 
+    private int userId;
+
     /**
      * constructor without parameters
      */
@@ -32,10 +34,12 @@ public class MobilePhone implements Serializable, Cloneable {
      *
      * @param idMobilePhone id
      * @param mobilePhone   string representation of mobile phone
+     * @param userId        user's id, who is owning this number
      */
-    public MobilePhone(int idMobilePhone, String mobilePhone) {
+    public MobilePhone(int idMobilePhone, String mobilePhone, int userId) {
         this.idMobilePhone = idMobilePhone;
         this.mobilePhone = mobilePhone;
+        this.userId = userId;
     }
 
     public int getIdMobilePhone() {
@@ -61,7 +65,9 @@ public class MobilePhone implements Serializable, Cloneable {
 
         MobilePhone that = (MobilePhone) o;
 
-        return getIdMobilePhone() == that.getIdMobilePhone();
+        if (idMobilePhone != that.idMobilePhone) return false;
+        if (userId != that.userId) return false;
+        return mobilePhone.equals(that.mobilePhone);
 
     }
 
@@ -83,6 +89,15 @@ public class MobilePhone implements Serializable, Cloneable {
         return "MobilePhone{" +
                 "idMobilePhone=" + idMobilePhone +
                 ", mobilePhone='" + mobilePhone + '\'' +
+                ", userId=" + userId +
                 '}';
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

@@ -1,17 +1,18 @@
 package main.java.com.hotelSystem.dao.daoImpl;
 
+import main.java.com.hotelSystem.app.GlobalContext;
+import main.java.com.hotelSystem.app.constants.GlobalContextConstant;
+import main.java.com.hotelSystem.dao.AbstractMobilePhoneDao;
 import main.java.com.hotelSystem.dao.AbstractUserDao;
 import main.java.com.hotelSystem.exception.DaoException;
+import main.java.com.hotelSystem.manager.AbstractDaoManager;
 import main.java.com.hotelSystem.manager.managerImpl.daoManagerImpl.ConnectionAllocator;
 import main.java.com.hotelSystem.model.MobilePhone;
 import main.java.com.hotelSystem.model.User;
 import main.java.com.hotelSystem.model.enums.UserType;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -91,6 +92,49 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
     }
 
     @Override
+    public void save(User object) throws DaoException {
+        AbstractDaoManager daoManager = (AbstractDaoManager) GlobalContext.getValue(GlobalContextConstant.DAO_MANAGER);
+        AbstractMobilePhoneDao mobilePhoneDao = daoManager.getInstance(AbstractMobilePhoneDao.class);
+
+        Connection connection = connectionAllocator.allocateConnection();
+        try {
+            connection.setAutoCommit(false);
+            String query = "INSERT INTO USER (name, last_name, login, password, idUserType) VALUES (?,?,?,?,?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+                preparedStatement.setString(1, object.getName());
+                preparedStatement.setString(2, object.getLastName());
+                preparedStatement.setString(3, object.getLogin());
+                preparedStatement.setString(4, object.getPassword());
+                preparedStatement.setInt(5, object.getUserType().getId());
+                preparedStatement.executeUpdate();
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    object.setIdUser(generatedKeys.getInt(1));
+                } else {
+                    throw new DaoException("Exception was thrown during the process of user registration");
+                }
+
+                for (MobilePhone mobilePhone : object.getMobilePhoneList()) {
+                    mobilePhoneDao.save(mobilePhone);
+                }
+            } catch (DaoException e) {
+                connection.rollback();
+                throw e;
+            } catch (SQLException e1) {
+                connection.rollback();
+                throw e1;
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage(), e);
+        }
+
+    }
+
+    @Override
     public boolean update(User object) throws DaoException {
         Connection connection = connectionAllocator.allocateConnection();
         String updateUser = "UPDATE User SET idUserType=?, name=?, last_name=? WHERE idUser=?";
@@ -157,6 +201,35 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
             return buildUserObject(resultSet);
         } catch (SQLException e) {
             throw new DaoException(MessageFormat.format("{0} using signIn and password", REQUEST_EXEC_EXCEPTION), e);
+        }
+    }
+
+    @Override
+    public boolean isValidLogin(String login) throws DaoException {
+        Connection connection = connectionAllocator.getConnection();
+        String query = "SELECT COUNT(*) FROM User WHERE login = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() && resultSet.getInt(1) > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void updatePassword(String login, String password) throws DaoException {
+        String query = "UPDATE User SET password = ? WHERE login = ?";
+        Connection connection = connectionAllocator.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, password);
+            preparedStatement.setString(2, login);
+            if (preparedStatement.executeUpdate() == 0) {
+                throw new DaoException();
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage(), e);
         }
     }
 

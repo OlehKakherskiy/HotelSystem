@@ -38,6 +38,10 @@ public class User implements Serializable, Cloneable {
      */
     private UserType userType;
 
+    private String login;
+
+    private String password;
+
     /**
      * assosiated mobile phones
      */
@@ -58,6 +62,23 @@ public class User implements Serializable, Cloneable {
         this.lastName = lastName;
         this.userType = userType;
         this.mobilePhoneList = (mobilePhoneList == null) ? Collections.emptyList() : mobilePhoneList;
+    }
+
+    public User(int idUser, String name, String lastName, UserType userType, String login, String password,
+                List<MobilePhone> mobilePhoneList) {
+        this(idUser, name, lastName, userType, mobilePhoneList);
+        this.login = login;
+        this.password = password;
+    }
+
+    public User(String name, String lastName, UserType userType, String login, String password,
+                List<MobilePhone> mobilePhoneList) {
+        this.name = name;
+        this.lastName = lastName;
+        this.userType = userType;
+        this.login = login;
+        this.password = password;
+        this.mobilePhoneList = mobilePhoneList;
     }
 
     /**
@@ -104,6 +125,14 @@ public class User implements Serializable, Cloneable {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override

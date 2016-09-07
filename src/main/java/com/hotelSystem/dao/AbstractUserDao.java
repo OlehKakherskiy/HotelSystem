@@ -23,4 +23,8 @@ public interface AbstractUserDao extends GenericDao<User> {
      *                      operation with target persistence storage, or if signIn or password is null
      */
     User tryLogin(String login, String password) throws DaoException;
+
+    boolean isValidLogin(String login) throws DaoException;
+
+    void updatePassword(String login, String password) throws DaoException;
 }

@@ -7,10 +7,8 @@ import main.java.com.hotelSystem.model.MobilePhone;
 import main.java.com.hotelSystem.model.User;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
     /**
      * db select for gettin all mobile phones of specific user
      */
-    private static final String GET_MOBILE_PHONE_LIST = "SELECT idMobilePhone, phone_number " +
+    private static final String GET_MOBILE_PHONE_LIST = "SELECT idMobilePhone, phone_number, id_User " +
             "FROM MOBILE_PHONE " +
             "WHERE id_User=?";
 
@@ -68,6 +66,27 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
             return buildList(resultSet);
         } catch (SQLException e) {
             throw new DaoException(SQL_REQUEST_EXCEPTION, e);
+        }
+    }
+
+    @Override
+    public void save(MobilePhone object) throws DaoException {
+        Connection connection = connectionAllocator.allocateConnection();
+        String query = "INSERT INTO Mobile_Phone(id_User, phone_number) VALUES (?,?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, object.getUserId());
+            preparedStatement.setString(2, object.getMobilePhone());
+            preparedStatement.executeUpdate();
+            ResultSet key = preparedStatement.getGeneratedKeys();
+            if (key.next()) {
+                object.setIdMobilePhone(key.getInt(1));
+            } else {
+                throw new DaoException(MessageFormat.format("There''s no key for new inserted mobile phone object. " +
+                        "Mobile phone is {0}", object.toString()));
+            }
+            key.close();
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage(), e);
         }
     }
 
@@ -105,6 +124,7 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
         try {
             mobilePhone.setIdMobilePhone(resultSet.getInt(1));
             mobilePhone.setMobilePhone(resultSet.getString(2));
+            mobilePhone.setUserId(resultSet.getInt(3));
         } catch (SQLException e) {
             throw new DaoException(BUILD_MOBILE_PHONE_EXCEPTION, e);
         }
