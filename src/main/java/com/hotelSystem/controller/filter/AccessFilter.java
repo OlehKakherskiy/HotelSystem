@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +30,14 @@ public class AccessFilter implements Filter {
      */
     private Map<UserType, List<CommandConstant>> accessRights;
 
+    private List<CommandConstant> whiteList;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        whiteList = Arrays.asList(CommandConstant.PASSWORD_RECOVERY_COMMAND,
+                CommandConstant.REGISTRATION_COMMAND,
+                CommandConstant.GET_PASSWORD_RECOVERY_FORM_COMMAND,
+                CommandConstant.GET_REGISTRATION_FORM_COMMAND);
     }
 
     /**
@@ -48,13 +55,20 @@ public class AccessFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        String commandName = request.getParameter(GlobalContextConstant.COMMAND_NAME.getName());
+        CommandConstant commandConstant = (commandName != null && !commandName.isEmpty())
+                ? CommandConstant.fromValue(commandName)
+                : null;
+        if (commandConstant == null || whiteList.contains(commandConstant)) { //no command - nothing to check (or in white list)
+            chain.doFilter(request, response);
+            return;
+        }
         HttpSession session = ((HttpServletRequest) request).getSession(false);
         if (session == null) {
             ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + WebPageConstant.LOGIN);
         } else {
             User user = (User) session.getAttribute(GlobalContextConstant.USER.getName());
-            String commandName = request.getParameter(GlobalContextConstant.COMMAND_NAME.getName());
-            if (commandName != null && !commandName.isEmpty() && (CommandConstant.fromValue(commandName) == CommandConstant.LOGIN_COMMAND || hasRights(user, CommandConstant.fromValue(commandName)))) {
+            if (commandConstant == CommandConstant.LOGIN_COMMAND || hasRights(user, commandConstant)) {
                 chain.doFilter(request, response);
             } else {
                 redirectToIndex(request, response);
@@ -78,10 +92,6 @@ public class AccessFilter implements Filter {
      * @return true, if user can invoke command, mapped to target commandName, otherwise - false
      */
     private boolean hasRights(User user, CommandConstant commandName) {
-        if (commandName == CommandConstant.PASSWORD_RECOVERY_COMMAND
-                || commandName == CommandConstant.REGISTRATION_COMMAND) {
-            return true;
-        }
         accessRights = (accessRights != null) ? accessRights : (Map<UserType, List<CommandConstant>>)
                 GlobalContext.getValue(GlobalContextConstant.SECURITY_CONFIGURATION);
         if (!accessRights.containsKey(user.getUserType()))
