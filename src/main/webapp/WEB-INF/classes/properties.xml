@@ -50,6 +50,12 @@
     <entry key="passwordRecoveryCommand">
         main.java.com.hotelSystem.controller.command.commandImpl.RecoveryPasswordCommand
     </entry>
+    <entry key="getPasswordRecoveryFormCommand">
+        main.java.com.hotelSystem.controller.command.commandImpl.PreparePasswordRecoveryForm
+    </entry>
+    <entry key="getRegistrationFormCommand">
+        main.java.com.hotelSystem.controller.command.commandImpl.PrepareRegistrationForm
+    </entry>
 
     <entry key="ADMIN_1">getHotelRoomListCommand</entry>
     <entry key="ADMIN_2">getReservationListCommand</entry>

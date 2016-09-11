@@ -10,7 +10,7 @@
     <link rel="stylesheet"
           href="<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> "
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 <div class="row">
@@ -35,6 +35,14 @@
                             key="loginBtn" bundle="${login}"/></button>
                     <div class="form-group"></div>
                     <div class="form-group">
+                        <a href="./controller?commandName=getRegistrationFormCommand&language=ru_RU" type="button"
+                           id="regLink">Register</a>
+                    </div>
+                    <div class="form-group">
+                        <a href="./controller?commandName=getPasswordRecoveryFormCommand&language=ru_RU" type="button"
+                           id="recoveryPasswordLink">Forgot password?</a>
+                    </div>
+                    <div class="form-group">
                         <label for="language"><fmt:message key="interfaceLanguage" bundle="${login}"/></label>
                         <select name="language" id="language">
                             <option value="en_EN">English</option>
@@ -47,5 +55,14 @@
     </div>
     <div class="col-md-4"></div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#language").change(function () {
+            lang = $("#language option:selected").val();
+            $("#regLink").attr("href", $("#regLink").attr("href").substring(0, $("#regLink").attr("href").lastIndexOf("=") + 1) + lang);
+            $("#recoveryPasswordLink").attr("href", $("#recoveryPasswordLink").attr("href").substring(0, $("#recoveryPasswordLink").attr("href").lastIndexOf("=") + 1) + lang);
+        })
+    })
+</script>
 </body>
 </html>

@@ -159,6 +159,32 @@ public class AbstractUserServiceTest {
         EasyMock.verify(okUserDao, systemExceptionMobilePhoneDao);
     }
 
+//    @Test
+//    public void testRegister() throws Exception {
+//
+//        AbstractUserDao userDao = EasyMock.createMock(AbstractUserDao.class);
+//        User actual = getActualUser();
+//        actual.setIdUser(0);
+//        List<MobilePhone> actualMobilePhones = getActualMobilePhones();
+//        actualMobilePhones.forEach(phone -> phone.setIdMobilePhone(0));
+//        actual.setMobilePhoneList(actualMobilePhones);
+//        userDao.save(EasyMock.eq(actual));
+//        EasyMock.expectLastCall().andAnswer(() -> {
+//            User user = ((User) EasyMock.getCurrentArguments()[0]);
+//            System.out.println("hi");
+//            System.out.println(user);
+//            user.setIdUser(1);
+//            user.getMobilePhoneList().get(0).setIdMobilePhone(1);
+//            user.getMobilePhoneList().get(1).setIdMobilePhone(2);
+//            user.getMobilePhoneList().get(2).setIdMobilePhone(3);
+//            return null;
+//        });
+//        EasyMock.replay(userDao);
+//        System.out.println("bye");
+//        Assert.assertEquals(expectation, actual);
+//        EasyMock.verify(userDao);
+//    }
+
     private static AbstractUserDao createOkUserDaoLogin() {
         AbstractUserDao okUserDaoLogin = EasyMock.createMock(AbstractUserDao.class);
         try {

@@ -1,10 +1,8 @@
 package main.java.com.hotelSystem.controller.command.commandImpl;
 
-import main.java.com.hotelSystem.app.GlobalContext;
-import main.java.com.hotelSystem.app.constants.CommandConstant;
 import main.java.com.hotelSystem.app.constants.GlobalContextConstant;
+import main.java.com.hotelSystem.app.constants.WebPageConstant;
 import main.java.com.hotelSystem.controller.command.AbstractCommand;
-import main.java.com.hotelSystem.manager.AbstractCommandManager;
 import main.java.com.hotelSystem.service.IUserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +21,6 @@ public class RecoveryPasswordCommand extends AbstractCommand {
         IUserService userService = serviceManager.getInstance(IUserService.class);
         userService.updatePassword(login, newPassword, passwordConfirmation);
 
-        return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
-                .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
+        return WebPageConstant.LOGIN.getPath();
     }
 }

@@ -23,11 +23,6 @@ public class MobilePhone implements Serializable, Cloneable {
 
     private int userId;
 
-    /**
-     * constructor without parameters
-     */
-    public MobilePhone() {
-    }
 
     /**
      * constructor that inits all fields
@@ -40,6 +35,18 @@ public class MobilePhone implements Serializable, Cloneable {
         this.idMobilePhone = idMobilePhone;
         this.mobilePhone = mobilePhone;
         this.userId = userId;
+    }
+
+    public MobilePhone(String mobilePhone, int userId) {
+        this.mobilePhone = mobilePhone;
+        this.userId = userId;
+    }
+
+    public MobilePhone() {
+    }
+
+    public MobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
     public int getIdMobilePhone() {

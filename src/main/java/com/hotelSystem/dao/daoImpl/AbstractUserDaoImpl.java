@@ -117,8 +117,10 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
                 }
 
                 for (MobilePhone mobilePhone : object.getMobilePhoneList()) {
+                    mobilePhone.setUserId(object.getIdUser());
                     mobilePhoneDao.save(mobilePhone);
                 }
+                generatedKeys.close();
             } catch (DaoException e) {
                 connection.rollback();
                 throw e;
@@ -131,7 +133,6 @@ public class AbstractUserDaoImpl implements AbstractUserDao {
         } catch (SQLException e) {
             throw new DaoException(e.getMessage(), e);
         }
-
     }
 
     @Override

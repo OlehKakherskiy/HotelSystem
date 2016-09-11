@@ -111,10 +111,11 @@ public class UserService implements IUserService {
 
     @Override
     public void update(User user, String name, String surname, List<String> mobilePhones) {
+        //TODO: разобраться с вставкой и удалением мобильных телефонов. Сделать так, чтобы профииль обновленный возвращался
         user.setName(name);
         user.setLastName(surname);
-        changePhones(user, mobilePhones);
         try {
+            changePhones(user, mobilePhones);
             if (!userDao.update(user)) {
                 throw new SystemException(MessageCode.UPDATE_USER_PROFILE_FAILED);
             }
@@ -123,10 +124,17 @@ public class UserService implements IUserService {
         }
     }
 
-    private void changePhones(User user, List<String> mobilePhones) {
+    private void changePhones(User user, List<String> mobilePhones) throws DaoException {
         List<MobilePhone> list = user.getMobilePhoneList();
         for (int i = 0; i < mobilePhones.size(); i++) {
-            list.get(i).setMobilePhone(mobilePhones.get(i));
+            if (list.size() < i) {
+                list.add(new MobilePhone(mobilePhones.get(i), user.getIdUser()));
+            } else {
+                list.get(i).setMobilePhone(mobilePhones.get(i));
+            }
+        }
+        for (int i = mobilePhones.size(); i < list.size(); i++) {
+            mobilePhoneDao.delete(list.remove(i).getUserId());
         }
     }
 

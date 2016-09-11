@@ -81,6 +81,7 @@ public class DebugLevelLoggerProxy implements InvocationHandler {
         } catch (IllegalAccessException e) {
             throw new SystemException(MessageCode.GENERAL_SYSTEM_EXCEPTION, e);
         } catch (InvocationTargetException e1) {
+            e1.printStackTrace();
             Class<? extends Throwable> targetExceptionClass = e1.getTargetException().getClass();
             for (Class<? extends Exception> exceptionClass : systemDefinedExceptions) {
                 if (exceptionClass.isAssignableFrom(targetExceptionClass)) {

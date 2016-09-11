@@ -39,7 +39,11 @@ public enum CommandConstant {
 
     PASSWORD_RECOVERY_COMMAND("passwordRecoveryCommand"),
 
-    REGISTRATION_COMMAND("registrationCommand");
+    REGISTRATION_COMMAND("registrationCommand"),
+
+    GET_PASSWORD_RECOVERY_FORM_COMMAND("getPasswordRecoveryFormCommand"),
+
+    GET_REGISTRATION_FORM_COMMAND("getRegistrationFormCommand");
 
     private String commandName;
 

@@ -90,6 +90,18 @@ public class AbstractMobilePhoneDaoImpl implements AbstractMobilePhoneDao {
         }
     }
 
+    @Override
+    public boolean delete(int id) throws DaoException {
+        Connection connection = connectionAllocator.allocateConnection();
+        String query = "DELETE FROM Mobile_Phone WHERE idMobilePhone = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage(), e);
+        }
+    }
+
     /**
      * Builds list of {@link MobilePhone} from data, stored in {@link ResultSet}
      *

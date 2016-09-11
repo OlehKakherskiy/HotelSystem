@@ -20,7 +20,10 @@ public enum WebPageConstant {
 
     HOTEL_ROOM_PROFILE("hotelRoomProfile"),
 
-    UPDATE_USER_PAGE("updateUserPage");
+
+    REGISTRATION_PAGE("registrationForm"),
+
+    PASSWORD_RECOVERY_FORM("passwordRecoveryForm");
 
     private String path;
 

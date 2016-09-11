@@ -36,26 +36,24 @@ public class RegistrationCommand extends AbstractCommand {
 
         IUserService userService = serviceManager.getInstance(IUserService.class);
         userService.register(user);
-
+        request.getSession(false).setAttribute(GlobalContextConstant.USER.getName(), user);
         return ((AbstractCommandManager) GlobalContext.getValue(GlobalContextConstant.COMMAND_FACTORY))
                 .getInstance(CommandConstant.GET_RESERVATION_LIST_COMMAND).process(request, response);
     }
 
     private List<MobilePhone> getMobilePhones(HttpServletRequest request) {
-        Map<String, String> paramsMap = request.getParameterMap();
-
+        Map<String, Object> paramsMap = request.getParameterMap();
         return paramsMap.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().startsWith("mobilePhone"))
-                .map(Map.Entry::getValue).map(mPhone -> {
-                    MobilePhone mobilePhone = new MobilePhone();
-                    mobilePhone.setMobilePhone(mPhone);
-                    return mobilePhone;
-                }).collect(Collectors.toList());
+                .stream().map(Map.Entry::getKey)
+                .filter(key -> key.startsWith("mobilePhone"))
+                .map(request::getParameter).map(MobilePhone::new)
+                .collect(Collectors.toList());
     }
 
     private void checkPassword(String password, String passwordConfirmation) {
-        if (!password.equals(passwordConfirmation)) {
+        if (password == null || password.isEmpty()
+                || passwordConfirmation == null || passwordConfirmation.isEmpty()
+                || !password.equals(passwordConfirmation)) {
             throw new RequestException(MessageCode.PASSWORD_CONFIRMATION_EXCEPTION_MESSAGE);
         }
     }
